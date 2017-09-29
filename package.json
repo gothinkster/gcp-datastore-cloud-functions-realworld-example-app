@@ -1,0 +1,9 @@
+{
+  "scripts": {
+    "test": "npm run test:api",
+    "test:api": "./run-api-tests.sh"
+  },
+  "devDependencies": {
+    "newman": "^3.8.2"
+  }
+}

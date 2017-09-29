@@ -1,0 +1,39 @@
+{
+  "variables": [],
+  "info": {
+    "name": "Realworld Datastore API Tests",
+    "description": "",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+  },
+  "item": [{
+    "name": "automated",
+    "description": "",
+    "item": [{
+      "name": "Ping",
+      "event": [{
+        "listen": "test",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            "tests['status 200'] = pm.response.code === 200;",
+            "res = pm.response.json();",
+            "tests['should have pong field'] = res.pong;",
+            ""
+          ]
+        }
+      }],
+      "request": {
+        "url": "{{apiUrl}}/ping",
+        "method": "POST",
+        "header": [{
+          "key": "Content-Type",
+          "value": "application/json",
+          "description": ""
+        }],
+        "body": {},
+        "description": ""
+      },
+      "response": []
+    }]
+  }]
+}
