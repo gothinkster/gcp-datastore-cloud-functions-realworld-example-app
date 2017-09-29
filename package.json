@@ -4,6 +4,7 @@
     "test:api": "./run-api-tests.sh"
   },
   "devDependencies": {
+    "@google-cloud/functions-emulator": "^1.0.0-alpha.25",
     "newman": "^3.8.2"
   }
 }
