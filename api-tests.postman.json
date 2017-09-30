@@ -2,6 +2,7 @@
   "variables": [],
   "info": {
     "name": "Realworld Datastore API Tests",
+    "_postman_id": "d6eff7c3-716f-e3f2-2527-413cc1380a87",
     "description": "",
     "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
   },
@@ -15,7 +16,7 @@
         "script": {
           "type": "text/javascript",
           "exec": [
-            "tests['status 200'] = pm.response.code === 200;",
+            "tests['should have status 200'] = pm.response.code === 200;",
             "res = pm.response.json();",
             "tests['should have pong field'] = res.pong;",
             ""

@@ -5,12 +5,18 @@ var jwt = require('jwt-simple');
 /* istanbul ignore next */
 var tokenSecret = process.env.SECRET ? process.env.SECRET : 'secret';
 
+/* istanbul ignore next */
+var namespace = process.env.DATASTORE_NAMESPACE ? process.env.DATASTORE_NAMESPACE : 'dev';
+
 module.exports = {
 
   async create(aUserData) {
 
     // Verify username is not taken
-    var userKey = ds.key(['User', aUserData.username]);
+    var userKey = ds.key({
+      namespace,
+      path: ['User', aUserData.username],
+    });
     var result = await ds.get(userKey);
     if (result[0]) {
       throw new Error(`Username already taken: [${aUserData.username}]`);
@@ -18,7 +24,7 @@ module.exports = {
 
     // Verify email is not taken
     var usersWithThisEmail = await ds.runQuery(
-      ds.createQuery('User').filter('email', '=', aUserData.email));
+      ds.createQuery(namespace, 'User').filter('email', '=', aUserData.email));
     if (usersWithThisEmail[0].length) {
       throw new Error(`Email already taken: [${aUserData.email}]`);
     }
@@ -45,7 +51,7 @@ module.exports = {
 
     // Get user with this email
     var queryResult = await ds.runQuery(
-      ds.createQuery('User').filter('email', '=', aUserData.email));
+      ds.createQuery(namespace, 'User').filter('email', '=', aUserData.email));
     var foundUser = queryResult[0][0];
     if (!foundUser) {
       throw new Error(`Email not found: [${aUserData.email}]`);
@@ -67,7 +73,10 @@ module.exports = {
   async authenticateToken(aToken) {
     var decoded = jwt.decode(aToken, tokenSecret);
     var username = decoded.username;
-    var result = await ds.get(ds.key(['User', decoded.username]));
+    var result = await ds.get(ds.key({
+      namespace,
+      path: ['User', decoded.username],
+    }));
     var foundUser = result[0];
     return {
       username,
