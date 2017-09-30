@@ -1,3 +1,10 @@
 machine:
   node:
     version: 8
+  environment:
+    GOOGLE_APPLICATION_CREDENTIALS: service-account-key.json
+
+test:
+  pre:
+    - echo Putting service account key into $GOOGLE_APPLICATION_CREDENTIALS
+    - echo $GOOGLE_APPLICATION_CREDENTIALS_BASE64 | base64 --decode --ignore-garbage > $GOOGLE_APPLICATION_CREDENTIALS
