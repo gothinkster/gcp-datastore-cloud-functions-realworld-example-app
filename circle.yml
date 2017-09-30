@@ -6,5 +6,4 @@ machine:
 
 test:
   pre:
-    - echo Putting service account key into $GOOGLE_APPLICATION_CREDENTIALS
     - echo $GOOGLE_APPLICATION_CREDENTIALS_BASE64 | base64 --decode --ignore-garbage > $GOOGLE_APPLICATION_CREDENTIALS

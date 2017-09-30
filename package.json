@@ -1,7 +1,7 @@
 {
   "scripts": {
     "test": "npm run test:unit && npm run test:api",
-    "test:unit": "mocha --timeout=60000 ./src/*.test.js",
+    "test:unit": "nyc mocha --timeout=60000 ./src/*.test.js",
     "test:api": "./run-api-tests.sh"
   },
   "devDependencies": {
@@ -9,7 +9,8 @@
     "casual": "^1.5.17",
     "chai": "^4.1.2",
     "mocha": "^3.5.3",
-    "newman": "^3.8.2"
+    "newman": "^3.8.2",
+    "nyc": "^11.2.1"
   },
   "dependencies": {
     "@google-cloud/datastore": "^1.1.0",
