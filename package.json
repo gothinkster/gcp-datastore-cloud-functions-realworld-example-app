@@ -1,10 +1,18 @@
 {
   "scripts": {
-    "test": "npm run test:api",
+    "test": "npm run test:unit && npm run test:api",
+    "test:unit": "mocha --timeout=60000 ./src/*.test.js",
     "test:api": "./run-api-tests.sh"
   },
   "devDependencies": {
     "@google-cloud/functions-emulator": "^1.0.0-alpha.25",
+    "casual": "^1.5.17",
+    "chai": "^4.1.2",
     "newman": "^3.8.2"
+  },
+  "dependencies": {
+    "@google-cloud/datastore": "^1.1.0",
+    "bcrypt": "^1.0.3",
+    "jwt-simple": "^0.5.1"
   }
 }
