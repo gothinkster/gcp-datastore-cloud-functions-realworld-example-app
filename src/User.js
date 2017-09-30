@@ -44,7 +44,7 @@ module.exports = {
     delete userRecord.password;
     userRecord.token = this.mintToken(aUserData.username);
     userRecord.username = aUserData.username;
-    return userRecord
+    return userRecord;
   },
 
   async login(aUserData) {
@@ -78,6 +78,9 @@ module.exports = {
       path: ['User', decoded.username],
     }));
     var foundUser = result[0];
+    if (!foundUser) {
+      throw new Error('Invalid token');
+    }
     return {
       username,
       token: aToken,
