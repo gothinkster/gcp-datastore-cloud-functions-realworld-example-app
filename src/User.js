@@ -29,6 +29,7 @@ module.exports = {
     // Add user
     var encryptedPassword = await bcrypt.hash(aUserData.password, 5);
     var userRecord = {
+      username: aUserData.username,
       email: aUserData.email,
       password: encryptedPassword,
       bio: '',
