@@ -70,7 +70,7 @@ describe('User module', async() => {
     });
   });
 
-  it('should allow following a user', async() => {
+  it('should follow/unfollow a user', async() => {
     var userToFollow = await user.create({
       email: 'followed_' + username + '@gmail.com',
       username: 'followed_' + username,
@@ -79,6 +79,8 @@ describe('User module', async() => {
     mlog.log(`User to follow: [${JSON.stringify(userToFollow)}]`);
     var followedUserProfile = await user.followUser(loggedInUser.username, userToFollow.username);
     mlog.log(`Followed user profile: [${JSON.stringify(followedUserProfile)}]`);
+    var unfollowedUserProfile = await user.unfollowUser(loggedInUser.username, userToFollow.username);
+    mlog.log(`Unfollowed user profile: [${JSON.stringify(unfollowedUserProfile)}]`);
 
     await user.followUser(loggedInUser.username + 'foobar').catch(err =>
       expect(err).to.match(/User not found/));

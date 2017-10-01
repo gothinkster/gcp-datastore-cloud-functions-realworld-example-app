@@ -67,25 +67,41 @@ module.exports = {
   },
 
   async followUser(aFollowerUsername, aFollowedUsername) {
+    return await this.mutateFollowing(aFollowerUsername, aFollowedUsername, true);
+  },
+
+  async unfollowUser(aFollowerUsername, aFollowedUsername) {
+    return await this.mutateFollowing(aFollowerUsername, aFollowedUsername, false);
+  },
+
+  async mutateFollowing(aFollowerUsername, aFollowedUsername, aMutation) {
 
     var updates = [];
 
-    // Add to "following" array of follower
+    // Add/remove "following" array of follower
     var followerUserKey = ds.key({ namespace, path: ['User', aFollowerUsername] });
     var followerUser = (await ds.get(followerUserKey))[0];
     if (!followerUser) {
       throw new Error(`User not found: [${aFollowerUsername}]`);
     }
-    followerUser.following.push(aFollowedUsername);
+    if (aMutation) {
+      followerUser.following.push(aFollowedUsername);
+    } else {
+      followerUser.following = followerUser.following.filter(e => e != aFollowedUsername);
+    }
     updates.push({ key: followerUserKey, data: followerUser, });
 
-    // Add to "followers" array of followed
+    // Add/remove "followers" array of followed
     var followedUserKey = ds.key({ namespace, path: ['User', aFollowedUsername] });
     var followedUser = (await ds.get(followedUserKey))[0];
     if (!followedUser) {
       throw new Error(`User not found: [${aFollowedUsername}]`);
     }
-    followedUser.followers.push(aFollowerUsername);
+    if (aMutation) {
+      followedUser.followers.push(aFollowerUsername);
+    } else {
+      followedUser.followers = followedUser.followers.filter(e => e != aFollowerUsername);
+    }
     updates.push({ key: followedUserKey, data: followedUser });
 
     await ds.update(updates);
@@ -95,9 +111,8 @@ module.exports = {
       username: aFollowedUsername,
       bio: followedUser.bio,
       image: followedUser.image,
-      following: true,
+      following: aMutation,
     };
-
   },
 
   // ===== Token managenement
