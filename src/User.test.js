@@ -45,8 +45,6 @@ describe('User module', async() => {
   });
 
   it('should not allow bad token', async() => {
-    // userWithWrongToken = JSON.parse(JSON.stringify(loggedInUser));
-    // userWithWrongToken.token += 'foo';
     await user.authenticateToken(loggedInUser.token + 'foo').catch(err =>
       expect(err).to.match(/Signature verification failed/));
   });
@@ -70,6 +68,22 @@ describe('User module', async() => {
     await user.authenticateToken(tokenForNonExistentUser).catch(err => {
       expect(err).to.match(/Invalid token/);
     });
+  });
+
+  it('should allow following a user', async() => {
+    var userToFollow = await user.create({
+      email: 'followed_' + username + '@gmail.com',
+      username: 'followed_' + username,
+      password: 'a',
+    });
+    mlog.log(`User to follow: [${JSON.stringify(userToFollow)}]`);
+    var followedUserProfile = await user.followUser(loggedInUser.username, userToFollow.username);
+    mlog.log(`Followed user profile: [${JSON.stringify(followedUserProfile)}]`);
+
+    await user.followUser(loggedInUser.username + 'foobar').catch(err =>
+      expect(err).to.match(/User not found/));
+    await user.followUser(loggedInUser.username, userToFollow.username + 'foobar').catch(err =>
+      expect(err).to.match(/User not found/));
   });
 
 });

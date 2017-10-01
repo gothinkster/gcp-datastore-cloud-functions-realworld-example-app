@@ -13,10 +13,7 @@ module.exports = {
   async create(aUserData) {
 
     // Verify username is not taken
-    var userKey = ds.key({
-      namespace,
-      path: ['User', aUserData.username],
-    });
+    var userKey = ds.key({ namespace, path: ['User', aUserData.username], });
     var result = await ds.get(userKey);
     if (result[0]) {
       throw new Error(`Username already taken: [${aUserData.username}]`);
@@ -36,11 +33,10 @@ module.exports = {
       password: encryptedPassword,
       bio: '',
       image: '',
+      followers: [],
+      following: [],
     };
-    await ds.upsert({
-      key: userKey,
-      data: userRecord
-    });
+    await ds.upsert({ key: userKey, data: userRecord });
     delete userRecord.password;
     userRecord.token = this.mintToken(aUserData.username);
     userRecord.username = aUserData.username;
@@ -70,13 +66,46 @@ module.exports = {
     };
   },
 
+  async followUser(aFollowerUsername, aFollowedUsername) {
+
+    var updates = [];
+
+    // Add to "following" array of follower
+    var followerUserKey = ds.key({ namespace, path: ['User', aFollowerUsername] });
+    var followerUser = (await ds.get(followerUserKey))[0];
+    if (!followerUser) {
+      throw new Error(`User not found: [${aFollowerUsername}]`);
+    }
+    followerUser.following.push(aFollowedUsername);
+    updates.push({ key: followerUserKey, data: followerUser, });
+
+    // Add to "followers" array of followed
+    var followedUserKey = ds.key({ namespace, path: ['User', aFollowedUsername] });
+    var followedUser = (await ds.get(followedUserKey))[0];
+    if (!followedUser) {
+      throw new Error(`User not found: [${aFollowedUsername}]`);
+    }
+    followedUser.followers.push(aFollowerUsername);
+    updates.push({ key: followedUserKey, data: followedUser });
+
+    await ds.update(updates);
+
+    // Return profile of followed user
+    return {
+      username: aFollowedUsername,
+      bio: followedUser.bio,
+      image: followedUser.image,
+      following: true,
+    };
+
+  },
+
+  // ===== Token managenement
+
   async authenticateToken(aToken) {
     var decoded = jwt.decode(aToken, tokenSecret);
     var username = decoded.username;
-    var result = await ds.get(ds.key({
-      namespace,
-      path: ['User', decoded.username],
-    }));
+    var result = await ds.get(ds.key({ namespace, path: ['User', decoded.username], }));
     var foundUser = result[0];
     if (!foundUser) {
       throw new Error('Invalid token');
