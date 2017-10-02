@@ -1,0 +1,19 @@
+# Index specification
+#
+# To setup your project, execute:
+#
+#   gcloud datastore create-indexes index.yaml
+
+indexes:
+
+- kind: Article
+  properties:
+  - name: tagList
+  - name: createdAt
+    direction: desc
+
+- kind: Article
+  properties:
+  - name: author
+  - name: createdAt
+    direction: desc

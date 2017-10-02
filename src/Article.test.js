@@ -11,6 +11,9 @@ var createdArticle = null;
 describe('Article module', async() => {
 
   before(async() => {
+    mlog.log('Deleting all articles.');
+    await Article.testutils.__deleteAll();
+
     var authorUsername = 'author_' + casual.username;
     authorUser = await user.create({
       email: authorUsername + '@mail.com',
@@ -24,6 +27,12 @@ describe('Article module', async() => {
       username: readerUsername,
       password: 'a',
     });
+  });
+
+  after(async() => {
+    mlog.log('Deleting all articles.');
+    await Article.testutils.__deleteAll();
+    await delay(1000);
   });
 
   it('should create new article', async() => {
@@ -79,4 +88,51 @@ describe('Article module', async() => {
       expect(err).to.match(/User does not exist/));
   });
 
+  it('should get all articles', async() => {
+    var articles = await Article.getAll();
+  });
+
+  it('should get all articles by tag', async() => {
+    var articles = await Article.getAll({ tag: createdArticle.tagList[0] });
+    expect(articles[0].tagList).to.contain(createdArticle.tagList[0]);
+  });
+
+  it('should get all articles by author', async() => {
+    var articles = await Article.getAll({ author: authorUser.username });
+    expect(articles[0].author.username).to.equal(authorUser.username);
+  });
+
+  it('should get all articles with limit/offset', async() => {
+    // Create few more articles for pagination
+    process.stdout.write('      ');
+    for (var i = 1; i <= 10; ++i) {
+      process.stdout.write('.');
+      await Article.create({
+          title: i,
+          description: `description ${i}`,
+          body: `body ${i}`,
+          tagList: ['sometag', `tag${i}`],
+        },
+        authorUser.username);
+      await delay(250);
+    }
+    console.log('');
+
+    var articles = await Article.getAll({ limit: 3 });
+    expect(articles).to.be.an('array').to.have.lengthOf(3);
+
+    var articles = await Article.getAll({ offset: 3 });
+    expect(articles).to.be.an('array').to.have.lengthOf(9);
+  });
+
+  it('should get all articles with a reader', async() => {
+    var articles = await Article.getAll({ reader: 'foobar' });
+  });
+
 });
+
+function delay(time) {
+  return new Promise(function(fulfill) {
+    setTimeout(fulfill, time);
+  });
+}

@@ -1,8 +1,5 @@
-var ds = require('./Datastore.js');
+var { ds, namespace } = require('./Datastore.js');
 var slug = require('slug');
-
-/* istanbul ignore next */
-var namespace = process.env.DATASTORE_NAMESPACE ? process.env.DATASTORE_NAMESPACE : 'dev';
 
 module.exports = {
 
@@ -61,6 +58,59 @@ module.exports = {
 
     article.author = authorUser;
     return article;
-  }
+  },
+
+  async getAll(options) {
+    var query = ds.createQuery(namespace, 'Article')
+      .order('createdAt', { descending: true });
+    if (!options) {
+      options = {};
+    }
+
+    if (options.tag) {
+      query = ds.createQuery(namespace, 'Article')
+        .order('createdAt', { descending: true })
+        .filter('tagList', '=', options.tag);
+    } else if (options.author) {
+      query = query.filter('author', '=', options.author);
+    }
+
+    if (options.limit) {
+      query = query.limit(options.limit);
+    } else {
+      query = query.limit(20);
+    }
+
+    if (options.offset) {
+      query = query.offset(options.offset);
+    }
+
+    var articles = (await query.run(query))[0];
+    for (var article of articles) {
+      delete article[ds.KEY];
+
+      // Get author info for this article
+      var authorUser = (await ds.get(ds.key({ namespace, path: ['User', article.author] })))[0];
+      article.author = {
+        username: authorUser.username,
+        bio: authorUser.bio,
+        image: authorUser.image,
+      }
+      if (options.reader) {
+        article.author.following = authorUser.followers.includes(options.reader);
+      }
+    }
+
+    return articles;
+  },
+
+  testutils: {
+    async __deleteAll() {
+      var articleKeys = (await ds.createQuery(namespace, 'Article').select('__key__').run())[0];
+      articleKeys.forEach(async(articleKey) => {
+        await ds.delete(articleKey[ds.KEY]);
+      });
+    }
+  },
 
 };

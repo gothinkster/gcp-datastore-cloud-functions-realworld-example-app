@@ -1,12 +1,9 @@
-var ds = require('./Datastore.js');
+var { ds, namespace } = require('./Datastore.js');
 var bcrypt = require('bcrypt');
 var jwt = require('jwt-simple');
 
 /* istanbul ignore next */
 var tokenSecret = process.env.SECRET ? process.env.SECRET : 'secret';
-
-/* istanbul ignore next */
-var namespace = process.env.DATASTORE_NAMESPACE ? process.env.DATASTORE_NAMESPACE : 'dev';
 
 module.exports = {
 
