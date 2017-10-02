@@ -68,9 +68,7 @@ module.exports = {
     }
 
     if (options.tag) {
-      query = ds.createQuery(namespace, 'Article')
-        .order('createdAt', { descending: true })
-        .filter('tagList', '=', options.tag);
+      query = query.filter('tagList', '=', options.tag);
     } else if (options.author) {
       query = query.filter('author', '=', options.author);
     }
