@@ -12,6 +12,7 @@ describe('Article module', async() => {
 
   before(async() => {
     await cleanSlate();
+    await delay(1000);
 
     var authorUsername = 'author_' + casual.username;
     authorUser = await user.create({
@@ -70,7 +71,7 @@ describe('Article module', async() => {
     expect(retrievedArticle.author.following).to.be.true;
   });
 
-  it('should get article by followed author', async() => {
+  it('should get article by unfollowed author', async() => {
     await user.unfollowUser(readerUser.username, authorUser.username);
     retrievedArticle = await Article.get(createdArticle.slug, readerUser.username);
     expect(retrievedArticle.author.following).to.be.false;
@@ -127,6 +128,46 @@ describe('Article module', async() => {
     var articles = await Article.getAll({ reader: 'foobar' });
   });
 
+  it('should get feed', async() => {
+    // Create a second user to follow
+    var secondAuthorUser = await user.create({
+      username: 'second_author',
+      email: 'second_author@gmail.com',
+      password: 'a',
+    });
+    var secondAuthorArticle = await Article.create({
+      title: 'second_author_article',
+      description: 'foo',
+      body: 'bar'
+    }, secondAuthorUser.username);
+    await user.followUser(readerUser.username, secondAuthorUser.username);
+    await user.followUser(readerUser.username, authorUser.username);
+    var feed = await Article.getFeed(readerUser.username);
+    expect(feed[0].author.username).to.equal('second_author');
+    expect(feed[0].title).to.equal('second_author_article');
+    for (var article of feed.slice(1)) {
+      expect(article.author.username).to.equal(authorUser.username);
+    }
+    expect(feed).to.be.an('array').to.have.lengthOf(13);
+
+    // Unfollow first author, end expect only second author's article
+    await user.unfollowUser(readerUser.username, authorUser.username);
+    feed = await Article.getFeed(readerUser.username);
+    expect(feed).to.be.an('array').to.have.lengthOf(1);
+
+    await Article.getFeed('non-existent_username_' + casual.username).catch(err => {
+      expect(err).to.match(/User not found/);
+    });
+  });
+
+  it('should get feed with limit/offset', async() => {
+    await user.followUser(readerUser.username, authorUser.username);
+    var feed = await Article.getFeed(readerUser.username, { limit: 3 });
+    expect(feed).to.be.an('array').to.have.lengthOf(3);
+    feed = await Article.getFeed(readerUser.username, { limit: 4, offset: 2 });
+    expect(feed).to.be.an('array').to.have.lengthOf(4);
+  });
+
   it('should create new comment', async() => {
     var commentBody = casual.sentence;
     var createdComment = await Article.createComment(createdArticle.slug, authorUser.username, commentBody);
@@ -167,6 +208,8 @@ function delay(time) {
 }
 
 async function cleanSlate() {
+  mlog.log('Deleting all users.');
+  await user.testutils.__deleteAllUsers();
   mlog.log('Deleting all articles.');
   await Article.testutils.__deleteAll();
   mlog.log('Deleting all comments.');

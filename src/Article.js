@@ -103,6 +103,44 @@ module.exports = {
     return articles;
   },
 
+  async getFeed(aUsername, options) {
+    var user = (await ds.get(ds.key({ namespace, path: ['User', aUsername] })))[0];
+    if (!user) {
+      throw new Error(`User not found: [${aUsername}]`);
+    }
+    if (!options) {
+      options = {};
+    }
+    if (!options.limit) {
+      options.limit = 20;
+    }
+    if (!options.offset) {
+      options.offset = 0;
+    }
+
+    // For each followed user, get authored articles
+    var articles = [];
+    for (var i = 0; i < user.following.length; ++i) {
+      var followedUser = (await ds.get(ds.key({ namespace, path: ['User', user.following[i]] })))[0];
+      var query = ds.createQuery(namespace, 'Article')
+        .order('createdAt', { descending: true })
+        .filter('author', '=', user.following[i]);
+
+      var articlesByThisAuthor = (await query.run())[0];
+      for (var article of articlesByThisAuthor) {
+        delete article[ds.KEY];
+        article.author = {
+          username: followedUser.username,
+          bio: followedUser.bio,
+          image: followedUser.image,
+          following: true,
+        };
+        articles.push(article);
+      }
+    }
+    return articles.slice(options.offset, options.offset + options.limit);
+  },
+
   async createComment(aSlug, aCommentAuthorUsername, aCommentBody) {
     var key = ds.key({ namespace, path: ['Article', aSlug, 'Comment'] });
     var timestamp = (new Date()).getTime();
