@@ -139,4 +139,18 @@ module.exports = {
     }, tokenSecret);
   },
 
+  testutils: {
+    async __deleteAllUsers() {
+      /* istanbul ignore next */
+      if (namespace != 'test') {
+        console.warn(`namespace is not test but [${namespace}], skipping.`);
+        return;
+      }
+      var userKeys = (await ds.createQuery(namespace, 'User').select('__key__').run())[0];
+      userKeys.forEach(async(userKey) => {
+        await ds.delete(userKey[ds.KEY]);
+      });
+    },
+  },
+
 };

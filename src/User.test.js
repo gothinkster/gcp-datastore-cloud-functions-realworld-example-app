@@ -13,6 +13,14 @@ var loggedInUser = null;
 
 describe('User module', async() => {
 
+  before(async() => {
+    await cleanSlate();
+  });
+
+  after(async() => {
+    await cleanSlate();
+  });
+
   it('should create new user', async() => {
     var createdUser = await user.create(userToCreate);
     mlog.log(`Created user: [${JSON.stringify(createdUser)}]`);
@@ -94,4 +102,9 @@ function delay(time) {
   return new Promise(function(fulfill) {
     setTimeout(fulfill, time);
   });
+}
+
+async function cleanSlate() {
+  mlog.log('Deleting all users.');
+  await user.testutils.__deleteAllUsers();
 }

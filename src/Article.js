@@ -93,6 +93,7 @@ module.exports = {
         username: authorUser.username,
         bio: authorUser.bio,
         image: authorUser.image,
+        following: false,
       }
       if (options.reader) {
         article.author.following = authorUser.followers.includes(options.reader);
@@ -102,13 +103,76 @@ module.exports = {
     return articles;
   },
 
+  async createComment(aSlug, aCommentAuthorUsername, aCommentBody) {
+    var key = ds.key({ namespace, path: ['Article', aSlug, 'Comment'] });
+    var timestamp = (new Date()).getTime();
+    var commentData = {
+      body: aCommentBody,
+      createdAt: timestamp,
+      updatedAt: timestamp,
+      author: aCommentAuthorUsername,
+    };
+    await ds.insert({ key, data: commentData });
+    commentData.id = key.id;
+    var commentAuthorUser = (await ds.get(ds.key({ namespace, path: ['User', aCommentAuthorUsername] })))[0];
+    commentData.author = {
+      username: aCommentAuthorUsername,
+      bio: commentAuthorUser.bio,
+      image: commentAuthorUser.image,
+      following: false,
+    };
+    return commentData;
+  },
+
+  async getAllComments(aSlug, aReaderUsername) {
+    var comments = (await ds.createQuery(namespace, 'Comment')
+      .hasAncestor(ds.key({ namespace, path: ['Article', aSlug] })).run())[0];
+    comments = comments.sort((a, b) => b.createdAt - a.createdAt);
+
+    for (var comment of comments) {
+      comment.id = comment[ds.KEY].id;
+      delete comment[ds.KEY];
+
+      // Get comment author info
+      var authorUser = (await ds.get(ds.key({ namespace, path: ['User', comment.author] })))[0];
+      comment.author = {
+        username: authorUser.username,
+        bio: authorUser.bio,
+        image: authorUser.image,
+        following: false,
+      };
+      if (aReaderUsername) {
+        comment.author.following = authorUser.followers.includes(aReaderUsername);
+      }
+    }
+    return comments;
+  },
+
+
+
   testutils: {
     async __deleteAll() {
+      /* istanbul ignore next */
+      if (namespace != 'test') {
+        console.warn(`namespace is not test but [${namespace}], skipping.`);
+        return;
+      }
       var articleKeys = (await ds.createQuery(namespace, 'Article').select('__key__').run())[0];
       articleKeys.forEach(async(articleKey) => {
         await ds.delete(articleKey[ds.KEY]);
       });
-    }
+    },
+    async __deleteAllComments() {
+      /* istanbul ignore next */
+      if (namespace != 'test') {
+        console.warn(`namespace is not test but [${namespace}], skipping.`);
+        return;
+      }
+      var commentKeys = (await ds.createQuery(namespace, 'Comment').select('__key__').run())[0];
+      commentKeys.forEach(async(commentKey) => {
+        await ds.delete(commentKey[ds.KEY]);
+      });
+    },
   },
 
 };

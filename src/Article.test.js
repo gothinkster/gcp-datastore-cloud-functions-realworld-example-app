@@ -11,8 +11,7 @@ var createdArticle = null;
 describe('Article module', async() => {
 
   before(async() => {
-    mlog.log('Deleting all articles.');
-    await Article.testutils.__deleteAll();
+    await cleanSlate();
 
     var authorUsername = 'author_' + casual.username;
     authorUser = await user.create({
@@ -30,8 +29,7 @@ describe('Article module', async() => {
   });
 
   after(async() => {
-    mlog.log('Deleting all articles.');
-    await Article.testutils.__deleteAll();
+    await cleanSlate();
     await delay(1000);
   });
 
@@ -114,7 +112,7 @@ describe('Article module', async() => {
           tagList: ['sometag', `tag${i}`],
         },
         authorUser.username);
-      await delay(250);
+      await delay(100);
     }
     console.log('');
 
@@ -129,10 +127,48 @@ describe('Article module', async() => {
     var articles = await Article.getAll({ reader: 'foobar' });
   });
 
+  it('should create new comment', async() => {
+    var commentBody = casual.sentence;
+    var createdComment = await Article.createComment(createdArticle.slug, authorUser.username, commentBody);
+    mlog.log(`Created comment: [${JSON.stringify(createdComment)}]`);
+    // TODO: Assert on created comment
+  });
+
+  it('should get all comments', async() => {
+    var createdComments = [];
+    process.stdout.write('      ');
+    for (var i = 1; i <= 10; ++i) {
+      process.stdout.write('.');
+      createdComments.push(await Article.createComment(createdArticle.slug, authorUser.username, `comment ${i}`));
+      await delay(100);
+    }
+    console.log('');
+    var retrievedComments = await Article.getAllComments(createdArticle.slug);
+    expect(retrievedComments, JSON.stringify(retrievedComments)).to.be.an('array').to.have.lengthOf(11);
+    // Verify comments are in reverse chronological order (newest first)
+    for (var i = 0; i < retrievedComments.length - 1; ++i) {
+      expect(retrievedComments[i].createdAt).to.be.at.least(retrievedComments[i + 1].createdAt);
+    }
+
+    // Verify following bit is set correctly
+    await user.followUser(readerUser.username, authorUser.username);
+    retrievedComments = await Article.getAllComments(createdArticle.slug, readerUser.username);
+    for (var i = 0; i < retrievedComments.length; ++i) {
+      expect(retrievedComments[i].author.following).to.be.true;
+    }
+  });
+
 });
 
 function delay(time) {
   return new Promise(function(fulfill) {
     setTimeout(fulfill, time);
   });
+}
+
+async function cleanSlate() {
+  mlog.log('Deleting all articles.');
+  await Article.testutils.__deleteAll();
+  mlog.log('Deleting all comments.');
+  await Article.testutils.__deleteAllComments();
 }
