@@ -19,6 +19,7 @@ describe('User module', async() => {
 
   after(async() => {
     await cleanSlate();
+    await delay(1000);
   });
 
   it('should create new user', async() => {
