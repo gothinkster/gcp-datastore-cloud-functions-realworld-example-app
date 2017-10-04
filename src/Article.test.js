@@ -153,7 +153,6 @@ describe('Article module', async() => {
     // Verify order of feed is descending by createdAt
     for (var i = 0; i < feed.length-1; ++i) {
       expect(feed[i].createdAt).to.be.above(feed[i+1].createdAt);
-      mlog.log(`feed[${i}].createdAt - feed[${i+1}].createdAt = [${feed[i].createdAt - feed[i+1].createdAt}] `)
     }
 
     // Unfollow first author, end expect only second author's article

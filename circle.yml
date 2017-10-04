@@ -3,6 +3,7 @@ machine:
     version: 8
   environment:
     GOOGLE_APPLICATION_CREDENTIALS: service-account-key.json
+    MOCHA_FILE: $CIRCLE_TEST_REPORTS/junit/test-results.xml
 
 test:
   pre:
