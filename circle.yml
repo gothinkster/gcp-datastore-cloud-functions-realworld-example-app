@@ -8,4 +8,4 @@ test:
   pre:
     - echo $GOOGLE_APPLICATION_CREDENTIALS_BASE64 | base64 --decode --ignore-garbage > $GOOGLE_APPLICATION_CREDENTIALS
   post:
-    - cp xunit.xml $CIRCLE_TEST_REPORTS/junit/test-results.xml
+    - cp test-results.xml $CIRCLE_TEST_REPORTS/test-results.xml

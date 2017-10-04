@@ -1,7 +1,7 @@
 {
   "scripts": {
     "test": "npm run test:unit && npm run test:api",
-    "test:unit": "DATASTORE_NAMESPACE=test nyc --reporter=lcov --reporter=text mocha --reporter mocha-multi-reporters --timeout=60000 ./src/*.test.js",
+    "test:unit": "DATASTORE_NAMESPACE=test nyc --reporter=lcov --reporter=text mocha --reporter mocha-multi-reporters --reporter-options configFile=mocha-multi-reporters.config.json --timeout=60000 ./src/*.test.js",
     "test:api": "./run-api-tests.sh"
   },
   "devDependencies": {
