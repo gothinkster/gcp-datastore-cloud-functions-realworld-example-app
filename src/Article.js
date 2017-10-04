@@ -122,9 +122,7 @@ module.exports = {
     var articles = [];
     for (var i = 0; i < user.following.length; ++i) {
       var followedUser = (await ds.get(ds.key({ namespace, path: ['User', user.following[i]] })))[0];
-      var query = ds.createQuery(namespace, 'Article')
-        .order('createdAt', { descending: true })
-        .filter('author', '=', user.following[i]);
+      var query = ds.createQuery(namespace, 'Article').filter('author', '=', user.following[i]);
 
       var articlesByThisAuthor = (await query.run())[0];
       for (var article of articlesByThisAuthor) {
@@ -138,6 +136,10 @@ module.exports = {
         articles.push(article);
       }
     }
+
+    // Sort merged articles by createdAt descending
+    articles = articles.sort((a,b) => b.createdAt - a.createdAt);
+    
     return articles.slice(options.offset, options.offset + options.limit);
   },
 

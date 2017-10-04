@@ -143,12 +143,18 @@ describe('Article module', async() => {
     await user.followUser(readerUser.username, secondAuthorUser.username);
     await user.followUser(readerUser.username, authorUser.username);
     var feed = await Article.getFeed(readerUser.username);
+    expect(feed).to.be.an('array').to.have.lengthOf(13);
     expect(feed[0].author.username).to.equal('second_author');
     expect(feed[0].title).to.equal('second_author_article');
     for (var article of feed.slice(1)) {
       expect(article.author.username).to.equal(authorUser.username);
     }
-    expect(feed).to.be.an('array').to.have.lengthOf(13);
+
+    // Verify order of feed is descending by createdAt
+    for (var i = 0; i < feed.length-1; ++i) {
+      expect(feed[i].createdAt).to.be.above(feed[i+1].createdAt);
+      mlog.log(`feed[${i}].createdAt - feed[${i+1}].createdAt = [${feed[i].createdAt - feed[i+1].createdAt}] `)
+    }
 
     // Unfollow first author, end expect only second author's article
     await user.unfollowUser(readerUser.username, authorUser.username);
@@ -188,7 +194,7 @@ describe('Article module', async() => {
     expect(retrievedComments, JSON.stringify(retrievedComments)).to.be.an('array').to.have.lengthOf(11);
     // Verify comments are in reverse chronological order (newest first)
     for (var i = 0; i < retrievedComments.length - 1; ++i) {
-      expect(retrievedComments[i].createdAt).to.be.at.least(retrievedComments[i + 1].createdAt);
+      expect(retrievedComments[i].createdAt).to.be.above(retrievedComments[i + 1].createdAt);
     }
 
     // Verify following bit is set correctly
