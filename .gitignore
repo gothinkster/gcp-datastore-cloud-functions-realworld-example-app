@@ -4,7 +4,7 @@ service-account-key.json
 .nyc_output/
 coverage/
 testresults/
-test-results.xml
+xunit.xml
 
 logs
 *.log
