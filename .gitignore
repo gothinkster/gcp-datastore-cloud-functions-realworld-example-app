@@ -1,10 +1,7 @@
 node_modules/
-.env
 service-account-key.json
 .nyc_output/
 coverage/
-testresults/
-test-results.xml
 
 logs
 *.log

@@ -1,7 +1,7 @@
 {
   "scripts": {
     "test": "npm run test:unit && npm run test:api",
-    "test:unit": "DATASTORE_NAMESPACE=test nyc --reporter=lcov --reporter=text mocha --reporter mocha-multi-reporters --reporter-options configFile=mocha-multi-reporters.config.json --timeout=60000 ./src/*.test.js",
+    "test:unit": "DATASTORE_NAMESPACE=test nyc --reporter=lcov --reporter=text mocha --timeout=60000 ./src/*.test.js",
     "test:api": "./run-api-tests.sh"
   },
   "devDependencies": {
@@ -9,9 +9,7 @@
     "casual": "^1.5.17",
     "chai": "^4.1.2",
     "mocha": "^3.5.3",
-    "mocha-junit-reporter": "^1.15.0",
     "mocha-logger": "^1.0.5",
-    "mocha-multi-reporters": "^1.1.6",
     "newman": "^3.8.2",
     "nyc": "^11.2.1"
   },
