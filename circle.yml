@@ -7,3 +7,5 @@ machine:
 test:
   pre:
     - echo $GOOGLE_APPLICATION_CREDENTIALS_BASE64 | base64 --decode --ignore-garbage > $GOOGLE_APPLICATION_CREDENTIALS
+  post:
+    - cp -r testresults/* $CIRCLE_ARTIFACTS

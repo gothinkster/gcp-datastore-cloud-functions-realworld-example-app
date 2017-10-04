@@ -2,6 +2,7 @@ node_modules/
 service-account-key.json
 .nyc_output/
 coverage/
+testresults/
 
 logs
 *.log
