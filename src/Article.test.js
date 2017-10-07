@@ -46,7 +46,7 @@ describe('Article module', async() => {
   });
 
   it('should create new article wihtout tags', async() => {
-    createdArticleNoTags = await Article.create({
+    var createdArticleNoTags = await Article.create({
       title: casual.title,
       description: casual.description,
       body: casual.text,
@@ -60,7 +60,7 @@ describe('Article module', async() => {
   });
 
   it('should get existing article anonymously', async() => {
-    retrievedArticle = await Article.get(createdArticle.slug);
+    var retrievedArticle = await Article.get(createdArticle.slug);
     expect(retrievedArticle.author.following).to.be.false;
   });
 
@@ -73,7 +73,7 @@ describe('Article module', async() => {
 
   it('should get article by unfollowed author', async() => {
     await user.unfollowUser(readerUser.username, authorUser.username);
-    retrievedArticle = await Article.get(createdArticle.slug, readerUser.username);
+    var retrievedArticle = await Article.get(createdArticle.slug, readerUser.username);
     expect(retrievedArticle.author.following).to.be.false;
   });
 
@@ -89,6 +89,8 @@ describe('Article module', async() => {
 
   it('should get all articles', async() => {
     var articles = await Article.getAll();
+    expect(articles).to.be.an('array');
+    // TODO: Assert on retrieved articles
   });
 
   it('should get all articles by tag', async() => {
@@ -120,12 +122,14 @@ describe('Article module', async() => {
     var articles = await Article.getAll({ limit: 3 });
     expect(articles).to.be.an('array').to.have.lengthOf(3);
 
-    var articles = await Article.getAll({ offset: 3 });
+    articles = await Article.getAll({ offset: 3 });
     expect(articles).to.be.an('array').to.have.lengthOf(9);
   });
 
   it('should get all articles with a reader', async() => {
     var articles = await Article.getAll({ reader: 'foobar' });
+    expect(articles).to.be.an('array');
+    // TODO: Assert on retrieved articles
   });
 
   it('should get feed', async() => {
@@ -135,7 +139,7 @@ describe('Article module', async() => {
       email: 'second_author@gmail.com',
       password: 'a',
     });
-    var secondAuthorArticle = await Article.create({
+    await Article.create({
       title: 'second_author_article',
       description: 'foo',
       body: 'bar'
@@ -192,14 +196,14 @@ describe('Article module', async() => {
     var retrievedComments = await Article.getAllComments(createdArticle.slug);
     expect(retrievedComments, JSON.stringify(retrievedComments)).to.be.an('array').to.have.lengthOf(11);
     // Verify comments are in reverse chronological order (newest first)
-    for (var i = 0; i < retrievedComments.length - 1; ++i) {
+    for (i = 0; i < retrievedComments.length - 1; ++i) {
       expect(retrievedComments[i].createdAt).to.be.above(retrievedComments[i + 1].createdAt);
     }
 
     // Verify following bit is set correctly
     await user.followUser(readerUser.username, authorUser.username);
     retrievedComments = await Article.getAllComments(createdArticle.slug, readerUser.username);
-    for (var i = 0; i < retrievedComments.length; ++i) {
+    for (i = 0; i < retrievedComments.length; ++i) {
       expect(retrievedComments[i].author.following).to.be.true;
     }
   });

@@ -45,14 +45,14 @@ module.exports = {
     var authorUser = (await ds.get(ds.key({ namespace, path: ['User', article.author] })))[0];
     /* istanbul ignore next */
     if (!authorUser) {
-      throw new Error(`User does not exist: [${aAuthorUsername}]`);
+      throw new Error(`User does not exist: [${article.author}]`);
     }
     ['email', 'password', 'following', ds.KEY].forEach(key => delete authorUser[key]);
 
     // If reader's username is provided, populate following bit
     authorUser.following = false;
     if (aReaderUsername) {
-      authorUser.following = authorUser.followers.includes(aReaderUsername)
+      authorUser.following = authorUser.followers.includes(aReaderUsername);
     }
     delete authorUser.followers;
 
@@ -94,7 +94,7 @@ module.exports = {
         bio: authorUser.bio,
         image: authorUser.image,
         following: false,
-      }
+      };
       if (options.reader) {
         article.author.following = authorUser.followers.includes(options.reader);
       }
@@ -139,7 +139,7 @@ module.exports = {
 
     // Sort merged articles by createdAt descending
     articles = articles.sort((a,b) => b.createdAt - a.createdAt);
-    
+
     return articles.slice(options.offset, options.offset + options.limit);
   },
 
