@@ -176,6 +176,12 @@ describe('Article module', async() => {
     expect(feed).to.be.an('array').to.have.lengthOf(4);
   });
 
+  it('should get tags', async() => {
+    const tags = await Article.getAllTags();
+    expect(tags).to.be.an('array');
+    expect(tags.length).to.be.at.least(11);
+  });
+
   it('should create new comment', async() => {
     const commentBody = casual.sentence;
     const createdComment = await Article.createComment(createdArticle.slug, authorUser.username, commentBody);

@@ -188,7 +188,14 @@ module.exports = {
     return comments;
   },
 
-
+  async getAllTags() {
+    const tags = (await ds.createQuery(namespace, 'Article').select('tagList').run())[0];
+    const dedupeObj = {};
+    for (let i = 0; i < tags.length; ++i) {
+      dedupeObj[tags[i].tagList] = 1;
+    }
+    return Object.keys(dedupeObj);
+  },
 
   testutils: {
     async __deleteAll() {
