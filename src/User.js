@@ -1,31 +1,31 @@
-var { ds, namespace } = require('./Datastore.js');
-var bcrypt = require('bcrypt');
-var jwt = require('jwt-simple');
+const { ds, namespace } = require('./Datastore.js');
+const bcrypt = require('bcrypt');
+const jwt = require('jwt-simple');
 
 /* istanbul ignore next */
-var tokenSecret = process.env.SECRET ? process.env.SECRET : 'secret';
+const tokenSecret = process.env.SECRET ? process.env.SECRET : 'secret';
 
 module.exports = {
 
   async create(aUserData) {
 
     // Verify username is not taken
-    var userKey = ds.key({ namespace, path: ['User', aUserData.username], });
-    var result = await ds.get(userKey);
+    const userKey = ds.key({ namespace, path: ['User', aUserData.username], });
+    const result = await ds.get(userKey);
     if (result[0]) {
       throw new Error(`Username already taken: [${aUserData.username}]`);
     }
 
     // Verify email is not taken
-    var usersWithThisEmail = await ds.runQuery(
+    const usersWithThisEmail = await ds.runQuery(
       ds.createQuery(namespace, 'User').filter('email', '=', aUserData.email));
     if (usersWithThisEmail[0].length) {
       throw new Error(`Email already taken: [${aUserData.email}]`);
     }
 
     // Add user
-    var encryptedPassword = await bcrypt.hash(aUserData.password, 5);
-    var userRecord = {
+    const encryptedPassword = await bcrypt.hash(aUserData.password, 5);
+    const userRecord = {
       username: aUserData.username,
       email: aUserData.email,
       password: encryptedPassword,
@@ -44,14 +44,14 @@ module.exports = {
   async login(aUserData) {
 
     // Get user with this email
-    var queryResult = await ds.runQuery(
+    const queryResult = await ds.runQuery(
       ds.createQuery(namespace, 'User').filter('email', '=', aUserData.email));
-    var foundUser = queryResult[0][0];
+    const foundUser = queryResult[0][0];
     if (!foundUser) {
       throw new Error(`Email not found: [${aUserData.email}]`);
     }
     foundUser.username = foundUser[ds.KEY].name;
-    var passwordCheckResult = await bcrypt.compare(aUserData.password, foundUser.password);
+    const passwordCheckResult = await bcrypt.compare(aUserData.password, foundUser.password);
     if (!passwordCheckResult) {
       throw new Error('Incorrect password');
     }
@@ -74,11 +74,11 @@ module.exports = {
 
   async mutateFollowing(aFollowerUsername, aFollowedUsername, aMutation) {
 
-    var updates = [];
+    const updates = [];
 
     // Add/remove "following" array of follower
-    var followerUserKey = ds.key({ namespace, path: ['User', aFollowerUsername] });
-    var followerUser = (await ds.get(followerUserKey))[0];
+    const followerUserKey = ds.key({ namespace, path: ['User', aFollowerUsername] });
+    const followerUser = (await ds.get(followerUserKey))[0];
     if (!followerUser) {
       throw new Error(`User not found: [${aFollowerUsername}]`);
     }
@@ -90,8 +90,8 @@ module.exports = {
     updates.push({ key: followerUserKey, data: followerUser, });
 
     // Add/remove "followers" array of followed
-    var followedUserKey = ds.key({ namespace, path: ['User', aFollowedUsername] });
-    var followedUser = (await ds.get(followedUserKey))[0];
+    const followedUserKey = ds.key({ namespace, path: ['User', aFollowedUsername] });
+    const followedUser = (await ds.get(followedUserKey))[0];
     if (!followedUser) {
       throw new Error(`User not found: [${aFollowedUsername}]`);
     }
@@ -116,10 +116,10 @@ module.exports = {
   // ===== Token managenement
 
   async authenticateToken(aToken) {
-    var decoded = jwt.decode(aToken, tokenSecret);
-    var username = decoded.username;
-    var result = await ds.get(ds.key({ namespace, path: ['User', decoded.username], }));
-    var foundUser = result[0];
+    const decoded = jwt.decode(aToken, tokenSecret);
+    const username = decoded.username;
+    const result = await ds.get(ds.key({ namespace, path: ['User', decoded.username], }));
+    const foundUser = result[0];
     if (!foundUser) {
       throw new Error('Invalid token');
     }
@@ -146,7 +146,7 @@ module.exports = {
         console.warn(`namespace is not test but [${namespace}], skipping.`);
         return;
       }
-      var userKeys = (await ds.createQuery(namespace, 'User').select('__key__').run())[0];
+      const userKeys = (await ds.createQuery(namespace, 'User').select('__key__').run())[0];
       userKeys.forEach(async(userKey) => {
         await ds.delete(userKey[ds.KEY]);
       });

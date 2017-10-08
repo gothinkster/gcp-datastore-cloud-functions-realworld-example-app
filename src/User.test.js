@@ -1,15 +1,15 @@
-var user = require('./User.js');
-var expect = require('chai').expect;
-var casual = require('casual');
-var mlog = process.env.CI ? { log() {} } : require('mocha-logger');
+const user = require('./User.js');
+const expect = require('chai').expect;
+const casual = require('casual');
+const mlog = process.env.CI ? { log() {} } : require('mocha-logger');
 
-var username = casual.username;
-var userToCreate = {
+const username = casual.username;
+const userToCreate = {
   email: username + '@gmail.com',
   username: username,
   password: 'a',
 };
-var loggedInUser = null;
+let loggedInUser = null;
 
 describe('User module', async() => {
 
@@ -23,7 +23,7 @@ describe('User module', async() => {
   });
 
   it('should create new user', async() => {
-    var createdUser = await user.create(userToCreate);
+    const createdUser = await user.create(userToCreate);
     mlog.log(`Created user: [${JSON.stringify(createdUser)}]`);
     await delay(1000);
   });
@@ -34,7 +34,7 @@ describe('User module', async() => {
   });
 
   it('should not allow same email', async() => {
-    var userWithSameEmail = JSON.parse(JSON.stringify(userToCreate));
+    const userWithSameEmail = JSON.parse(JSON.stringify(userToCreate));
     userWithSameEmail.username += 'foo';
     await user.create(userWithSameEmail).catch(err =>
       expect(err).to.match(/Email already taken/));
@@ -49,7 +49,7 @@ describe('User module', async() => {
   });
 
   it('should authenticate token', async() => {
-    var authenticatedUser = await user.authenticateToken(loggedInUser.token);
+    const authenticatedUser = await user.authenticateToken(loggedInUser.token);
     mlog.log(`Authenticated user: [${JSON.stringify(authenticatedUser)}]`);
   });
 
@@ -73,22 +73,22 @@ describe('User module', async() => {
   });
 
   it('should not allow token for non existetnt user', async() => {
-    var tokenForNonExistentUser = user.mintToken((Math.random() * Math.pow(36, 6)).toString(36));
+    const tokenForNonExistentUser = user.mintToken((Math.random() * Math.pow(36, 6)).toString(36));
     await user.authenticateToken(tokenForNonExistentUser).catch(err => {
       expect(err).to.match(/Invalid token/);
     });
   });
 
   it('should follow/unfollow a user', async() => {
-    var userToFollow = await user.create({
+    const userToFollow = await user.create({
       email: 'followed_' + username + '@gmail.com',
       username: 'followed_' + username,
       password: 'a',
     });
     mlog.log(`User to follow: [${JSON.stringify(userToFollow)}]`);
-    var followedUserProfile = await user.followUser(loggedInUser.username, userToFollow.username);
+    const followedUserProfile = await user.followUser(loggedInUser.username, userToFollow.username);
     mlog.log(`Followed user profile: [${JSON.stringify(followedUserProfile)}]`);
-    var unfollowedUserProfile = await user.unfollowUser(loggedInUser.username, userToFollow.username);
+    const unfollowedUserProfile = await user.unfollowUser(loggedInUser.username, userToFollow.username);
     mlog.log(`Unfollowed user profile: [${JSON.stringify(unfollowedUserProfile)}]`);
 
     await user.followUser(loggedInUser.username + 'foobar').catch(err =>

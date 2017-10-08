@@ -1,4 +1,4 @@
-var router = require('./Router.js');
+const router = require('./Router.js');
 
 module.exports = {
 

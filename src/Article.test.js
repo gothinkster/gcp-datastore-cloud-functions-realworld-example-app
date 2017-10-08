@@ -1,12 +1,12 @@
-var user = require('./User.js');
-var Article = require('./Article.js');
-var expect = require('chai').expect;
-var casual = require('casual');
-var mlog = process.env.CI ? { log() {} } : require('mocha-logger');
+const user = require('./User.js');
+const Article = require('./Article.js');
+const expect = require('chai').expect;
+const casual = require('casual');
+const mlog = process.env.CI ? { log() {} } : require('mocha-logger');
 
-var authorUser = null;
-var readerUser = null;
-var createdArticle = null;
+let authorUser = null;
+let readerUser = null;
+let createdArticle = null;
 
 describe('Article module', async() => {
 
@@ -14,14 +14,14 @@ describe('Article module', async() => {
     await cleanSlate();
     await delay(1000);
 
-    var authorUsername = 'author_' + casual.username;
+    const authorUsername = 'author_' + casual.username;
     authorUser = await user.create({
       email: authorUsername + '@mail.com',
       username: authorUsername,
       password: 'a',
     });
 
-    var readerUsername = 'reader_' + casual.username;
+    const readerUsername = 'reader_' + casual.username;
     readerUser = await user.create({
       email: readerUsername + '@mail.com',
       username: readerUsername,
@@ -46,7 +46,7 @@ describe('Article module', async() => {
   });
 
   it('should create new article wihtout tags', async() => {
-    var createdArticleNoTags = await Article.create({
+    const createdArticleNoTags = await Article.create({
       title: casual.title,
       description: casual.description,
       body: casual.text,
@@ -60,20 +60,20 @@ describe('Article module', async() => {
   });
 
   it('should get existing article anonymously', async() => {
-    var retrievedArticle = await Article.get(createdArticle.slug);
+    const retrievedArticle = await Article.get(createdArticle.slug);
     expect(retrievedArticle.author.following).to.be.false;
   });
 
   it('should get article by followed author', async() => {
     await user.followUser(readerUser.username, authorUser.username);
-    var retrievedArticle = await Article.get(createdArticle.slug, readerUser.username);
+    const retrievedArticle = await Article.get(createdArticle.slug, readerUser.username);
     mlog.log(`Retrieved article: [${JSON.stringify(retrievedArticle)}]`);
     expect(retrievedArticle.author.following).to.be.true;
   });
 
   it('should get article by unfollowed author', async() => {
     await user.unfollowUser(readerUser.username, authorUser.username);
-    var retrievedArticle = await Article.get(createdArticle.slug, readerUser.username);
+    const retrievedArticle = await Article.get(createdArticle.slug, readerUser.username);
     expect(retrievedArticle.author.following).to.be.false;
   });
 
@@ -88,38 +88,37 @@ describe('Article module', async() => {
   });
 
   it('should get all articles', async() => {
-    var articles = await Article.getAll();
+    const articles = await Article.getAll();
     expect(articles).to.be.an('array');
     // TODO: Assert on retrieved articles
   });
 
   it('should get all articles by tag', async() => {
-    var articles = await Article.getAll({ tag: createdArticle.tagList[0] });
+    const articles = await Article.getAll({ tag: createdArticle.tagList[0] });
     expect(articles[0].tagList).to.contain(createdArticle.tagList[0]);
   });
 
   it('should get all articles by author', async() => {
-    var articles = await Article.getAll({ author: authorUser.username });
+    const articles = await Article.getAll({ author: authorUser.username });
     expect(articles[0].author.username).to.equal(authorUser.username);
   });
 
   it('should get all articles with limit/offset', async() => {
     // Create few more articles for pagination
     process.stdout.write('      ');
-    for (var i = 1; i <= 10; ++i) {
+    for (let i = 1; i <= 10; ++i) {
       process.stdout.write('.');
       await Article.create({
-          title: i,
-          description: `description ${i}`,
-          body: `body ${i}`,
-          tagList: ['sometag', `tag${i}`],
-        },
-        authorUser.username);
+        title: i,
+        description: `description ${i}`,
+        body: `body ${i}`,
+        tagList: ['sometag', `tag${i}`],
+      }, authorUser.username);
       await delay(100);
     }
     console.log('');
 
-    var articles = await Article.getAll({ limit: 3 });
+    let articles = await Article.getAll({ limit: 3 });
     expect(articles).to.be.an('array').to.have.lengthOf(3);
 
     articles = await Article.getAll({ offset: 3 });
@@ -127,14 +126,14 @@ describe('Article module', async() => {
   });
 
   it('should get all articles with a reader', async() => {
-    var articles = await Article.getAll({ reader: 'foobar' });
+    const articles = await Article.getAll({ reader: 'foobar' });
     expect(articles).to.be.an('array');
     // TODO: Assert on retrieved articles
   });
 
   it('should get feed', async() => {
     // Create a second user to follow
-    var secondAuthorUser = await user.create({
+    const secondAuthorUser = await user.create({
       username: 'second_author',
       email: 'second_author@gmail.com',
       password: 'a',
@@ -146,16 +145,16 @@ describe('Article module', async() => {
     }, secondAuthorUser.username);
     await user.followUser(readerUser.username, secondAuthorUser.username);
     await user.followUser(readerUser.username, authorUser.username);
-    var feed = await Article.getFeed(readerUser.username);
+    let feed = await Article.getFeed(readerUser.username);
     expect(feed).to.be.an('array').to.have.lengthOf(13);
     expect(feed[0].author.username).to.equal('second_author');
     expect(feed[0].title).to.equal('second_author_article');
-    for (var article of feed.slice(1)) {
+    for (const article of feed.slice(1)) {
       expect(article.author.username).to.equal(authorUser.username);
     }
 
     // Verify order of feed is descending by createdAt
-    for (var i = 0; i < feed.length-1; ++i) {
+    for (let i = 0; i < feed.length-1; ++i) {
       expect(feed[i].createdAt).to.be.above(feed[i+1].createdAt);
     }
 
@@ -171,39 +170,39 @@ describe('Article module', async() => {
 
   it('should get feed with limit/offset', async() => {
     await user.followUser(readerUser.username, authorUser.username);
-    var feed = await Article.getFeed(readerUser.username, { limit: 3 });
+    let feed = await Article.getFeed(readerUser.username, { limit: 3 });
     expect(feed).to.be.an('array').to.have.lengthOf(3);
     feed = await Article.getFeed(readerUser.username, { limit: 4, offset: 2 });
     expect(feed).to.be.an('array').to.have.lengthOf(4);
   });
 
   it('should create new comment', async() => {
-    var commentBody = casual.sentence;
-    var createdComment = await Article.createComment(createdArticle.slug, authorUser.username, commentBody);
+    const commentBody = casual.sentence;
+    const createdComment = await Article.createComment(createdArticle.slug, authorUser.username, commentBody);
     mlog.log(`Created comment: [${JSON.stringify(createdComment)}]`);
     // TODO: Assert on created comment
   });
 
   it('should get all comments', async() => {
-    var createdComments = [];
+    const createdComments = [];
     process.stdout.write('      ');
-    for (var i = 1; i <= 10; ++i) {
+    for (let i = 1; i <= 10; ++i) {
       process.stdout.write('.');
       createdComments.push(await Article.createComment(createdArticle.slug, authorUser.username, `comment ${i}`));
       await delay(100);
     }
     console.log('');
-    var retrievedComments = await Article.getAllComments(createdArticle.slug);
+    let retrievedComments = await Article.getAllComments(createdArticle.slug);
     expect(retrievedComments, JSON.stringify(retrievedComments)).to.be.an('array').to.have.lengthOf(11);
     // Verify comments are in reverse chronological order (newest first)
-    for (i = 0; i < retrievedComments.length - 1; ++i) {
+    for (let i = 0; i < retrievedComments.length - 1; ++i) {
       expect(retrievedComments[i].createdAt).to.be.above(retrievedComments[i + 1].createdAt);
     }
 
     // Verify following bit is set correctly
     await user.followUser(readerUser.username, authorUser.username);
     retrievedComments = await Article.getAllComments(createdArticle.slug, readerUser.username);
-    for (i = 0; i < retrievedComments.length; ++i) {
+    for (let i = 0; i < retrievedComments.length; ++i) {
       expect(retrievedComments[i].author.following).to.be.true;
     }
   });

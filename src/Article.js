@@ -1,20 +1,20 @@
-var { ds, namespace } = require('./Datastore.js');
-var slug = require('slug');
+const { ds, namespace } = require('./Datastore.js');
+const slug = require('slug');
 
 module.exports = {
 
   async create(aArticleData, aAuthorUsername) {
     // Get author data
-    var authorUser = (await ds.get(ds.key({ namespace, path: ['User', aAuthorUsername] })))[0];
+    const authorUser = (await ds.get(ds.key({ namespace, path: ['User', aAuthorUsername] })))[0];
     if (!authorUser) {
       throw new Error(`User does not exist: [${aAuthorUsername}]`);
     }
     ['email', 'password', 'following', 'followers', ds.KEY].forEach(key => delete authorUser[key]);
     authorUser.following = false;
 
-    var articleSlug = slug(aArticleData.title) + '-' + (Math.random() * Math.pow(36, 6) | 0).toString(36);
-    var timestamp = (new Date()).getTime();
-    var newArticle = {
+    const articleSlug = slug(aArticleData.title) + '-' + (Math.random() * Math.pow(36, 6) | 0).toString(36);
+    const timestamp = (new Date()).getTime();
+    const newArticle = {
       slug: articleSlug,
       title: aArticleData.title,
       description: aArticleData.description,
@@ -35,14 +35,14 @@ module.exports = {
   },
 
   async get(aSlug, aReaderUsername) {
-    var article = (await ds.get(ds.key({ namespace, path: ['Article', aSlug] })))[0];
+    const article = (await ds.get(ds.key({ namespace, path: ['Article', aSlug] })))[0];
     if (!article) {
       throw new Error(`Article not found: [${aSlug}]`);
     }
     delete article[ds.KEY];
 
     // Get author data
-    var authorUser = (await ds.get(ds.key({ namespace, path: ['User', article.author] })))[0];
+    const authorUser = (await ds.get(ds.key({ namespace, path: ['User', article.author] })))[0];
     /* istanbul ignore next */
     if (!authorUser) {
       throw new Error(`User does not exist: [${article.author}]`);
@@ -61,7 +61,7 @@ module.exports = {
   },
 
   async getAll(options) {
-    var query = ds.createQuery(namespace, 'Article')
+    let query = ds.createQuery(namespace, 'Article')
       .order('createdAt', { descending: true });
     if (!options) {
       options = {};
@@ -83,12 +83,12 @@ module.exports = {
       query = query.offset(options.offset);
     }
 
-    var articles = (await query.run(query))[0];
-    for (var article of articles) {
+    const articles = (await query.run(query))[0];
+    for (const article of articles) {
       delete article[ds.KEY];
 
       // Get author info for this article
-      var authorUser = (await ds.get(ds.key({ namespace, path: ['User', article.author] })))[0];
+      const authorUser = (await ds.get(ds.key({ namespace, path: ['User', article.author] })))[0];
       article.author = {
         username: authorUser.username,
         bio: authorUser.bio,
@@ -104,7 +104,7 @@ module.exports = {
   },
 
   async getFeed(aUsername, options) {
-    var user = (await ds.get(ds.key({ namespace, path: ['User', aUsername] })))[0];
+    const user = (await ds.get(ds.key({ namespace, path: ['User', aUsername] })))[0];
     if (!user) {
       throw new Error(`User not found: [${aUsername}]`);
     }
@@ -119,13 +119,13 @@ module.exports = {
     }
 
     // For each followed user, get authored articles
-    var articles = [];
-    for (var i = 0; i < user.following.length; ++i) {
-      var followedUser = (await ds.get(ds.key({ namespace, path: ['User', user.following[i]] })))[0];
-      var query = ds.createQuery(namespace, 'Article').filter('author', '=', user.following[i]);
+    let articles = [];
+    for (let i = 0; i < user.following.length; ++i) {
+      const followedUser = (await ds.get(ds.key({ namespace, path: ['User', user.following[i]] })))[0];
+      const query = ds.createQuery(namespace, 'Article').filter('author', '=', user.following[i]);
 
-      var articlesByThisAuthor = (await query.run())[0];
-      for (var article of articlesByThisAuthor) {
+      const articlesByThisAuthor = (await query.run())[0];
+      for (const article of articlesByThisAuthor) {
         delete article[ds.KEY];
         article.author = {
           username: followedUser.username,
@@ -138,15 +138,15 @@ module.exports = {
     }
 
     // Sort merged articles by createdAt descending
-    articles = articles.sort((a,b) => b.createdAt - a.createdAt);
+    articles = articles.sort((a, b) => b.createdAt - a.createdAt);
 
     return articles.slice(options.offset, options.offset + options.limit);
   },
 
   async createComment(aSlug, aCommentAuthorUsername, aCommentBody) {
-    var key = ds.key({ namespace, path: ['Article', aSlug, 'Comment'] });
-    var timestamp = (new Date()).getTime();
-    var commentData = {
+    const key = ds.key({ namespace, path: ['Article', aSlug, 'Comment'] });
+    const timestamp = (new Date()).getTime();
+    const commentData = {
       body: aCommentBody,
       createdAt: timestamp,
       updatedAt: timestamp,
@@ -154,7 +154,7 @@ module.exports = {
     };
     await ds.insert({ key, data: commentData });
     commentData.id = key.id;
-    var commentAuthorUser = (await ds.get(ds.key({ namespace, path: ['User', aCommentAuthorUsername] })))[0];
+    const commentAuthorUser = (await ds.get(ds.key({ namespace, path: ['User', aCommentAuthorUsername] })))[0];
     commentData.author = {
       username: aCommentAuthorUsername,
       bio: commentAuthorUser.bio,
@@ -165,16 +165,16 @@ module.exports = {
   },
 
   async getAllComments(aSlug, aReaderUsername) {
-    var comments = (await ds.createQuery(namespace, 'Comment')
+    let comments = (await ds.createQuery(namespace, 'Comment')
       .hasAncestor(ds.key({ namespace, path: ['Article', aSlug] })).run())[0];
     comments = comments.sort((a, b) => b.createdAt - a.createdAt);
 
-    for (var comment of comments) {
+    for (const comment of comments) {
       comment.id = comment[ds.KEY].id;
       delete comment[ds.KEY];
 
       // Get comment author info
-      var authorUser = (await ds.get(ds.key({ namespace, path: ['User', comment.author] })))[0];
+      const authorUser = (await ds.get(ds.key({ namespace, path: ['User', comment.author] })))[0];
       comment.author = {
         username: authorUser.username,
         bio: authorUser.bio,
@@ -197,7 +197,7 @@ module.exports = {
         console.warn(`namespace is not test but [${namespace}], skipping.`);
         return;
       }
-      var articleKeys = (await ds.createQuery(namespace, 'Article').select('__key__').run())[0];
+      const articleKeys = (await ds.createQuery(namespace, 'Article').select('__key__').run())[0];
       articleKeys.forEach(async(articleKey) => {
         await ds.delete(articleKey[ds.KEY]);
       });
@@ -208,7 +208,7 @@ module.exports = {
         console.warn(`namespace is not test but [${namespace}], skipping.`);
         return;
       }
-      var commentKeys = (await ds.createQuery(namespace, 'Comment').select('__key__').run())[0];
+      const commentKeys = (await ds.createQuery(namespace, 'Comment').select('__key__').run())[0];
       commentKeys.forEach(async(commentKey) => {
         await ds.delete(commentKey[ds.KEY]);
       });

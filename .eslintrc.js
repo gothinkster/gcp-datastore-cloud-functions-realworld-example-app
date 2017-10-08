@@ -2,14 +2,8 @@ module.exports = {
 
   env: {
     node: true,
-  },
-
-  globals: {
-    Promise: true,
-    describe: true,
-    it: true,
-    before: true,
-    after: true,
+    mocha: true,
+    es6: true,
   },
 
   parserOptions: {
@@ -17,11 +11,17 @@ module.exports = {
     sourceType: 'module',
   },
 
-  // The Rules
+  // The Rules (Keep them sorted)
   extends: 'eslint:recommended',
   rules: {
-    'semi': ['error', 'always'],
+    'comma-spacing': 'error',
+    'indent': ['error', 2],
     'no-console': 'off',
+    'no-multi-spaces': 'error',
+    'no-trailing-spaces': 'error',
+    'no-var': 'error',
+    'prefer-const': 'error',
+    'semi': 'error',
   },
 
 };
