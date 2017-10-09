@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jwt-simple');
 
 /* istanbul ignore next */
-const tokenSecret = process.env.SECRET ? process.env.SECRET : 'secret';
+const tokenSecret = process.env.SECRET ? process.env.SECRET : '3ee058420bc2';
 
 module.exports = {
 
