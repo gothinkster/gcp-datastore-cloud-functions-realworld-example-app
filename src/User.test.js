@@ -17,11 +17,6 @@ describe('User module', async() => {
     await cleanSlate();
   });
 
-  after(async() => {
-    await cleanSlate();
-    await delay(1000);
-  });
-
   it('should create new user', async() => {
     const createdUser = await user.create(userToCreate);
     mlog.log(`Created user: [${JSON.stringify(createdUser)}]`);
