@@ -9,8 +9,6 @@ module.exports = {
     if (!authorUser) {
       throw new Error(`User does not exist: [${aAuthorUsername}]`);
     }
-    ['email', 'password', 'following', 'followers', ds.KEY].forEach(key => delete authorUser[key]);
-    authorUser.following = false;
 
     const articleSlug = slug(aArticleData.title) + '-' + (Math.random() * Math.pow(36, 6) | 0).toString(36);
     const timestamp = (new Date()).getTime();
@@ -29,7 +27,12 @@ module.exports = {
       key: ds.key({ namespace, path: ['Article', newArticle.slug] }),
       data: newArticle,
     });
-    newArticle.author = authorUser;
+    newArticle.author = {
+      username: aAuthorUsername,
+      bio: authorUser.bio,
+      image: authorUser.bio,
+      following: false,
+    };
     newArticle.favorited = false;
     newArticle.favoritesCount = 0;
     delete newArticle.favoritedBy;
@@ -49,20 +52,22 @@ module.exports = {
     if (!authorUser) {
       throw new Error(`User does not exist: [${article.author}]`);
     }
-    ['email', 'password', 'following', ds.KEY].forEach(key => delete authorUser[key]);
+    article.author = {
+      username: authorUser.username,
+      bio: authorUser.bio,
+      image: authorUser.image,
+      following: false,
+    };
 
     // If reader's username is provided, populate following & favorited bits
-    authorUser.following = false;
     article.favorited = false;
     article.favoritesCount = article.favoritedBy.length;
     if (aReaderUsername) {
-      authorUser.following = authorUser.followers.includes(aReaderUsername);
+      article.author.following = authorUser.followers.includes(aReaderUsername);
       article.favoritedBy.includes(aReaderUsername);
     }
-    delete authorUser.followers;
     delete article.favoritedBy;
 
-    article.author = authorUser;
     return article;
   },
 
