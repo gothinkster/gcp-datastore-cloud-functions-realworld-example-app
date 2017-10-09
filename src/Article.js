@@ -23,7 +23,7 @@ module.exports = {
       createdAt: timestamp,
       updatedAt: timestamp,
       author: aAuthorUsername,
-      favoritesCount: 0,
+      favoritedBy: [],
     };
     await ds.upsert({
       key: ds.key({ namespace, path: ['Article', newArticle.slug] }),
@@ -31,6 +31,8 @@ module.exports = {
     });
     newArticle.author = authorUser;
     newArticle.favorited = false;
+    newArticle.favoritesCount = 0;
+    delete newArticle.favoritedBy;
     return newArticle;
   },
 
@@ -49,12 +51,16 @@ module.exports = {
     }
     ['email', 'password', 'following', ds.KEY].forEach(key => delete authorUser[key]);
 
-    // If reader's username is provided, populate following bit
+    // If reader's username is provided, populate following & favorited bits
     authorUser.following = false;
+    article.favorited = false;
+    article.favoritesCount = article.favoritedBy.length;
     if (aReaderUsername) {
       authorUser.following = authorUser.followers.includes(aReaderUsername);
+      article.favoritedBy.includes(aReaderUsername);
     }
     delete authorUser.followers;
+    delete article.favoritedBy;
 
     article.author = authorUser;
     return article;
@@ -95,9 +101,13 @@ module.exports = {
         image: authorUser.image,
         following: false,
       };
+      article.favorited = false;
+      article.favoritesCount = article.favoritedBy.length;
       if (options.reader) {
         article.author.following = authorUser.followers.includes(options.reader);
+        article.favorited = article.favoritedBy.includes(options.reader);
       }
+      delete article.favoritedBy;
     }
 
     return articles;
@@ -127,6 +137,9 @@ module.exports = {
       const articlesByThisAuthor = (await query.run())[0];
       for (const article of articlesByThisAuthor) {
         delete article[ds.KEY];
+        article.favorited = article.favoritedBy.includes(aUsername);
+        article.favoritesCount = article.favoritedBy.length;
+        delete article.favoritedBy;
         article.author = {
           username: followedUser.username,
           bio: followedUser.bio,
@@ -141,6 +154,52 @@ module.exports = {
     articles = articles.sort((a, b) => b.createdAt - a.createdAt);
 
     return articles.slice(options.offset, options.offset + options.limit);
+  },
+
+  async favoriteArticle(aSlug, aUsername) {
+    return await this.mutateFavoriteBit(aSlug, aUsername, true);
+  },
+
+  async unfavoriteArticle(aSlug, aUsername) {
+    return await this.mutateFavoriteBit(aSlug, aUsername, false);
+  },
+
+  async mutateFavoriteBit(aSlug, aUsername, aFavoriteBit) {
+    // Verify user exists
+    if (!aUsername) {
+      throw new Error('User must be specified');
+    }
+    const favoriterUser = (await ds.get(ds.key({ namespace, path: ['User', aUsername] })))[0];
+    if (!favoriterUser) {
+      throw new Error(`User does not exist: [${aUsername}]`);
+    }
+
+    // Get article to mutate
+    const article = (await ds.get(ds.key({ namespace, path: ['Article', aSlug] })))[0];
+    if (!article) {
+      throw new Error(`Article does not exist: [${aSlug}]`);
+    }
+    if (aFavoriteBit) {
+      article.favoritedBy.push(aUsername);
+    } else {
+      article.favoritedBy = article.favoritedBy.filter(e => e !== aUsername);
+    }
+    await ds.update(article);
+    article.favorited = aFavoriteBit;
+    article.favoritesCount = article.favoritedBy.length;
+    delete article.favoritedBy;
+    article[ds.KEY];
+
+    // Get author data
+    const authorUser = (await ds.get(ds.key({ namespace, path: ['User', article.author] })))[0];
+    article.author = {
+      username: authorUser.username,
+      bio: authorUser.bio,
+      image: authorUser.image,
+      following: authorUser.followers.includes(aUsername),
+    };
+
+    return article;
   },
 
   async createComment(aSlug, aCommentAuthorUsername, aCommentBody) {

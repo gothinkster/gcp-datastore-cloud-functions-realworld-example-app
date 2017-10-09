@@ -8,6 +8,12 @@ let authorUser = null;
 let readerUser = null;
 let createdArticle = null;
 
+const expectedArticleKeys = ['slug', 'title', 'description', 'body', 'tagList',
+  'createdAt', 'updatedAt', 'favorited', 'favoritesCount', 'author'].sort();
+const expectedArticleAuthorKeys = ['username', 'image', 'bio', 'following'].sort();
+const expectedCommentKeys = ['id', 'createdAt', 'updatedAt', 'body', 'author'].sort();
+const expectedCommentAuthorKeys = expectedArticleAuthorKeys;
+
 describe('Article module', async() => {
 
   before(async() => {
@@ -29,11 +35,6 @@ describe('Article module', async() => {
     });
   });
 
-  after(async() => {
-    await cleanSlate();
-    await delay(1000);
-  });
-
   it('should create new article', async() => {
     createdArticle = await Article.create({
       title: casual.title,
@@ -41,6 +42,8 @@ describe('Article module', async() => {
       body: casual.text,
       tagList: casual.array_of_words(Math.ceil(10 * Math.random())),
     }, authorUser.username);
+    expectArticleSchema(createdArticle);
+
     // TODO: Assert on Article fields
     mlog.log(`Created article: [${JSON.stringify(createdArticle)}]`);
   });
@@ -51,6 +54,7 @@ describe('Article module', async() => {
       description: casual.description,
       body: casual.text,
     }, authorUser.username);
+    expectArticleSchema(createdArticleNoTags);
     expect(createdArticleNoTags.tagList).to.be.an('array').that.is.empty;
   });
 
@@ -61,12 +65,33 @@ describe('Article module', async() => {
 
   it('should get existing article anonymously', async() => {
     const retrievedArticle = await Article.get(createdArticle.slug);
+    expectArticleSchema(retrievedArticle);
     expect(retrievedArticle.author.following).to.be.false;
+  });
+
+  it('should favorite/unfavorite article', async() => {
+    let favoritedArticle = await Article.favoriteArticle(createdArticle.slug, readerUser.username);
+    expectArticleSchema(favoritedArticle);
+    expect(favoritedArticle.favorited).to.be.true;
+    expect(favoritedArticle.favoritesCount).to.equal(1);
+
+    favoritedArticle = await Article.unfavoriteArticle(createdArticle.slug, readerUser.username);
+    expectArticleSchema(favoritedArticle);
+    expect(favoritedArticle.favorited).to.be.false;
+    expect(favoritedArticle.favoritesCount).to.equal(0);
+
+    await Article.favoriteArticle('unknown_slug_' + casual.title, readerUser.username).catch(err =>
+      expect(err).to.match(/Article does not exist/));
+    await Article.favoriteArticle(createdArticle.slug).catch(err =>
+      expect(err).to.match(/User must be specified/));
+    await Article.favoriteArticle(createdArticle.slug, 'unknown_username_' + casual.username).catch(err =>
+      expect(err).to.match(/User does not exist/));
   });
 
   it('should get article by followed author', async() => {
     await user.followUser(readerUser.username, authorUser.username);
     const retrievedArticle = await Article.get(createdArticle.slug, readerUser.username);
+    expectArticleSchema(retrievedArticle);
     mlog.log(`Retrieved article: [${JSON.stringify(retrievedArticle)}]`);
     expect(retrievedArticle.author.following).to.be.true;
   });
@@ -74,6 +99,7 @@ describe('Article module', async() => {
   it('should get article by unfollowed author', async() => {
     await user.unfollowUser(readerUser.username, authorUser.username);
     const retrievedArticle = await Article.get(createdArticle.slug, readerUser.username);
+    expectArticleSchema(retrievedArticle);
     expect(retrievedArticle.author.following).to.be.false;
   });
 
@@ -90,16 +116,19 @@ describe('Article module', async() => {
   it('should get all articles', async() => {
     const articles = await Article.getAll();
     expect(articles).to.be.an('array');
+    articles.forEach(expectArticleSchema);
     // TODO: Assert on retrieved articles
   });
 
   it('should get all articles by tag', async() => {
     const articles = await Article.getAll({ tag: createdArticle.tagList[0] });
+    articles.forEach(expectArticleSchema);
     expect(articles[0].tagList).to.contain(createdArticle.tagList[0]);
   });
 
   it('should get all articles by author', async() => {
     const articles = await Article.getAll({ author: authorUser.username });
+    articles.forEach(expectArticleSchema);
     expect(articles[0].author.username).to.equal(authorUser.username);
   });
 
@@ -119,15 +148,18 @@ describe('Article module', async() => {
     console.log('');
 
     let articles = await Article.getAll({ limit: 3 });
+    articles.forEach(expectArticleSchema);
     expect(articles).to.be.an('array').to.have.lengthOf(3);
 
     articles = await Article.getAll({ offset: 3 });
+    articles.forEach(expectArticleSchema);
     expect(articles).to.be.an('array').to.have.lengthOf(9);
   });
 
   it('should get all articles with a reader', async() => {
     const articles = await Article.getAll({ reader: 'foobar' });
     expect(articles).to.be.an('array');
+    articles.forEach(expectArticleSchema);
     // TODO: Assert on retrieved articles
   });
 
@@ -146,6 +178,7 @@ describe('Article module', async() => {
     await user.followUser(readerUser.username, secondAuthorUser.username);
     await user.followUser(readerUser.username, authorUser.username);
     let feed = await Article.getFeed(readerUser.username);
+    feed.forEach(expectArticleSchema);
     expect(feed).to.be.an('array').to.have.lengthOf(13);
     expect(feed[0].author.username).to.equal('second_author');
     expect(feed[0].title).to.equal('second_author_article');
@@ -161,6 +194,7 @@ describe('Article module', async() => {
     // Unfollow first author, end expect only second author's article
     await user.unfollowUser(readerUser.username, authorUser.username);
     feed = await Article.getFeed(readerUser.username);
+    feed.forEach(expectArticleSchema);
     expect(feed).to.be.an('array').to.have.lengthOf(1);
 
     await Article.getFeed('non-existent_username_' + casual.username).catch(err => {
@@ -171,8 +205,10 @@ describe('Article module', async() => {
   it('should get feed with limit/offset', async() => {
     await user.followUser(readerUser.username, authorUser.username);
     let feed = await Article.getFeed(readerUser.username, { limit: 3 });
+    feed.forEach(expectArticleSchema);
     expect(feed).to.be.an('array').to.have.lengthOf(3);
     feed = await Article.getFeed(readerUser.username, { limit: 4, offset: 2 });
+    feed.forEach(expectArticleSchema);
     expect(feed).to.be.an('array').to.have.lengthOf(4);
   });
 
@@ -185,6 +221,7 @@ describe('Article module', async() => {
   it('should create new comment', async() => {
     const commentBody = casual.sentence;
     const createdComment = await Article.createComment(createdArticle.slug, authorUser.username, commentBody);
+    expectCommentSchema(createdComment);
     mlog.log(`Created comment: [${JSON.stringify(createdComment)}]`);
     // TODO: Assert on created comment
   });
@@ -199,6 +236,7 @@ describe('Article module', async() => {
     }
     console.log('');
     let retrievedComments = await Article.getAllComments(createdArticle.slug);
+    retrievedComments.forEach(expectCommentSchema);
     expect(retrievedComments, JSON.stringify(retrievedComments)).to.be.an('array').to.have.lengthOf(11);
     // Verify comments are in reverse chronological order (newest first)
     for (let i = 0; i < retrievedComments.length - 1; ++i) {
@@ -208,6 +246,7 @@ describe('Article module', async() => {
     // Verify following bit is set correctly
     await user.followUser(readerUser.username, authorUser.username);
     retrievedComments = await Article.getAllComments(createdArticle.slug, readerUser.username);
+    retrievedComments.forEach(expectCommentSchema);
     for (let i = 0; i < retrievedComments.length; ++i) {
       expect(retrievedComments[i].author.following).to.be.true;
     }
@@ -228,4 +267,14 @@ async function cleanSlate() {
   await Article.testutils.__deleteAll();
   mlog.log('Deleting all comments.');
   await Article.testutils.__deleteAllComments();
+}
+
+function expectArticleSchema(aArticle) {
+  expect(Object.keys(aArticle).sort()).to.eql(expectedArticleKeys);
+  expect(Object.keys(aArticle.author).sort()).to.eql(expectedArticleAuthorKeys);
+}
+
+function expectCommentSchema(aComment) {
+  expect(Object.keys(aComment).sort()).to.eql(expectedCommentKeys);
+  expect(Object.keys(aComment.author).sort()).to.eql(expectedCommentAuthorKeys);
 }
