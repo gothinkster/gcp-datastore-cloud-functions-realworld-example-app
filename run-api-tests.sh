@@ -1,4 +1,4 @@
-#!/bin/bash -e -x
+#!/bin/bash -x
 pwd
 
 ## Deploy to Cloud Functions Local Emulator
