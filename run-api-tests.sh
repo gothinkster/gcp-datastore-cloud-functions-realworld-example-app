@@ -1,10 +1,10 @@
-#!/bin/bash -x
-pwd
+#!/bin/bash
+echo PWD=`pwd`
 
 ## Deploy to Cloud Functions Local Emulator
+echo "Using functions emulator located at: ["`which functions`"]"
 export DATASTORE_NAMESPACE=test-api
-which functions
-echo $GCP_PROJECT | functions start
+echo $GCP_PROJECT | functions start > /dev/null
 if [ -n "$CI" ]; then
   functions config set watch false
   functions restart
@@ -15,8 +15,9 @@ export API_URL=`grep Resource $DEPLOY_OUTPUT_FILE | grep -o 'http://localhost:[^
 echo $API_URL
 
 ## Smoke test API endpoint
-curl $API_URL/ping | python -m json.tool
+curl --silent $API_URL/ping
+echo
 
 ## Run Postman tests against local deployed API
-which newman
+echo "Using newman runner located at: ["`which newman`"]"
 newman run --global-var="apiUrl=$API_URL" --folder automated ./api-tests.postman.json

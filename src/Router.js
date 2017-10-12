@@ -11,7 +11,7 @@ module.exports = {
     }
 
     if (req.path == '/ping') {
-      res.status(200).send({ pong: new Date(), env: process.env, });
+      res.status(200).send({ pong: new Date(), DATASTORE_NAMESPACE: process.env.DATASTORE_NAMESPACE, });
     } else if (req.method == 'POST' && req.path == '/users') {
       res.status(200).send({ user: await User.create(req.body.user) });
     } else if (req.method == 'POST' && req.path == '/users/login') {
