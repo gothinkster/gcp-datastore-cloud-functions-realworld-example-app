@@ -51,7 +51,7 @@
               "exec": [
                 "tests['should have status 200'] = pm.response.code === 200;",
                 "res = pm.response.json();",
-                "tests['should have user field'] = res.user;",
+                "tests['should have user field'] = typeof(res.user) === 'object';",
                 "var user = res.user;",
                 "",
                 "var expectedUserFields = ['email', 'token', 'username', 'bio', 'image'];",
@@ -61,8 +61,9 @@
                 "tests['should have correct email'] = user.email == 'user@mail.com';",
                 "tests['should have correct username'] = user.username == 'user';",
                 "",
-                "pm.globals.set('token', user.token);",
-                "tests['global variable token should be set'] = pm.globals.get('token');",
+                "pm.globals.unset('authToken');",
+                "pm.globals.set('authToken', user.token);",
+                "tests['global variable token should be set'] = pm.globals.get('authToken');",
                 ""
               ]
             }
@@ -75,7 +76,7 @@
             }],
             "body": {
               "mode": "raw",
-              "raw": "{\n\t\"user\": {\n\t\t\"email\": \"user@mail.com\",\n\t\t\"password\": \"password\"\n\t}\n}"
+              "raw": "{\n  \"user\": {\n    \"email\": \"user@mail.com\",\n    \"password\": \"password\"\n  }\n}"
             },
             "url": {
               "raw": "{{apiUrl}}/users/login",
@@ -100,7 +101,7 @@
               "exec": [
                 "tests['should have status 200'] = pm.response.code === 200;",
                 "res = pm.response.json();",
-                "tests['should have user field'] = res.user;",
+                "tests['should have user field'] = typeof(res.user) === 'object';",
                 "var user = res.user;",
                 "",
                 "var expectedUserFields = ['email', 'token', 'username', 'bio', 'image'];",
@@ -116,9 +117,14 @@
           "request": {
             "method": "GET",
             "header": [{
-              "key": "Authorization",
-              "value": "{{token}}"
-            }],
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "{{authToken}}"
+              }
+            ],
             "body": {},
             "url": {
               "raw": "{{apiUrl}}/user",

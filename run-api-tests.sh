@@ -2,6 +2,7 @@
 pwd
 
 ## Deploy to Cloud Functions Local Emulator
+export DATASTORE_NAMESPACE=test-api
 which functions
 echo mock-project | functions start
 if [ -n "$CI" ]; then

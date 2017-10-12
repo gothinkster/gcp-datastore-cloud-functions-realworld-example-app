@@ -49,8 +49,9 @@ describe('User module', async() => {
   });
 
   it('should not allow bad token', async() => {
-    await user.authenticateToken(loggedInUser.token + 'foo').catch(err =>
-      expect(err).to.match(/Signature verification failed/));
+    await user.authenticateToken(loggedInUser.token + 'foo').catch(err => {
+      expect(err.message).to.match(/invalid signature/);
+    });
   });
 
   it('should not allow wrong email', async() => {

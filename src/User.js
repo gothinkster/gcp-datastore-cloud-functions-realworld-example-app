@@ -1,6 +1,6 @@
 const { ds, namespace } = require('./Datastore.js');
 const bcrypt = require('bcrypt');
-const jwt = require('jwt-simple');
+const jwt = require('jsonwebtoken');
 
 /* istanbul ignore next */
 const tokenSecret = process.env.SECRET ? process.env.SECRET : '3ee058420bc2';
@@ -116,7 +116,7 @@ module.exports = {
   // ===== Token managenement
 
   async authenticateToken(aToken) {
-    const decoded = jwt.decode(aToken, tokenSecret);
+    const decoded = jwt.verify(aToken, tokenSecret);
     const username = decoded.username;
     const result = await ds.get(ds.key({ namespace, path: ['User', decoded.username], }));
     const foundUser = result[0];
@@ -133,10 +133,7 @@ module.exports = {
   },
 
   mintToken(aUsername) {
-    return jwt.encode({
-      username: aUsername,
-      exp: (Date.now() + 2 * 24 * 60 * 60 * 1000) / 1000, // expires in 2 days
-    }, tokenSecret);
+    return jwt.sign({username: aUsername}, tokenSecret, {expiresIn: '2 days'});
   },
 
   testutils: {
