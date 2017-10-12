@@ -7,7 +7,9 @@ which functions
 echo mock-project | functions start
 if [ -n "$CI" ]; then
   functions config set watch false
-  functions restart
+  functions stop
+  functions start --tail &
+  sleep 2
 fi
 export DEPLOY_OUTPUT_FILE=`mktemp`
 functions deploy api --trigger-http | tee $DEPLOY_OUTPUT_FILE
@@ -17,3 +19,5 @@ echo $API_URL
 ## Run Postman tests against local deployed API
 which newman
 newman run --global-var="apiUrl=$API_URL" --folder automated ./api-tests.postman.json
+
+functions stop
