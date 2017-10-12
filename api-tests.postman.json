@@ -1,40 +1,168 @@
 {
-  "variables": [],
   "info": {
     "name": "Realworld Datastore API Tests",
     "_postman_id": "d6eff7c3-716f-e3f2-2527-413cc1380a87",
     "description": "",
-    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [{
-    "name": "automated",
-    "description": "",
-    "item": [{
-      "name": "Ping",
-      "event": [{
-        "listen": "test",
-        "script": {
-          "type": "text/javascript",
-          "exec": [
-            "tests['should have status 200'] = pm.response.code === 200;",
-            "res = pm.response.json();",
-            "tests['should have pong field'] = res.pong;",
-            ""
-          ]
+      "name": "automated",
+      "description": "",
+      "item": [{
+          "name": "Ping",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "tests['should have status 200'] = pm.response.code === 200;",
+                "res = pm.response.json();",
+                "tests['should have pong field'] = res.pong;",
+                ""
+              ]
+            }
+          }],
+          "request": {
+            "method": "GET",
+            "header": [{
+              "key": "Content-Type",
+              "value": "application/json"
+            }],
+            "body": {},
+            "url": {
+              "raw": "{{apiUrl}}/ping",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "ping"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Login",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "tests['should have status 200'] = pm.response.code === 200;",
+                "res = pm.response.json();",
+                "tests['should have user field'] = res.user;",
+                "var user = res.user;",
+                "",
+                "var expectedUserFields = ['email', 'token', 'username', 'bio', 'image'];",
+                "expectedUserFields.forEach(function(key) {",
+                "    tests[`user should have ${key} field`] = (typeof(user[key]) !== 'undefined');",
+                "});",
+                "tests['should have correct email'] = user.email == 'user@mail.com';",
+                "tests['should have correct username'] = user.username == 'user';",
+                "",
+                "pm.globals.set('token', user.token);",
+                "tests['global variable token should be set'] = pm.globals.get('token');",
+                ""
+              ]
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{
+              "key": "Content-Type",
+              "value": "application/json"
+            }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n\t\"user\": {\n\t\t\"email\": \"user@mail.com\",\n\t\t\"password\": \"password\"\n\t}\n}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/users/login",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "users",
+                "login"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Authenticate",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "tests['should have status 200'] = pm.response.code === 200;",
+                "res = pm.response.json();",
+                "tests['should have user field'] = res.user;",
+                "var user = res.user;",
+                "",
+                "var expectedUserFields = ['email', 'token', 'username', 'bio', 'image'];",
+                "expectedUserFields.forEach(function(key) {",
+                "    tests[`user should have ${key} field`] = (typeof(user[key]) !== 'undefined');",
+                "});",
+                "tests['should have correct email'] = user.email == 'user@mail.com';",
+                "tests['should have correct username'] = user.username == 'user';",
+                ""
+              ]
+            }
+          }],
+          "request": {
+            "method": "GET",
+            "header": [{
+              "key": "Authorization",
+              "value": "{{token}}"
+            }],
+            "body": {},
+            "url": {
+              "raw": "{{apiUrl}}/user",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "user"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
         }
-      }],
-      "request": {
-        "url": "{{apiUrl}}/ping",
-        "method": "POST",
-        "header": [{
-          "key": "Content-Type",
-          "value": "application/json",
+      ]
+    },
+    {
+      "name": "manual",
+      "description": "",
+      "item": [{
+        "name": "Signup",
+        "request": {
+          "method": "POST",
+          "header": [{
+            "key": "Content-Type",
+            "value": "application/json"
+          }],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"user\": {\n    \"username\": \"user\",\n    \"email\": \"user@mail.com\",\n    \"password\": \"password\"\n  }\n}"
+          },
+          "url": {
+            "raw": "{{apiUrl}}/users",
+            "host": [
+              "{{apiUrl}}"
+            ],
+            "path": [
+              "users"
+            ]
+          },
           "description": ""
-        }],
-        "body": {},
-        "description": ""
-      },
-      "response": []
-    }]
-  }]
+        },
+        "response": []
+      }]
+    }
+  ]
 }
