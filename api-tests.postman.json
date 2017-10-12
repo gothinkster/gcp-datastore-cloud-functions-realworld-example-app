@@ -1,13 +1,12 @@
 {
   "info": {
     "name": "Realworld Datastore API Tests",
-    "_postman_id": "d6eff7c3-716f-e3f2-2527-413cc1380a87",
+    "_postman_id": "293d1768-5605-e0a5-770a-ec9569803f22",
     "description": "",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [{
       "name": "automated",
-      "description": "",
       "item": [{
           "name": "Ping",
           "event": [{
@@ -37,8 +36,7 @@
               "path": [
                 "ping"
               ]
-            },
-            "description": ""
+            }
           },
           "response": []
         },
@@ -51,6 +49,7 @@
               "exec": [
                 "tests['should have status 200'] = pm.response.code === 200;",
                 "res = pm.response.json();",
+                "console.log(res);",
                 "tests['should have user field'] = typeof(res.user) === 'object';",
                 "var user = res.user;",
                 "",
@@ -87,8 +86,7 @@
                 "users",
                 "login"
               ]
-            },
-            "description": ""
+            }
           },
           "response": []
         },
@@ -101,6 +99,7 @@
               "exec": [
                 "tests['should have status 200'] = pm.response.code === 200;",
                 "res = pm.response.json();",
+                "console.log(res);",
                 "tests['should have user field'] = typeof(res.user) === 'object';",
                 "var user = res.user;",
                 "",
@@ -125,7 +124,10 @@
                 "value": "{{authToken}}"
               }
             ],
-            "body": {},
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
             "url": {
               "raw": "{{apiUrl}}/user",
               "host": [
@@ -133,6 +135,37 @@
               ],
               "path": [
                 "user"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "404",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "tests['should have status 404'] = pm.response.code === 404;",
+                "res = pm.response.json();",
+                "console.log(res);",
+                "tests['should have correct error message'] = res.errors.body[0].indexOf('404 Not found') > -1;",
+                ""
+              ]
+            }
+          }],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {},
+            "url": {
+              "raw": "{{apiUrl}}/nopez",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "nopez"
               ]
             },
             "description": ""
@@ -143,7 +176,6 @@
     },
     {
       "name": "manual",
-      "description": "",
       "item": [{
         "name": "Signup",
         "request": {
@@ -164,8 +196,7 @@
             "path": [
               "users"
             ]
-          },
-          "description": ""
+          }
         },
         "response": []
       }]
