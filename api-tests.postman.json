@@ -16,6 +16,7 @@
               "exec": [
                 "tests['should have status 200'] = pm.response.code === 200;",
                 "res = pm.response.json();",
+                "console.log(res);",
                 "tests['should have pong field'] = res.pong;",
                 ""
               ]
