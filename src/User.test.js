@@ -82,10 +82,25 @@ describe('User module', async() => {
       password: 'a',
     });
     mlog.log(`User to follow: [${JSON.stringify(userToFollow)}]`);
-    const followedUserProfile = await user.followUser(loggedInUser.username, userToFollow.username);
+
+    // Follow
+    let followedUserProfile = await user.followUser(loggedInUser.username, userToFollow.username);
     mlog.log(`Followed user profile: [${JSON.stringify(followedUserProfile)}]`);
-    const unfollowedUserProfile = await user.unfollowUser(loggedInUser.username, userToFollow.username);
+    followedUserProfile = await user.getProfile(userToFollow.username, loggedInUser);
+    expect(followedUserProfile.following).to.be.true;
+
+    // Unfollow
+    let unfollowedUserProfile = await user.unfollowUser(loggedInUser.username, userToFollow.username);
     mlog.log(`Unfollowed user profile: [${JSON.stringify(unfollowedUserProfile)}]`);
+    unfollowedUserProfile = await user.getProfile(userToFollow.username, loggedInUser);
+    expect(unfollowedUserProfile.following).to.be.false;
+
+    // Get profile without current user
+    const anonymouslyViewedProfile = await user.getProfile(userToFollow.username);
+    expect(anonymouslyViewedProfile.following).to.be.false;
+
+    await user.getProfile(loggedInUser.username + 'foobar').catch(err =>
+      expect(err).to.match(/User not found/));
 
     await user.followUser(loggedInUser.username + 'foobar').catch(err =>
       expect(err).to.match(/User not found/));

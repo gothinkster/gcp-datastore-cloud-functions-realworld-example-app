@@ -64,6 +64,26 @@ module.exports = {
     };
   },
 
+  async getProfile(aUsername, aCurrentUser) {
+    const user = (await ds.get(ds.key({namespace, path: ['User', aUsername]})))[0];
+    if (!user) {
+      throw new Error(`User not found: [${aUsername}]`);
+    }
+
+    const profile = {
+      username: aUsername,
+      bio: user.bio,
+      image: user.image,
+      following: false,
+    };
+
+    if (aCurrentUser && aCurrentUser.username) {
+      profile.following = user.followers.includes(aCurrentUser.username);
+    }
+
+    return profile;
+  },
+
   async followUser(aFollowerUsername, aFollowedUsername) {
     return await this.mutateFollowing(aFollowerUsername, aFollowedUsername, true);
   },
