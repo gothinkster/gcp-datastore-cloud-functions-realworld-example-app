@@ -65,6 +65,9 @@ module.exports = {
   },
 
   async getProfile(aUsername, aCurrentUser) {
+    if (!aUsername) {
+      throw new Error('User name must be specified');
+    }
     const user = (await ds.get(ds.key({namespace, path: ['User', aUsername]})))[0];
     if (!user) {
       throw new Error(`User not found: [${aUsername}]`);

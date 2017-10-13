@@ -1,3 +1,4 @@
+const routeParser = require('route-parser');
 const User = require('./User.js');
 
 module.exports = {
@@ -16,6 +17,9 @@ module.exports = {
       res.status(200).send({ user: await User.create(req.body.user) });
     } else if (req.method == 'POST' && req.path == '/users/login') {
       res.status(200).send({ user: await User.login(req.body.user) });
+    } else if (req.method == 'GET' && req.path.startsWith('/profiles/')) {
+      const matchedPath = (new routeParser('/profiles/:username')).match(req.path);
+      res.status(200).send({ profile: await User.getProfile(matchedPath.username, validatedUser) });
     } else if (req.method == 'GET' && req.path == '/user') {
       if (!validatedUser) {
         res.status(401).send({ errors: { body: ['Token is required'], }, });

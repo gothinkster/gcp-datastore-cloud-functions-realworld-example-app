@@ -57,8 +57,8 @@
                 "expectedUserFields.forEach(function(key) {",
                 "    tests[`user should have ${key} field`] = (typeof(user[key]) !== 'undefined');",
                 "});",
-                "tests['should have correct email'] = user.email == 'user@mail.com';",
-                "tests['should have correct username'] = user.username == 'user';",
+                "tests['should have correct email'] = user.email == 'basicuser@mail.com';",
+                "tests['should have correct username'] = user.username == 'basicuser';",
                 "",
                 "pm.globals.unset('authToken');",
                 "pm.globals.set('authToken', user.token);",
@@ -75,7 +75,7 @@
             }],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"user\": {\n    \"email\": \"user@mail.com\",\n    \"password\": \"password\"\n  }\n}"
+              "raw": "{\n  \"user\": {\n    \"email\": \"basicuser@mail.com\",\n    \"password\": \"password\"\n  }\n}"
             },
             "url": {
               "raw": "{{apiUrl}}/users/login",
@@ -107,8 +107,8 @@
                 "expectedUserFields.forEach(function(key) {",
                 "    tests[`user should have ${key} field`] = (typeof(user[key]) !== 'undefined');",
                 "});",
-                "tests['should have correct email'] = user.email == 'user@mail.com';",
-                "tests['should have correct username'] = user.username == 'user';",
+                "tests['should have correct email'] = user.email == 'basicuser@mail.com';",
+                "tests['should have correct username'] = user.username == 'basicuser';",
                 ""
               ]
             }
@@ -124,10 +124,7 @@
                 "value": "{{authToken}}"
               }
             ],
-            "body": {
-              "mode": "raw",
-              "raw": ""
-            },
+            "body": {},
             "url": {
               "raw": "{{apiUrl}}/user",
               "host": [
@@ -171,6 +168,46 @@
             "description": ""
           },
           "response": []
+        },
+        {
+          "name": "Profile",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "tests['should have status 200'] = pm.response.code === 200;",
+                "res = pm.response.json();",
+                "console.log(res);",
+                "var profile = res.profile;",
+                "tests['should have profile field'] = typeof(profile) === 'object';",
+                "var expectedProfileFields = ['username', 'bio', 'image', 'following'];",
+                "expectedProfileFields.forEach(function(key) {",
+                "    tests[`profile should have ${key} field`] = (typeof(profile[key]) !== 'undefined');",
+                "});",
+                "tests['should have correct username'] = profile.username === 'basicuser';",
+                "tests['should have correct following'] = profile.following === false;",
+                ""
+              ]
+            }
+          }],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {},
+            "url": {
+              "raw": "{{apiUrl}}/profiles/basicuser",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "profiles",
+                "basicuser"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
         }
       ]
     },
@@ -186,7 +223,7 @@
           }],
           "body": {
             "mode": "raw",
-            "raw": "{\n  \"user\": {\n    \"username\": \"user\",\n    \"email\": \"user@mail.com\",\n    \"password\": \"password\"\n  }\n}"
+            "raw": "{\n  \"user\": {\n    \"username\": \"basicuser\",\n    \"email\": \"basicuser@mail.com\",\n    \"password\": \"password\"\n  }\n}"
           },
           "url": {
             "raw": "{{apiUrl}}/users",

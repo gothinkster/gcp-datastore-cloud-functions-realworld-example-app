@@ -99,6 +99,9 @@ describe('User module', async() => {
     const anonymouslyViewedProfile = await user.getProfile(userToFollow.username);
     expect(anonymouslyViewedProfile.following).to.be.false;
 
+    await user.getProfile(null).catch(err => {
+      expect(err).to.match(/User name must be specified/);
+    });
     await user.getProfile(loggedInUser.username + 'foobar').catch(err =>
       expect(err).to.match(/User not found/));
 
