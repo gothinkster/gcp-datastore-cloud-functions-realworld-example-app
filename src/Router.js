@@ -20,6 +20,12 @@ module.exports = {
     } else if (req.method == 'GET' && req.path.startsWith('/profiles/')) {
       const matchedPath = (new routeParser('/profiles/:username')).match(req.path);
       res.status(200).send({ profile: await User.getProfile(matchedPath.username, validatedUser) });
+    } else if (req.method == 'POST' && req.path.startsWith('/profiles/')) {
+      const matchedPath = (new routeParser('/profiles/:username')).match(req.path);
+      res.status(200).send({ profile: await User.followUser(validatedUser.username, matchedPath.username) });
+    } else if (req.method == 'DELETE' && req.path.startsWith('/profiles/')) {
+      const matchedPath = (new routeParser('/profiles/:username')).match(req.path);
+      res.status(200).send({ profile: await User.unfollowUser(validatedUser.username, matchedPath.username) });
     } else if (req.method == 'GET' && req.path == '/user') {
       if (!validatedUser) {
         res.status(401).send({ errors: { body: ['Token is required'], }, });

@@ -89,6 +89,9 @@ describe('User module', async() => {
     followedUserProfile = await user.getProfile(userToFollow.username, loggedInUser);
     expect(followedUserProfile.following).to.be.true;
 
+    // Follow again to ensure idempotence
+    await user.getProfile(userToFollow.username, loggedInUser);
+
     // Unfollow
     let unfollowedUserProfile = await user.unfollowUser(loggedInUser.username, userToFollow.username);
     mlog.log(`Unfollowed user profile: [${JSON.stringify(unfollowedUserProfile)}]`);

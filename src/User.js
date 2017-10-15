@@ -68,7 +68,7 @@ module.exports = {
     if (!aUsername) {
       throw new Error('User name must be specified');
     }
-    const user = (await ds.get(ds.key({namespace, path: ['User', aUsername]})))[0];
+    const user = (await ds.get(ds.key({ namespace, path: ['User', aUsername] })))[0];
     if (!user) {
       throw new Error(`User not found: [${aUsername}]`);
     }
@@ -106,7 +106,9 @@ module.exports = {
       throw new Error(`User not found: [${aFollowerUsername}]`);
     }
     if (aMutation) {
-      followerUser.following.push(aFollowedUsername);
+      if (!followerUser.following.includes(aFollowedUsername)) {
+        followerUser.following.push(aFollowedUsername);
+      }
     } else {
       followerUser.following = followerUser.following.filter(e => e != aFollowedUsername);
     }
@@ -119,7 +121,9 @@ module.exports = {
       throw new Error(`User not found: [${aFollowedUsername}]`);
     }
     if (aMutation) {
-      followedUser.followers.push(aFollowerUsername);
+      if (!followedUser.followers.includes(aFollowerUsername)) {
+        followedUser.followers.push(aFollowerUsername);
+      }
     } else {
       followedUser.followers = followedUser.followers.filter(e => e != aFollowerUsername);
     }
@@ -156,7 +160,7 @@ module.exports = {
   },
 
   mintToken(aUsername) {
-    return jwt.sign({username: aUsername}, tokenSecret, {expiresIn: '2 days'});
+    return jwt.sign({ username: aUsername }, tokenSecret, { expiresIn: '2 days' });
   },
 
   testutils: {

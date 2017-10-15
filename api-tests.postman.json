@@ -171,6 +171,54 @@
           "response": []
         },
         {
+          "name": "Follow",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "tests['should have status 200'] = pm.response.code === 200;",
+                "res = pm.response.json();",
+                "console.log(res);",
+                "var profile = res.profile;",
+                "tests['should have profile field'] = typeof(profile) === 'object';",
+                "var expectedProfileFields = ['username', 'bio', 'image', 'following'];",
+                "expectedProfileFields.forEach(function(key) {",
+                "    tests[`profile should have ${key} field`] = (typeof(profile[key]) !== 'undefined');",
+                "});",
+                "tests['should have correct username'] = profile.username === 'celebuser';",
+                "tests['should have correct following'] = profile.following === true;",
+                ""
+              ]
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "{{authToken}}"
+              }
+            ],
+            "body": {},
+            "url": {
+              "raw": "{{apiUrl}}/profiles/celebuser",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "profiles",
+                "celebuser"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
           "name": "Profile",
           "event": [{
             "listen": "test",
@@ -186,24 +234,80 @@
                 "expectedProfileFields.forEach(function(key) {",
                 "    tests[`profile should have ${key} field`] = (typeof(profile[key]) !== 'undefined');",
                 "});",
-                "tests['should have correct username'] = profile.username === 'basicuser';",
-                "tests['should have correct following'] = profile.following === false;",
+                "tests['should have correct username'] = profile.username === 'celebuser';",
+                "tests['should have correct following'] = profile.following === true;",
                 ""
               ]
             }
           }],
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [{
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "{{authToken}}"
+              }
+            ],
             "body": {},
             "url": {
-              "raw": "{{apiUrl}}/profiles/basicuser",
+              "raw": "{{apiUrl}}/profiles/celebuser",
               "host": [
                 "{{apiUrl}}"
               ],
               "path": [
                 "profiles",
-                "basicuser"
+                "celebuser"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Unfollow",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "tests['should have status 200'] = pm.response.code === 200;",
+                "res = pm.response.json();",
+                "console.log(res);",
+                "var profile = res.profile;",
+                "tests['should have profile field'] = typeof(profile) === 'object';",
+                "var expectedProfileFields = ['username', 'bio', 'image', 'following'];",
+                "expectedProfileFields.forEach(function(key) {",
+                "    tests[`profile should have ${key} field`] = (typeof(profile[key]) !== 'undefined');",
+                "});",
+                "tests['should have correct username'] = profile.username === 'celebuser';",
+                "tests['should have correct following'] = profile.following === false;",
+                ""
+              ]
+            }
+          }],
+          "request": {
+            "method": "DELETE",
+            "header": [{
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "{{authToken}}"
+              }
+            ],
+            "body": {},
+            "url": {
+              "raw": "{{apiUrl}}/profiles/celebuser",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "profiles",
+                "celebuser"
               ]
             },
             "description": ""
