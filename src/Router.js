@@ -8,14 +8,21 @@ module.exports = {
 
     var validatedUser = null; // eslint-disable-line no-var
     var validatedUsername = null; // eslint-disable-line no-var
-    const token = req.get('Authorization');
-    if (token) {
-      validatedUser = await User.authenticateToken(token);
-      validatedUsername = validatedUser.username;
+    const rawToken = req.get('Authorization');
+    if (rawToken) {
+      const matchedToken = rawToken.match(/Token (.*)/);
+      if (matchedToken && matchedToken[1]) {
+        console.log(`matchedToken = ${matchedToken}`);
+        validatedUser = await User.authenticateToken(matchedToken[1]);
+        validatedUsername = validatedUser.username;
+      }
     }
 
     if (req.path == '/ping') {
-      res.status(200).send({ pong: new Date(), DATASTORE_NAMESPACE: process.env.DATASTORE_NAMESPACE, });
+      res.status(200).send({
+        pong: new Date(),
+        DATASTORE_NAMESPACE: process.env.DATASTORE_NAMESPACE ? process.env.DATASTORE_NAMESPACE : '',
+      });
     } else if (req.method == 'POST' && req.path == '/users') {
       res.status(200).send({ user: await User.create(req.body.user) });
     } else if (req.method == 'POST' && req.path == '/users/login') {

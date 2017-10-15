@@ -122,7 +122,7 @@
               },
               {
                 "key": "Authorization",
-                "value": "{{authToken}}"
+                "value": "Token {{authToken}}"
               }
             ],
             "body": {},
@@ -200,7 +200,7 @@
               },
               {
                 "key": "Authorization",
-                "value": "{{authToken}}"
+                "value": "Token {{authToken}}"
               }
             ],
             "body": {},
@@ -248,7 +248,7 @@
               },
               {
                 "key": "Authorization",
-                "value": "{{authToken}}"
+                "value": "Token {{authToken}}"
               }
             ],
             "body": {},
@@ -296,7 +296,7 @@
               },
               {
                 "key": "Authorization",
-                "value": "{{authToken}}"
+                "value": "Token {{authToken}}"
               }
             ],
             "body": {},
@@ -353,12 +353,12 @@
           "request": {
             "method": "POST",
             "header": [{
-                "key": "Authorization",
-                "value": "{{authToken}}"
-              },
-              {
                 "key": "Content-Type",
                 "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{authToken}}"
               }
             ],
             "body": {
@@ -450,7 +450,7 @@
             "method": "GET",
             "header": [{
               "key": "Authorization",
-              "value": "{{authToken}}"
+              "value": "Token {{authToken}}"
             }],
             "body": {},
             "url": {
@@ -482,7 +482,7 @@
             "method": "DELETE",
             "header": [{
               "key": "Authorization",
-              "value": "{{authToken}}"
+              "value": "Token {{authToken}}"
             }],
             "body": {},
             "url": {
