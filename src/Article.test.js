@@ -7,9 +7,11 @@ const mlog = process.env.CI ? { log() {} } : require('mocha-logger');
 let authorUser = null;
 let readerUser = null;
 let createdArticle = null;
+let createdArticleNoTags = null;
 
 const expectedArticleKeys = ['slug', 'title', 'description', 'body', 'tagList',
-  'createdAt', 'updatedAt', 'favorited', 'favoritesCount', 'author'].sort();
+  'createdAt', 'updatedAt', 'favorited', 'favoritesCount', 'author'
+].sort();
 const expectedArticleAuthorKeys = ['username', 'image', 'bio', 'following'].sort();
 const expectedCommentKeys = ['id', 'createdAt', 'updatedAt', 'body', 'author'].sort();
 const expectedCommentAuthorKeys = expectedArticleAuthorKeys;
@@ -49,7 +51,7 @@ describe('Article module', async() => {
   });
 
   it('should create new article wihtout tags', async() => {
-    const createdArticleNoTags = await Article.create({
+    createdArticleNoTags = await Article.create({
       title: casual.title,
       description: casual.description,
       body: casual.text,
@@ -187,8 +189,8 @@ describe('Article module', async() => {
     }
 
     // Verify order of feed is descending by createdAt
-    for (let i = 0; i < feed.length-1; ++i) {
-      expect(feed[i].createdAt).to.be.above(feed[i+1].createdAt);
+    for (let i = 0; i < feed.length - 1; ++i) {
+      expect(feed[i].createdAt).to.be.above(feed[i + 1].createdAt);
     }
 
     // Unfollow first author, end expect only second author's article
@@ -210,6 +212,17 @@ describe('Article module', async() => {
     feed = await Article.getFeed(readerUser.username, { limit: 4, offset: 2 });
     feed.forEach(expectArticleSchema);
     expect(feed).to.be.an('array').to.have.lengthOf(4);
+  });
+
+  it('should delete article', async() => {
+    await Article.delete(createdArticleNoTags.slug + casual.word, authorUser.username).catch(err =>
+      expect(err).to.match(/Article not found/));
+    await Article.delete(createdArticleNoTags.slug, authorUser.username + casual.word).catch(err =>
+      expect(err).to.match(/User does not exist/));
+    await Article.delete(createdArticleNoTags.slug, readerUser.username).catch(err =>
+      expect(err).to.match(/Only author can delete article/));
+
+    await Article.delete(createdArticleNoTags.slug, authorUser.username);
   });
 
   it('should get tags', async() => {

@@ -71,6 +71,22 @@ module.exports = {
     return article;
   },
 
+  async delete(aSlug, aUsername) {
+    const article = (await ds.get(ds.key({ namespace, path: ['Article', aSlug] })))[0];
+    if (!article) {
+      throw new Error(`Article not found: [${aSlug}]`);
+    }
+    const user = (await ds.get(ds.key({ namespace, path: ['User', aUsername] })))[0];
+    if (!user) {
+      throw new Error(`User does not exist: [${aUsername}]`);
+    }
+    if (article.author !== user.username) {
+      throw new Error(`Only author can delete article: [${article.author}]`);
+    }
+    await ds.delete(ds.key({ namespace, path: ['Article', aSlug] }));
+    return null;
+  },
+
   async getAll(options) {
     let query = ds.createQuery(namespace, 'Article')
       .order('createdAt', { descending: true });
