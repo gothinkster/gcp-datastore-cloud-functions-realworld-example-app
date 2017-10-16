@@ -587,6 +587,46 @@
           "response": []
         },
         {
+          "name": "Delete Comment",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "tests['should have status 200'] = pm.response.code === 200;",
+                ""
+              ]
+            }
+          }],
+          "request": {
+            "method": "DELETE",
+            "header": [{
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{authToken}}"
+              }
+            ],
+            "body": {},
+            "url": {
+              "raw": "{{apiUrl}}/articles/{{articleSlug}}/comments/{{commentId}}",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "articles",
+                "{{articleSlug}}",
+                "comments",
+                "{{commentId}}"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
           "name": "Delete Article",
           "event": [{
             "listen": "test",
