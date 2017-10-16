@@ -8,6 +8,7 @@ let authorUser = null;
 let readerUser = null;
 let createdArticle = null;
 let createdArticleNoTags = null;
+let createdComment = null;
 
 const expectedArticleKeys = ['slug', 'title', 'description', 'body', 'tagList',
   'createdAt', 'updatedAt', 'favorited', 'favoritesCount', 'author'
@@ -233,7 +234,7 @@ describe('Article module', async() => {
 
   it('should create new comment', async() => {
     const commentBody = casual.sentence;
-    const createdComment = await Article.createComment(createdArticle.slug, authorUser.username, commentBody);
+    createdComment = await Article.createComment(createdArticle.slug, authorUser.username, commentBody);
     expectCommentSchema(createdComment);
     mlog.log(`Created comment: [${JSON.stringify(createdComment)}]`);
     // TODO: Assert on created comment
@@ -263,6 +264,14 @@ describe('Article module', async() => {
     for (let i = 0; i < retrievedComments.length; ++i) {
       expect(retrievedComments[i].author.following).to.be.true;
     }
+  });
+
+  it('should delete a comment', async() => {
+    await Article.deleteComment(createdArticle.slug, createdComment.id + 10, authorUser.username)
+      .catch(err => expect(err).to.match(/Comment not found/));
+    await Article.deleteComment(createdArticle.slug, createdComment.id, casual.username)
+      .catch(err => expect(err).to.match(/Only comment author can delete comment/));
+    await Article.deleteComment(createdArticle.slug, createdComment.id, authorUser.username);
   });
 
 });

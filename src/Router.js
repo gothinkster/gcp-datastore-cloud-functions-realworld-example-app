@@ -92,6 +92,8 @@ module.exports = {
       ['GET', '/articles/:slug/comments', async(matchedPath) => res.status(200).send({
         comments: await Article.getAllComments(matchedPath.slug, validatedUsername)
       })],
+      ['DELETE', '/articles/:slug/comments/:id', async(matchedPath) => res.status(200).send(
+        await Article.deleteComment(matchedPath.slug, matchedPath.id, validatedUsername))],
 
     ];
 

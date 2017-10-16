@@ -244,6 +244,21 @@ module.exports = {
     return commentData;
   },
 
+  async deleteComment(aSlug, aCommentId, aDeleterUsername) {
+    const commentKey = ds.key({ namespace, path: ['Article', aSlug, 'Comment', parseInt(aCommentId)] });
+    const comment = (await ds.get(commentKey))[0];
+    if (!comment) {
+      throw new Error(`Comment not found: [${aSlug}/${aCommentId}]`);
+    }
+
+    // Only comment's author can delete comment
+    if (comment.author !== aDeleterUsername) {
+      throw new Error('Only comment author can delete comment');
+    }
+    await ds.delete(commentKey);
+    return null;
+  },
+
   async getAllComments(aSlug, aReaderUsername) {
     let comments = (await ds.createQuery(namespace, 'Comment')
       .hasAncestor(ds.key({ namespace, path: ['Article', aSlug] })).run())[0];
