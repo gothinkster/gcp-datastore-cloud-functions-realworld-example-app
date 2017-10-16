@@ -205,13 +205,14 @@
             ],
             "body": {},
             "url": {
-              "raw": "{{apiUrl}}/profiles/celebuser",
+              "raw": "{{apiUrl}}/profiles/celebuser/follow",
               "host": [
                 "{{apiUrl}}"
               ],
               "path": [
                 "profiles",
-                "celebuser"
+                "celebuser",
+                "follow"
               ]
             },
             "description": ""
@@ -301,13 +302,14 @@
             ],
             "body": {},
             "url": {
-              "raw": "{{apiUrl}}/profiles/celebuser",
+              "raw": "{{apiUrl}}/profiles/celebuser/follow",
               "host": [
                 "{{apiUrl}}"
               ],
               "path": [
                 "profiles",
-                "celebuser"
+                "celebuser",
+                "follow"
               ]
             },
             "description": ""
