@@ -1,4 +1,4 @@
-const router = require('./Router.js');
+const Router = require('./Router.js');
 
 module.exports = {
 
@@ -6,7 +6,7 @@ module.exports = {
   async api(req, res) {
     res.setHeader('Content-Type', 'application/json');
     try {
-      await router.route(req, res);
+      await Router.route(req, res);
     } catch (e) {
       console.log(e);
       res.status(422).send({ errors: { body: [e.message], } });

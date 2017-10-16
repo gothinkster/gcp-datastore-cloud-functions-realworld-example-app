@@ -1,4 +1,4 @@
-const user = require('./User.js');
+const User = require('./User.js');
 const Article = require('./Article.js');
 const expect = require('chai').expect;
 const casual = require('casual');
@@ -23,14 +23,14 @@ describe('Article module', async() => {
     await delay(1000);
 
     const authorUsername = 'author_' + casual.username;
-    authorUser = await user.create({
+    authorUser = await User.create({
       email: authorUsername + '@mail.com',
       username: authorUsername,
       password: 'a',
     });
 
     const readerUsername = 'reader_' + casual.username;
-    readerUser = await user.create({
+    readerUser = await User.create({
       email: readerUsername + '@mail.com',
       username: readerUsername,
       password: 'a',
@@ -91,7 +91,7 @@ describe('Article module', async() => {
   });
 
   it('should get article by followed author', async() => {
-    await user.followUser(readerUser.username, authorUser.username);
+    await User.followUser(readerUser.username, authorUser.username);
     const retrievedArticle = await Article.get(createdArticle.slug, readerUser.username);
     expectArticleSchema(retrievedArticle);
     mlog.log(`Retrieved article: [${JSON.stringify(retrievedArticle)}]`);
@@ -99,7 +99,7 @@ describe('Article module', async() => {
   });
 
   it('should get article by unfollowed author', async() => {
-    await user.unfollowUser(readerUser.username, authorUser.username);
+    await User.unfollowUser(readerUser.username, authorUser.username);
     const retrievedArticle = await Article.get(createdArticle.slug, readerUser.username);
     expectArticleSchema(retrievedArticle);
     expect(retrievedArticle.author.following).to.be.false;
@@ -167,7 +167,7 @@ describe('Article module', async() => {
 
   it('should get feed', async() => {
     // Create a second user to follow
-    const secondAuthorUser = await user.create({
+    const secondAuthorUser = await User.create({
       username: 'second_author',
       email: 'second_author@gmail.com',
       password: 'a',
@@ -177,8 +177,8 @@ describe('Article module', async() => {
       description: 'foo',
       body: 'bar'
     }, secondAuthorUser.username);
-    await user.followUser(readerUser.username, secondAuthorUser.username);
-    await user.followUser(readerUser.username, authorUser.username);
+    await User.followUser(readerUser.username, secondAuthorUser.username);
+    await User.followUser(readerUser.username, authorUser.username);
     let feed = await Article.getFeed(readerUser.username);
     feed.forEach(expectArticleSchema);
     expect(feed).to.be.an('array').to.have.lengthOf(13);
@@ -194,7 +194,7 @@ describe('Article module', async() => {
     }
 
     // Unfollow first author, end expect only second author's article
-    await user.unfollowUser(readerUser.username, authorUser.username);
+    await User.unfollowUser(readerUser.username, authorUser.username);
     feed = await Article.getFeed(readerUser.username);
     feed.forEach(expectArticleSchema);
     expect(feed).to.be.an('array').to.have.lengthOf(1);
@@ -205,7 +205,7 @@ describe('Article module', async() => {
   });
 
   it('should get feed with limit/offset', async() => {
-    await user.followUser(readerUser.username, authorUser.username);
+    await User.followUser(readerUser.username, authorUser.username);
     let feed = await Article.getFeed(readerUser.username, { limit: 3 });
     feed.forEach(expectArticleSchema);
     expect(feed).to.be.an('array').to.have.lengthOf(3);
@@ -257,7 +257,7 @@ describe('Article module', async() => {
     }
 
     // Verify following bit is set correctly
-    await user.followUser(readerUser.username, authorUser.username);
+    await User.followUser(readerUser.username, authorUser.username);
     retrievedComments = await Article.getAllComments(createdArticle.slug, readerUser.username);
     retrievedComments.forEach(expectCommentSchema);
     for (let i = 0; i < retrievedComments.length; ++i) {
@@ -275,7 +275,7 @@ function delay(time) {
 
 async function cleanSlate() {
   mlog.log('Deleting all users.');
-  await user.testutils.__deleteAllUsers();
+  await User.testutils.__deleteAllUsers();
   mlog.log('Deleting all articles.');
   await Article.testutils.__deleteAll();
   mlog.log('Deleting all comments.');
