@@ -8,6 +8,25 @@
   "item": [{
       "name": "automated",
       "item": [{
+          "name": "Clean Slate",
+          "request": {
+            "method": "PURGE",
+            "header": [],
+            "body": {},
+            "url": {
+              "raw": "{{apiUrl}}/__DELETE_ALL_DATA__",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "__DELETE_ALL_DATA__"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
           "name": "Ping",
           "event": [{
             "listen": "test",
@@ -462,6 +481,105 @@
               ],
               "path": [
                 "articles"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Add Comment",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "tests['should have status 200'] = pm.response.code === 200;",
+                "res = pm.response.json();",
+                "console.log(res);",
+                "var comment = res.comment;",
+                "tests['should have comment field'] = typeof(comment) === 'object';",
+                "",
+                "var expectedCommentFields = ['body', 'createdAt', 'updatedAt', 'author', 'id'];",
+                "expectedCommentFields.forEach(function(key) {",
+                "    tests[`comment should have ${key} field`] = (typeof(comment[key]) !== 'undefined');",
+                "});",
+                "tests['should have correct body'] = comment.body === 'His name was my name too.';",
+                "",
+                "var author = comment.author;",
+                "tests['should have author field'] = typeof(author) === 'object';",
+                "var expectedAuthorFields = ['username', 'bio', 'image', 'following'];",
+                "expectedAuthorFields.forEach(function(key) {",
+                "    tests[`author should have ${key} field`] = (typeof(author[key]) !== 'undefined');",
+                "});",
+                "tests['author username should be correct'] = author.username === 'basicuser';",
+                "",
+                "pm.globals.unset('commentId');",
+                "pm.globals.set('commentId', comment.id);",
+                "tests['global variable commentId should be set'] = pm.globals.get('commentId');",
+                ""
+              ]
+            }
+          }],
+          "request": {
+            "method": "POST",
+            "header": [{
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Authorization",
+                "value": "Token {{authToken}}"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"comment\": {\n    \"body\": \"His name was my name too.\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{apiUrl}}/articles/{{articleSlug}}/comments",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "articles",
+                "{{articleSlug}}",
+                "comments"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
+          "name": "Get Comments",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "tests['should have status 200'] = pm.response.code === 200;",
+                "res = pm.response.json();",
+                "var comments = res.comments;",
+                "tests['should have comments field'] = Array.isArray(comments);",
+                "",
+                ""
+              ]
+            }
+          }],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {},
+            "url": {
+              "raw": "{{apiUrl}}/articles/{{articleSlug}}/comments",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "articles",
+                "{{articleSlug}}",
+                "comments"
               ]
             },
             "description": ""

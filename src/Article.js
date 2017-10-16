@@ -280,8 +280,8 @@ module.exports = {
   testutils: {
     async __deleteAll() {
       /* istanbul ignore next */
-      if (namespace != 'test') {
-        console.warn(`namespace is not test but [${namespace}], skipping.`);
+      if (namespace != 'test' && namespace != 'test-api') {
+        console.warn(`namespace is not test/test-api but [${namespace}], skipping.`);
         return;
       }
       const articleKeys = (await ds.createQuery(namespace, 'Article').select('__key__').run())[0];
@@ -291,8 +291,8 @@ module.exports = {
     },
     async __deleteAllComments() {
       /* istanbul ignore next */
-      if (namespace != 'test') {
-        console.warn(`namespace is not test but [${namespace}], skipping.`);
+      if (namespace != 'test' && namespace != 'test-api') {
+        console.warn(`namespace is not test/test-api but [${namespace}], skipping.`);
         return;
       }
       const commentKeys = (await ds.createQuery(namespace, 'Comment').select('__key__').run())[0];

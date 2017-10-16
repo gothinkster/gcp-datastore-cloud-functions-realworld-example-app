@@ -26,6 +26,11 @@ module.exports = {
         pong: new Date(),
         DATASTORE_NAMESPACE: process.env.DATASTORE_NAMESPACE ? process.env.DATASTORE_NAMESPACE : '',
       })],
+      ['PURGE', '/__DELETE_ALL_DATA__', async() => {
+        await Article.testutils.__deleteAll();
+        await Article.testutils.__deleteAllComments();
+        res.status(200).send();
+      }],
 
       // Users
       ['POST', '/users/login', async() => res.status(200).send({ user: await User.login(req.body.user) })],
@@ -74,6 +79,19 @@ module.exports = {
         }
         res.status(200).send(await Article.delete(matchedPath.slug, validatedUsername));
       }],
+
+      // Comments
+      ['POST', '/articles/:slug/comments', async(matchedPath) => {
+        if (!validatedUser) {
+          res.status(401).send({ errors: { body: ['Must be logged in'], }, });
+        }
+        res.status(200).send({
+          comment: await Article.createComment(matchedPath.slug, validatedUsername, req.body.comment.body)
+        });
+      }],
+      ['GET', '/articles/:slug/comments', async(matchedPath) => res.status(200).send({
+        comments: await Article.getAllComments(matchedPath.slug, validatedUsername)
+      })],
 
     ];
 
