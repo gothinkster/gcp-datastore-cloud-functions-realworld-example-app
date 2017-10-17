@@ -6,800 +6,95 @@
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [{
-      "name": "automated",
-      "description": null,
-      "item": [{
-          "name": "Clean Slate",
-          "event": [{
-            "listen": "test",
-            "script": {
-              "type": "text/javascript",
-              "exec": [
-                "tests['should have status 200'] = pm.response.code === 200;",
-                ""
-              ]
-            }
+    "name": "automated",
+    "description": null,
+    "item": [{
+        "name": "Ping",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              "res = pm.response.json();",
+              "console.log(res);",
+              "tests['should have pong field'] = res.pong;",
+              ""
+            ]
+          }
+        }],
+        "request": {
+          "method": "GET",
+          "header": [{
+            "key": "Content-Type",
+            "value": "application/json"
           }],
-          "request": {
-            "method": "PURGE",
-            "header": [],
-            "body": {},
-            "url": {
-              "raw": "{{apiUrl}}/__DELETE_ALL_ARTICLE_DATA__",
-              "host": [
-                "{{apiUrl}}"
-              ],
-              "path": [
-                "__DELETE_ALL_ARTICLE_DATA__"
-              ]
-            },
-            "description": ""
-          },
-          "response": []
-        },
-        {
-          "name": "Ping",
-          "event": [{
-            "listen": "test",
-            "script": {
-              "type": "text/javascript",
-              "exec": [
-                "tests['should have status 200'] = pm.response.code === 200;",
-                "res = pm.response.json();",
-                "console.log(res);",
-                "tests['should have pong field'] = res.pong;",
-                ""
-              ]
-            }
-          }],
-          "request": {
-            "method": "GET",
-            "header": [{
-              "key": "Content-Type",
-              "value": "application/json"
-            }],
-            "body": {},
-            "url": {
-              "raw": "{{apiUrl}}/ping",
-              "host": [
-                "{{apiUrl}}"
-              ],
-              "path": [
-                "ping"
-              ]
-            },
-            "description": null
-          },
-          "response": []
-        },
-        {
-          "name": "Login",
-          "event": [{
-            "listen": "test",
-            "script": {
-              "type": "text/javascript",
-              "exec": [
-                "tests['should have status 200'] = pm.response.code === 200;",
-                "res = pm.response.json();",
-                "console.log(res);",
-                "tests['should have user field'] = typeof(res.user) === 'object';",
-                "var user = res.user;",
-                "",
-                "var expectedUserFields = ['email', 'token', 'username', 'bio', 'image'];",
-                "expectedUserFields.forEach(function(key) {",
-                "    tests[`user should have ${key} field`] = (typeof(user[key]) !== 'undefined');",
-                "});",
-                "tests['should have correct email'] = user.email == 'basicuser@mail.com';",
-                "tests['should have correct username'] = user.username == 'basicuser';",
-                "",
-                "pm.globals.unset('authToken');",
-                "pm.globals.set('authToken', user.token);",
-                "tests['global variable token should be set'] = pm.globals.get('authToken');",
-                ""
-              ]
-            }
-          }],
-          "request": {
-            "method": "POST",
-            "header": [{
-              "key": "Content-Type",
-              "value": "application/json"
-            }],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"user\": {\n    \"email\": \"basicuser@mail.com\",\n    \"password\": \"password\"\n  }\n}"
-            },
-            "url": {
-              "raw": "{{apiUrl}}/users/login",
-              "host": [
-                "{{apiUrl}}"
-              ],
-              "path": [
-                "users",
-                "login"
-              ]
-            },
-            "description": null
-          },
-          "response": []
-        },
-        {
-          "name": "Authenticate",
-          "event": [{
-            "listen": "test",
-            "script": {
-              "type": "text/javascript",
-              "exec": [
-                "tests['should have status 200'] = pm.response.code === 200;",
-                "res = pm.response.json();",
-                "console.log(res);",
-                "tests['should have user field'] = typeof(res.user) === 'object';",
-                "var user = res.user;",
-                "",
-                "var expectedUserFields = ['email', 'token', 'username', 'bio', 'image'];",
-                "expectedUserFields.forEach(function(key) {",
-                "    tests[`user should have ${key} field`] = (typeof(user[key]) !== 'undefined');",
-                "});",
-                "tests['should have correct email'] = user.email == 'basicuser@mail.com';",
-                "tests['should have correct username'] = user.username == 'basicuser';",
-                ""
-              ]
-            }
-          }],
-          "request": {
-            "method": "GET",
-            "header": [{
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Token {{authToken}}"
-              }
+          "body": {},
+          "url": {
+            "raw": "{{apiUrl}}/ping",
+            "host": [
+              "{{apiUrl}}"
             ],
-            "body": {},
-            "url": {
-              "raw": "{{apiUrl}}/user",
-              "host": [
-                "{{apiUrl}}"
-              ],
-              "path": [
-                "user"
-              ]
-            },
-            "description": null
+            "path": [
+              "ping"
+            ]
           },
-          "response": []
+          "description": null
         },
-        {
-          "name": "404",
-          "event": [{
-            "listen": "test",
-            "script": {
-              "type": "text/javascript",
-              "exec": [
-                "tests['should have status 404'] = pm.response.code === 404;",
-                "res = pm.response.json();",
-                "console.log(res);",
-                "tests['should have correct error message'] = res.errors.body[0].indexOf('404 Not found') > -1;",
-                ""
-              ]
-            }
-          }],
-          "request": {
-            "method": "GET",
-            "header": [],
-            "body": {},
-            "url": {
-              "raw": "{{apiUrl}}/nopez",
-              "host": [
-                "{{apiUrl}}"
-              ],
-              "path": [
-                "nopez"
-              ]
-            },
-            "description": ""
-          },
-          "response": []
-        },
-        {
-          "name": "Follow",
-          "event": [{
-            "listen": "test",
-            "script": {
-              "type": "text/javascript",
-              "exec": [
-                "tests['should have status 200'] = pm.response.code === 200;",
-                "res = pm.response.json();",
-                "console.log(res);",
-                "var profile = res.profile;",
-                "tests['should have profile field'] = typeof(profile) === 'object';",
-                "var expectedProfileFields = ['username', 'bio', 'image', 'following'];",
-                "expectedProfileFields.forEach(function(key) {",
-                "    tests[`profile should have ${key} field`] = (typeof(profile[key]) !== 'undefined');",
-                "});",
-                "tests['should have correct username'] = profile.username === 'celebuser';",
-                "tests['should have correct following'] = profile.following === true;",
-                ""
-              ]
-            }
-          }],
-          "request": {
-            "method": "POST",
-            "header": [{
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Token {{authToken}}"
-              }
+        "response": []
+      },
+      {
+        "name": "Clean Slate",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              ""
+            ]
+          }
+        }],
+        "request": {
+          "method": "PURGE",
+          "header": [],
+          "body": {},
+          "url": {
+            "raw": "{{apiUrl}}/__DELETE_ALL_DATA__",
+            "host": [
+              "{{apiUrl}}"
             ],
-            "body": {},
-            "url": {
-              "raw": "{{apiUrl}}/profiles/celebuser/follow",
-              "host": [
-                "{{apiUrl}}"
-              ],
-              "path": [
-                "profiles",
-                "celebuser",
-                "follow"
-              ]
-            },
-            "description": ""
+            "path": [
+              "__DELETE_ALL_DATA__"
+            ]
           },
-          "response": []
+          "description": ""
         },
-        {
-          "name": "Profile",
-          "event": [{
-            "listen": "test",
-            "script": {
-              "type": "text/javascript",
-              "exec": [
-                "tests['should have status 200'] = pm.response.code === 200;",
-                "res = pm.response.json();",
-                "console.log(res);",
-                "var profile = res.profile;",
-                "tests['should have profile field'] = typeof(profile) === 'object';",
-                "var expectedProfileFields = ['username', 'bio', 'image', 'following'];",
-                "expectedProfileFields.forEach(function(key) {",
-                "    tests[`profile should have ${key} field`] = (typeof(profile[key]) !== 'undefined');",
-                "});",
-                "tests['should have correct username'] = profile.username === 'celebuser';",
-                "tests['should have correct following'] = profile.following === true;",
-                ""
-              ]
-            }
-          }],
-          "request": {
-            "method": "GET",
-            "header": [{
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Token {{authToken}}"
-              }
-            ],
-            "body": {},
-            "url": {
-              "raw": "{{apiUrl}}/profiles/celebuser",
-              "host": [
-                "{{apiUrl}}"
-              ],
-              "path": [
-                "profiles",
-                "celebuser"
-              ]
-            },
-            "description": ""
-          },
-          "response": []
-        },
-        {
-          "name": "Unfollow",
-          "event": [{
-            "listen": "test",
-            "script": {
-              "type": "text/javascript",
-              "exec": [
-                "tests['should have status 200'] = pm.response.code === 200;",
-                "res = pm.response.json();",
-                "console.log(res);",
-                "var profile = res.profile;",
-                "tests['should have profile field'] = typeof(profile) === 'object';",
-                "var expectedProfileFields = ['username', 'bio', 'image', 'following'];",
-                "expectedProfileFields.forEach(function(key) {",
-                "    tests[`profile should have ${key} field`] = (typeof(profile[key]) !== 'undefined');",
-                "});",
-                "tests['should have correct username'] = profile.username === 'celebuser';",
-                "tests['should have correct following'] = profile.following === false;",
-                ""
-              ]
-            }
-          }],
-          "request": {
-            "method": "DELETE",
-            "header": [{
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Token {{authToken}}"
-              }
-            ],
-            "body": {},
-            "url": {
-              "raw": "{{apiUrl}}/profiles/celebuser/follow",
-              "host": [
-                "{{apiUrl}}"
-              ],
-              "path": [
-                "profiles",
-                "celebuser",
-                "follow"
-              ]
-            },
-            "description": ""
-          },
-          "response": []
-        },
-        {
-          "name": "Create Article",
-          "event": [{
-            "listen": "test",
-            "script": {
-              "type": "text/javascript",
-              "exec": [
-                "tests['should have status 200'] = pm.response.code === 200;",
-                "res = pm.response.json();",
-                "console.log(res);",
-                "var article = res.article;",
-                "tests['should have article field'] = typeof(article) === 'object';",
-                "",
-                "var expectedArticleFields = ['slug', 'title', 'description', 'body', 'tagList', 'createdAt', 'updatedAt', 'author', 'favorited', 'favoritesCount'];",
-                "expectedArticleFields.forEach(function(key) {",
-                "    tests[`article should have ${key} field`] = (typeof(article[key]) !== 'undefined');",
-                "});",
-                "tests['should have correct title'] = article.title === 'How to train your dragon';",
-                "tests['should have correct decription'] = article.description === 'Ever wonder how?';",
-                "tests['should have correct body'] = article.body === 'You have to believe';",
-                "",
-                "var author = article.author;",
-                "tests['should have author field'] = typeof(author) === 'object';",
-                "var expectedAuthorFields = ['username', 'bio', 'image', 'following'];",
-                "expectedAuthorFields.forEach(function(key) {",
-                "    tests[`author should have ${key} field`] = (typeof(author[key]) !== 'undefined');",
-                "});",
-                "tests['author username should be correct'] = author.username === 'basicuser';",
-                "",
-                "pm.globals.unset('articleSlug');",
-                "pm.globals.set('articleSlug', article.slug);",
-                "tests['global variable articleSlug should be set'] = pm.globals.get('articleSlug');",
-                ""
-              ]
-            }
-          }],
-          "request": {
-            "method": "POST",
-            "header": [{
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Token {{authToken}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"article\": {\n    \"title\": \"How to train your dragon\",\n    \"description\": \"Ever wonder how?\",\n    \"body\": \"You have to believe\",\n    \"tagList\": [\"reactjs\", \"angularjs\", \"dragons\"]\n  }\n}"
-            },
-            "url": {
-              "raw": "{{apiUrl}}/articles",
-              "host": [
-                "{{apiUrl}}"
-              ],
-              "path": [
-                "articles"
-              ]
-            },
-            "description": ""
-          },
-          "response": []
-        },
-        {
-          "name": "Get Article",
-          "event": [{
-            "listen": "test",
-            "script": {
-              "type": "text/javascript",
-              "exec": [
-                "tests['should have status 200'] = pm.response.code === 200;",
-                "res = pm.response.json();",
-                "console.log(res);",
-                "var article = res.article;",
-                "tests['should have article field'] = typeof(article) === 'object';",
-                "",
-                "var expectedArticleFields = ['slug', 'title', 'description', 'body', 'tagList', 'createdAt', 'updatedAt', 'author', 'favorited', 'favoritesCount'];",
-                "expectedArticleFields.forEach(function(key) {",
-                "    tests[`article should have ${key} field`] = (typeof(article[key]) !== 'undefined');",
-                "});",
-                "tests['should have correct title'] = article.title === 'How to train your dragon';",
-                "tests['should have correct decription'] = article.description === 'Ever wonder how?';",
-                "tests['should have correct body'] = article.body === 'You have to believe';",
-                "",
-                "var author = article.author;",
-                "tests['should have author field'] = typeof(author) === 'object';",
-                "var expectedAuthorFields = ['username', 'bio', 'image', 'following'];",
-                "expectedAuthorFields.forEach(function(key) {",
-                "    tests[`author should have ${key} field`] = (typeof(author[key]) !== 'undefined');",
-                "});",
-                "tests['author username should be correct'] = author.username === 'basicuser';",
-                ""
-              ]
-            }
-          }],
-          "request": {
-            "method": "GET",
-            "header": [],
-            "body": {},
-            "url": {
-              "raw": "{{apiUrl}}/articles/{{articleSlug}}",
-              "host": [
-                "{{apiUrl}}"
-              ],
-              "path": [
-                "articles",
-                "{{articleSlug}}"
-              ]
-            },
-            "description": ""
-          },
-          "response": []
-        },
-        {
-          "name": "Get All Articles",
-          "event": [{
-            "listen": "test",
-            "script": {
-              "type": "text/javascript",
-              "exec": [
-                "tests['should have status 200'] = pm.response.code === 200;",
-                "res = pm.response.json();",
-                "console.log(res);",
-                "var articles = res.articles;",
-                "tests['should have articles field'] = typeof(articles) === 'object';",
-                "tests['should have articlesCount field'] = typeof(res.articlesCount) !== 'undefined';",
-                "",
-                ""
-              ]
-            }
-          }],
-          "request": {
-            "method": "GET",
-            "header": [{
-              "key": "Authorization",
-              "value": "Token {{authToken}}"
-            }],
-            "body": {},
-            "url": {
-              "raw": "{{apiUrl}}/articles",
-              "host": [
-                "{{apiUrl}}"
-              ],
-              "path": [
-                "articles"
-              ]
-            },
-            "description": ""
-          },
-          "response": []
-        },
-        {
-          "name": "Add Comment",
-          "event": [{
-            "listen": "test",
-            "script": {
-              "type": "text/javascript",
-              "exec": [
-                "tests['should have status 200'] = pm.response.code === 200;",
-                "res = pm.response.json();",
-                "console.log(res);",
-                "var comment = res.comment;",
-                "tests['should have comment field'] = typeof(comment) === 'object';",
-                "",
-                "var expectedCommentFields = ['body', 'createdAt', 'updatedAt', 'author', 'id'];",
-                "expectedCommentFields.forEach(function(key) {",
-                "    tests[`comment should have ${key} field`] = (typeof(comment[key]) !== 'undefined');",
-                "});",
-                "tests['should have correct body'] = comment.body === 'His name was my name too.';",
-                "",
-                "var author = comment.author;",
-                "tests['should have author field'] = typeof(author) === 'object';",
-                "var expectedAuthorFields = ['username', 'bio', 'image', 'following'];",
-                "expectedAuthorFields.forEach(function(key) {",
-                "    tests[`author should have ${key} field`] = (typeof(author[key]) !== 'undefined');",
-                "});",
-                "tests['author username should be correct'] = author.username === 'basicuser';",
-                "",
-                "pm.globals.unset('commentId');",
-                "pm.globals.set('commentId', comment.id);",
-                "tests['global variable commentId should be set'] = pm.globals.get('commentId');",
-                ""
-              ]
-            }
-          }],
-          "request": {
-            "method": "POST",
-            "header": [{
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Token {{authToken}}"
-              }
-            ],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"comment\": {\n    \"body\": \"His name was my name too.\"\n  }\n}"
-            },
-            "url": {
-              "raw": "{{apiUrl}}/articles/{{articleSlug}}/comments",
-              "host": [
-                "{{apiUrl}}"
-              ],
-              "path": [
-                "articles",
-                "{{articleSlug}}",
-                "comments"
-              ]
-            },
-            "description": ""
-          },
-          "response": []
-        },
-        {
-          "name": "Get Comments",
-          "event": [{
-            "listen": "test",
-            "script": {
-              "type": "text/javascript",
-              "exec": [
-                "tests['should have status 200'] = pm.response.code === 200;",
-                "res = pm.response.json();",
-                "var comments = res.comments;",
-                "tests['should have comments field'] = Array.isArray(comments);",
-                "",
-                ""
-              ]
-            }
-          }],
-          "request": {
-            "method": "GET",
-            "header": [],
-            "body": {},
-            "url": {
-              "raw": "{{apiUrl}}/articles/{{articleSlug}}/comments",
-              "host": [
-                "{{apiUrl}}"
-              ],
-              "path": [
-                "articles",
-                "{{articleSlug}}",
-                "comments"
-              ]
-            },
-            "description": ""
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Comment",
-          "event": [{
-            "listen": "test",
-            "script": {
-              "type": "text/javascript",
-              "exec": [
-                "tests['should have status 200'] = pm.response.code === 200;",
-                ""
-              ]
-            }
-          }],
-          "request": {
-            "method": "DELETE",
-            "header": [{
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Token {{authToken}}"
-              }
-            ],
-            "body": {},
-            "url": {
-              "raw": "{{apiUrl}}/articles/{{articleSlug}}/comments/{{commentId}}",
-              "host": [
-                "{{apiUrl}}"
-              ],
-              "path": [
-                "articles",
-                "{{articleSlug}}",
-                "comments",
-                "{{commentId}}"
-              ]
-            },
-            "description": ""
-          },
-          "response": []
-        },
-        {
-          "name": "Favorite Article",
-          "event": [{
-            "listen": "test",
-            "script": {
-              "type": "text/javascript",
-              "exec": [
-                "tests['should have status 200'] = pm.response.code === 200;",
-                "res = pm.response.json();",
-                "var article = res.article;",
-                "tests['should have article field'] = typeof(res.article) !== 'undefined';",
-                "tests['should be favorited'] = article.favorited === true;",
-                "tests['should have favoritesCount of one'] = article.favoritesCount === 1;",
-                ""
-              ]
-            }
-          }],
-          "request": {
-            "method": "POST",
-            "header": [{
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Token {{authToken}}"
-              }
-            ],
-            "body": {},
-            "url": {
-              "raw": "{{apiUrl}}/articles/{{articleSlug}}/favorite",
-              "host": [
-                "{{apiUrl}}"
-              ],
-              "path": [
-                "articles",
-                "{{articleSlug}}",
-                "favorite"
-              ]
-            },
-            "description": ""
-          },
-          "response": []
-        },
-        {
-          "name": "Unfavorite Article",
-          "event": [{
-            "listen": "test",
-            "script": {
-              "type": "text/javascript",
-              "exec": [
-                "tests['should have status 200'] = pm.response.code === 200;",
-                "res = pm.response.json();",
-                "var article = res.article;",
-                "tests['should have article field'] = typeof(res.article) !== 'undefined';",
-                "tests['should not be favorited'] = article.favorited === false;",
-                "tests['should have favoritesCount of zero'] = article.favoritesCount === 0;",
-                ""
-              ]
-            }
-          }],
-          "request": {
-            "method": "DELETE",
-            "header": [{
-                "key": "Content-Type",
-                "value": "application/json"
-              },
-              {
-                "key": "Authorization",
-                "value": "Token {{authToken}}"
-              }
-            ],
-            "body": {},
-            "url": {
-              "raw": "{{apiUrl}}/articles/{{articleSlug}}/favorite",
-              "host": [
-                "{{apiUrl}}"
-              ],
-              "path": [
-                "articles",
-                "{{articleSlug}}",
-                "favorite"
-              ]
-            },
-            "description": ""
-          },
-          "response": []
-        },
-        {
-          "name": "Get All Tags",
-          "event": [{
-            "listen": "test",
-            "script": {
-              "type": "text/javascript",
-              "exec": [
-                "tests['should have status 200'] = pm.response.code === 200;",
-                "res = pm.response.json();",
-                "var tags = res.tags;",
-                "tests['should have tags field'] = typeof(tags) !== 'undefined';",
-                "tests['tags should be an array'] = Array.isArray(tags);",
-                ""
-              ]
-            }
-          }],
-          "request": {
-            "method": "GET",
-            "header": [],
-            "body": {},
-            "url": {
-              "raw": "{{apiUrl}}/tags",
-              "host": [
-                "{{apiUrl}}"
-              ],
-              "path": [
-                "tags"
-              ]
-            },
-            "description": ""
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Article",
-          "event": [{
-            "listen": "test",
-            "script": {
-              "type": "text/javascript",
-              "exec": [
-                "tests['should have status 200'] = pm.response.code === 200;",
-                ""
-              ]
-            }
-          }],
-          "request": {
-            "method": "DELETE",
-            "header": [{
-              "key": "Authorization",
-              "value": "Token {{authToken}}"
-            }],
-            "body": {},
-            "url": {
-              "raw": "{{apiUrl}}/articles/{{articleSlug}}",
-              "host": [
-                "{{apiUrl}}"
-              ],
-              "path": [
-                "articles",
-                "{{articleSlug}}"
-              ]
-            },
-            "description": ""
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "manual",
-      "item": [{
+        "response": []
+      },
+      {
         "name": "Signup",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              "res = pm.response.json();",
+              "console.log(res);",
+              "tests['should have user field'] = typeof(res.user) === 'object';",
+              "var user = res.user;",
+              "",
+              "var expectedUserFields = ['email', 'token', 'username', 'bio', 'image'];",
+              "expectedUserFields.forEach(function(key) {",
+              "    tests[`user should have ${key} field`] = (typeof(user[key]) !== 'undefined');",
+              "});",
+              "tests['should have correct email'] = user.email == 'basicuser@mail.com';",
+              "tests['should have correct username'] = user.username == 'basicuser';",
+              ""
+            ]
+          }
+        }],
         "request": {
           "method": "POST",
           "header": [{
@@ -822,7 +117,947 @@
           "description": null
         },
         "response": []
-      }]
-    }
-  ]
+      },
+      {
+        "name": "Signup Another User",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              "res = pm.response.json();",
+              "console.log(res);",
+              "tests['should have user field'] = typeof(res.user) === 'object';",
+              "var user = res.user;",
+              "",
+              "var expectedUserFields = ['email', 'token', 'username', 'bio', 'image'];",
+              "expectedUserFields.forEach(function(key) {",
+              "    tests[`user should have ${key} field`] = (typeof(user[key]) !== 'undefined');",
+              "});",
+              "tests['should have correct email'] = user.email == 'celebuser@mail.com';",
+              "tests['should have correct username'] = user.username == 'celebuser';",
+              ""
+            ]
+          }
+        }],
+        "request": {
+          "method": "POST",
+          "header": [{
+            "key": "Content-Type",
+            "value": "application/json"
+          }],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"user\": {\n    \"username\": \"celebuser\",\n    \"email\": \"celebuser@mail.com\",\n    \"password\": \"password\"\n  }\n}"
+          },
+          "url": {
+            "raw": "{{apiUrl}}/users",
+            "host": [
+              "{{apiUrl}}"
+            ],
+            "path": [
+              "users"
+            ]
+          },
+          "description": null
+        },
+        "response": []
+      },
+      {
+        "name": "Login",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              "res = pm.response.json();",
+              "console.log(res);",
+              "tests['should have user field'] = typeof(res.user) === 'object';",
+              "var user = res.user;",
+              "",
+              "var expectedUserFields = ['email', 'token', 'username', 'bio', 'image'];",
+              "expectedUserFields.forEach(function(key) {",
+              "    tests[`user should have ${key} field`] = (typeof(user[key]) !== 'undefined');",
+              "});",
+              "tests['should have correct email'] = user.email == 'basicuser@mail.com';",
+              "tests['should have correct username'] = user.username == 'basicuser';",
+              "",
+              "pm.globals.unset('authToken');",
+              "pm.globals.set('authToken', user.token);",
+              "tests['global variable token should be set'] = pm.globals.get('authToken');",
+              ""
+            ]
+          }
+        }],
+        "request": {
+          "method": "POST",
+          "header": [{
+            "key": "Content-Type",
+            "value": "application/json"
+          }],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"user\": {\n    \"email\": \"basicuser@mail.com\",\n    \"password\": \"password\"\n  }\n}"
+          },
+          "url": {
+            "raw": "{{apiUrl}}/users/login",
+            "host": [
+              "{{apiUrl}}"
+            ],
+            "path": [
+              "users",
+              "login"
+            ]
+          },
+          "description": null
+        },
+        "response": []
+      },
+      {
+        "name": "Authenticate",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              "res = pm.response.json();",
+              "console.log(res);",
+              "tests['should have user field'] = typeof(res.user) === 'object';",
+              "var user = res.user;",
+              "",
+              "var expectedUserFields = ['email', 'token', 'username', 'bio', 'image'];",
+              "expectedUserFields.forEach(function(key) {",
+              "    tests[`user should have ${key} field`] = (typeof(user[key]) !== 'undefined');",
+              "});",
+              "tests['should have correct email'] = user.email == 'basicuser@mail.com';",
+              "tests['should have correct username'] = user.username == 'basicuser';",
+              ""
+            ]
+          }
+        }],
+        "request": {
+          "method": "GET",
+          "header": [{
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Authorization",
+              "value": "Token {{authToken}}"
+            }
+          ],
+          "body": {},
+          "url": {
+            "raw": "{{apiUrl}}/user",
+            "host": [
+              "{{apiUrl}}"
+            ],
+            "path": [
+              "user"
+            ]
+          },
+          "description": null
+        },
+        "response": []
+      },
+      {
+        "name": "404",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 404'] = pm.response.code === 404;",
+              "res = pm.response.json();",
+              "console.log(res);",
+              "tests['should have correct error message'] = res.errors.body[0].indexOf('404 Not found') > -1;",
+              ""
+            ]
+          }
+        }],
+        "request": {
+          "method": "GET",
+          "header": [],
+          "body": {},
+          "url": {
+            "raw": "{{apiUrl}}/nopez",
+            "host": [
+              "{{apiUrl}}"
+            ],
+            "path": [
+              "nopez"
+            ]
+          },
+          "description": ""
+        },
+        "response": []
+      },
+      {
+        "name": "Follow",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              "res = pm.response.json();",
+              "console.log(res);",
+              "var profile = res.profile;",
+              "tests['should have profile field'] = typeof(profile) === 'object';",
+              "var expectedProfileFields = ['username', 'bio', 'image', 'following'];",
+              "expectedProfileFields.forEach(function(key) {",
+              "    tests[`profile should have ${key} field`] = (typeof(profile[key]) !== 'undefined');",
+              "});",
+              "tests['should have correct username'] = profile.username === 'celebuser';",
+              "tests['should have correct following'] = profile.following === true;",
+              ""
+            ]
+          }
+        }],
+        "request": {
+          "method": "POST",
+          "header": [{
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Authorization",
+              "value": "Token {{authToken}}"
+            }
+          ],
+          "body": {},
+          "url": {
+            "raw": "{{apiUrl}}/profiles/celebuser/follow",
+            "host": [
+              "{{apiUrl}}"
+            ],
+            "path": [
+              "profiles",
+              "celebuser",
+              "follow"
+            ]
+          },
+          "description": ""
+        },
+        "response": []
+      },
+      {
+        "name": "Profile",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              "res = pm.response.json();",
+              "console.log(res);",
+              "var profile = res.profile;",
+              "tests['should have profile field'] = typeof(profile) === 'object';",
+              "var expectedProfileFields = ['username', 'bio', 'image', 'following'];",
+              "expectedProfileFields.forEach(function(key) {",
+              "    tests[`profile should have ${key} field`] = (typeof(profile[key]) !== 'undefined');",
+              "});",
+              "tests['should have correct username'] = profile.username === 'celebuser';",
+              "tests['should have correct following'] = profile.following === true;",
+              ""
+            ]
+          }
+        }],
+        "request": {
+          "method": "GET",
+          "header": [{
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Authorization",
+              "value": "Token {{authToken}}"
+            }
+          ],
+          "body": {},
+          "url": {
+            "raw": "{{apiUrl}}/profiles/celebuser",
+            "host": [
+              "{{apiUrl}}"
+            ],
+            "path": [
+              "profiles",
+              "celebuser"
+            ]
+          },
+          "description": ""
+        },
+        "response": []
+      },
+      {
+        "name": "Unfollow",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              "res = pm.response.json();",
+              "console.log(res);",
+              "var profile = res.profile;",
+              "tests['should have profile field'] = typeof(profile) === 'object';",
+              "var expectedProfileFields = ['username', 'bio', 'image', 'following'];",
+              "expectedProfileFields.forEach(function(key) {",
+              "    tests[`profile should have ${key} field`] = (typeof(profile[key]) !== 'undefined');",
+              "});",
+              "tests['should have correct username'] = profile.username === 'celebuser';",
+              "tests['should have correct following'] = profile.following === false;",
+              ""
+            ]
+          }
+        }],
+        "request": {
+          "method": "DELETE",
+          "header": [{
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Authorization",
+              "value": "Token {{authToken}}"
+            }
+          ],
+          "body": {},
+          "url": {
+            "raw": "{{apiUrl}}/profiles/celebuser/follow",
+            "host": [
+              "{{apiUrl}}"
+            ],
+            "path": [
+              "profiles",
+              "celebuser",
+              "follow"
+            ]
+          },
+          "description": ""
+        },
+        "response": []
+      },
+      {
+        "name": "Create Article",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              "res = pm.response.json();",
+              "console.log(res);",
+              "var article = res.article;",
+              "tests['should have article field'] = typeof(article) === 'object';",
+              "",
+              "var expectedArticleFields = ['slug', 'title', 'description', 'body', 'tagList', 'createdAt', 'updatedAt', 'author', 'favorited', 'favoritesCount'];",
+              "expectedArticleFields.forEach(function(key) {",
+              "    tests[`article should have ${key} field`] = (typeof(article[key]) !== 'undefined');",
+              "});",
+              "tests['should have correct title'] = article.title === 'How to train your dragon';",
+              "tests['should have correct decription'] = article.description === 'Ever wonder how?';",
+              "tests['should have correct body'] = article.body === 'You have to believe';",
+              "",
+              "var author = article.author;",
+              "tests['should have author field'] = typeof(author) === 'object';",
+              "var expectedAuthorFields = ['username', 'bio', 'image', 'following'];",
+              "expectedAuthorFields.forEach(function(key) {",
+              "    tests[`author should have ${key} field`] = (typeof(author[key]) !== 'undefined');",
+              "});",
+              "tests['author username should be correct'] = author.username === 'basicuser';",
+              "",
+              "pm.globals.unset('articleSlug');",
+              "pm.globals.set('articleSlug', article.slug);",
+              "tests['global variable articleSlug should be set'] = pm.globals.get('articleSlug');",
+              ""
+            ]
+          }
+        }],
+        "request": {
+          "method": "POST",
+          "header": [{
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Authorization",
+              "value": "Token {{authToken}}"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"article\": {\n    \"title\": \"How to train your dragon\",\n    \"description\": \"Ever wonder how?\",\n    \"body\": \"You have to believe\",\n    \"tagList\": [\"reactjs\", \"angularjs\", \"dragons\"]\n  }\n}"
+          },
+          "url": {
+            "raw": "{{apiUrl}}/articles",
+            "host": [
+              "{{apiUrl}}"
+            ],
+            "path": [
+              "articles"
+            ]
+          },
+          "description": ""
+        },
+        "response": []
+      },
+      {
+        "name": "Get Article",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              "res = pm.response.json();",
+              "console.log(res);",
+              "var article = res.article;",
+              "tests['should have article field'] = typeof(article) === 'object';",
+              "",
+              "var expectedArticleFields = ['slug', 'title', 'description', 'body', 'tagList', 'createdAt', 'updatedAt', 'author', 'favorited', 'favoritesCount'];",
+              "expectedArticleFields.forEach(function(key) {",
+              "    tests[`article should have ${key} field`] = (typeof(article[key]) !== 'undefined');",
+              "});",
+              "tests['should have correct title'] = article.title === 'How to train your dragon';",
+              "tests['should have correct decription'] = article.description === 'Ever wonder how?';",
+              "tests['should have correct body'] = article.body === 'You have to believe';",
+              "",
+              "var author = article.author;",
+              "tests['should have author field'] = typeof(author) === 'object';",
+              "var expectedAuthorFields = ['username', 'bio', 'image', 'following'];",
+              "expectedAuthorFields.forEach(function(key) {",
+              "    tests[`author should have ${key} field`] = (typeof(author[key]) !== 'undefined');",
+              "});",
+              "tests['author username should be correct'] = author.username === 'basicuser';",
+              ""
+            ]
+          }
+        }],
+        "request": {
+          "method": "GET",
+          "header": [],
+          "body": {},
+          "url": {
+            "raw": "{{apiUrl}}/articles/{{articleSlug}}",
+            "host": [
+              "{{apiUrl}}"
+            ],
+            "path": [
+              "articles",
+              "{{articleSlug}}"
+            ]
+          },
+          "description": ""
+        },
+        "response": []
+      },
+      {
+        "name": "Get All Articles",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              "res = pm.response.json();",
+              "console.log(res);",
+              "var articles = res.articles;",
+              "tests['should have articles field'] = typeof(articles) === 'object';",
+              "tests['should have articlesCount field'] = typeof(res.articlesCount) !== 'undefined';",
+              "",
+              ""
+            ]
+          }
+        }],
+        "request": {
+          "method": "GET",
+          "header": [{
+            "key": "Authorization",
+            "value": "Token {{authToken}}"
+          }],
+          "body": {},
+          "url": {
+            "raw": "{{apiUrl}}/articles",
+            "host": [
+              "{{apiUrl}}"
+            ],
+            "path": [
+              "articles"
+            ]
+          },
+          "description": ""
+        },
+        "response": []
+      },
+      {
+        "name": "Get All Articles Limit",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              "res = pm.response.json();",
+              "console.log(res);",
+              "var articles = res.articles;",
+              "tests['should have articles field'] = typeof(articles) === 'object';",
+              "tests['should have articlesCount field'] = typeof(res.articlesCount) !== 'undefined';",
+              "",
+              ""
+            ]
+          }
+        }],
+        "request": {
+          "method": "GET",
+          "header": [{
+            "key": "Authorization",
+            "value": "Token {{authToken}}"
+          }],
+          "body": {},
+          "url": {
+            "raw": "{{apiUrl}}/articles?limit=1",
+            "host": [
+              "{{apiUrl}}"
+            ],
+            "path": [
+              "articles"
+            ],
+            "query": [{
+              "key": "limit",
+              "value": "1",
+              "equals": true
+            }]
+          },
+          "description": ""
+        },
+        "response": []
+      },
+      {
+        "name": "Get All Articles Offset",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              "res = pm.response.json();",
+              "console.log(res);",
+              "var articles = res.articles;",
+              "tests['should have articles field'] = typeof(articles) === 'object';",
+              "tests['should have articlesCount field'] = typeof(res.articlesCount) !== 'undefined';",
+              "",
+              ""
+            ]
+          }
+        }],
+        "request": {
+          "method": "GET",
+          "header": [{
+            "key": "Authorization",
+            "value": "Token {{authToken}}"
+          }],
+          "body": {},
+          "url": {
+            "raw": "{{apiUrl}}/articles?offset=1",
+            "host": [
+              "{{apiUrl}}"
+            ],
+            "path": [
+              "articles"
+            ],
+            "query": [{
+              "key": "offset",
+              "value": "1",
+              "equals": true
+            }]
+          },
+          "description": ""
+        },
+        "response": []
+      },
+      {
+        "name": "Get All Articles by Tag",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              "res = pm.response.json();",
+              "console.log(res);",
+              "var articles = res.articles;",
+              "tests['should have articles field'] = typeof(articles) === 'object';",
+              "tests['should have articlesCount field'] = typeof(res.articlesCount) !== 'undefined';",
+              "",
+              ""
+            ]
+          }
+        }],
+        "request": {
+          "method": "GET",
+          "header": [{
+            "key": "Authorization",
+            "value": "Token {{authToken}}"
+          }],
+          "body": {},
+          "url": {
+            "raw": "{{apiUrl}}/articles?tag=dragons",
+            "host": [
+              "{{apiUrl}}"
+            ],
+            "path": [
+              "articles"
+            ],
+            "query": [{
+              "key": "tag",
+              "value": "dragons",
+              "equals": true
+            }]
+          },
+          "description": ""
+        },
+        "response": []
+      },
+      {
+        "name": "Get All Articles by Author",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              "res = pm.response.json();",
+              "console.log(res);",
+              "var articles = res.articles;",
+              "tests['should have articles field'] = typeof(articles) === 'object';",
+              "tests['should have articlesCount field'] = typeof(res.articlesCount) !== 'undefined';",
+              "",
+              ""
+            ]
+          }
+        }],
+        "request": {
+          "method": "GET",
+          "header": [{
+            "key": "Authorization",
+            "value": "Token {{authToken}}"
+          }],
+          "body": {},
+          "url": {
+            "raw": "{{apiUrl}}/articles?author=basicuser",
+            "host": [
+              "{{apiUrl}}"
+            ],
+            "path": [
+              "articles"
+            ],
+            "query": [{
+              "key": "author",
+              "value": "basicuser",
+              "equals": true
+            }]
+          },
+          "description": ""
+        },
+        "response": []
+      },
+      {
+        "name": "Add Comment",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              "res = pm.response.json();",
+              "console.log(res);",
+              "var comment = res.comment;",
+              "tests['should have comment field'] = typeof(comment) === 'object';",
+              "",
+              "var expectedCommentFields = ['body', 'createdAt', 'updatedAt', 'author', 'id'];",
+              "expectedCommentFields.forEach(function(key) {",
+              "    tests[`comment should have ${key} field`] = (typeof(comment[key]) !== 'undefined');",
+              "});",
+              "tests['should have correct body'] = comment.body === 'His name was my name too.';",
+              "",
+              "var author = comment.author;",
+              "tests['should have author field'] = typeof(author) === 'object';",
+              "var expectedAuthorFields = ['username', 'bio', 'image', 'following'];",
+              "expectedAuthorFields.forEach(function(key) {",
+              "    tests[`author should have ${key} field`] = (typeof(author[key]) !== 'undefined');",
+              "});",
+              "tests['author username should be correct'] = author.username === 'basicuser';",
+              "",
+              "pm.globals.unset('commentId');",
+              "pm.globals.set('commentId', comment.id);",
+              "tests['global variable commentId should be set'] = pm.globals.get('commentId');",
+              ""
+            ]
+          }
+        }],
+        "request": {
+          "method": "POST",
+          "header": [{
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Authorization",
+              "value": "Token {{authToken}}"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n  \"comment\": {\n    \"body\": \"His name was my name too.\"\n  }\n}"
+          },
+          "url": {
+            "raw": "{{apiUrl}}/articles/{{articleSlug}}/comments",
+            "host": [
+              "{{apiUrl}}"
+            ],
+            "path": [
+              "articles",
+              "{{articleSlug}}",
+              "comments"
+            ]
+          },
+          "description": ""
+        },
+        "response": []
+      },
+      {
+        "name": "Get Comments",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              "res = pm.response.json();",
+              "var comments = res.comments;",
+              "tests['should have comments field'] = Array.isArray(comments);",
+              "",
+              ""
+            ]
+          }
+        }],
+        "request": {
+          "method": "GET",
+          "header": [],
+          "body": {},
+          "url": {
+            "raw": "{{apiUrl}}/articles/{{articleSlug}}/comments",
+            "host": [
+              "{{apiUrl}}"
+            ],
+            "path": [
+              "articles",
+              "{{articleSlug}}",
+              "comments"
+            ]
+          },
+          "description": ""
+        },
+        "response": []
+      },
+      {
+        "name": "Delete Comment",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              ""
+            ]
+          }
+        }],
+        "request": {
+          "method": "DELETE",
+          "header": [{
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Authorization",
+              "value": "Token {{authToken}}"
+            }
+          ],
+          "body": {},
+          "url": {
+            "raw": "{{apiUrl}}/articles/{{articleSlug}}/comments/{{commentId}}",
+            "host": [
+              "{{apiUrl}}"
+            ],
+            "path": [
+              "articles",
+              "{{articleSlug}}",
+              "comments",
+              "{{commentId}}"
+            ]
+          },
+          "description": ""
+        },
+        "response": []
+      },
+      {
+        "name": "Favorite Article",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              "res = pm.response.json();",
+              "var article = res.article;",
+              "tests['should have article field'] = typeof(res.article) !== 'undefined';",
+              "tests['should be favorited'] = article.favorited === true;",
+              "tests['should have favoritesCount of one'] = article.favoritesCount === 1;",
+              ""
+            ]
+          }
+        }],
+        "request": {
+          "method": "POST",
+          "header": [{
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Authorization",
+              "value": "Token {{authToken}}"
+            }
+          ],
+          "body": {},
+          "url": {
+            "raw": "{{apiUrl}}/articles/{{articleSlug}}/favorite",
+            "host": [
+              "{{apiUrl}}"
+            ],
+            "path": [
+              "articles",
+              "{{articleSlug}}",
+              "favorite"
+            ]
+          },
+          "description": ""
+        },
+        "response": []
+      },
+      {
+        "name": "Unfavorite Article",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              "res = pm.response.json();",
+              "var article = res.article;",
+              "tests['should have article field'] = typeof(res.article) !== 'undefined';",
+              "tests['should not be favorited'] = article.favorited === false;",
+              "tests['should have favoritesCount of zero'] = article.favoritesCount === 0;",
+              ""
+            ]
+          }
+        }],
+        "request": {
+          "method": "DELETE",
+          "header": [{
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Authorization",
+              "value": "Token {{authToken}}"
+            }
+          ],
+          "body": {},
+          "url": {
+            "raw": "{{apiUrl}}/articles/{{articleSlug}}/favorite",
+            "host": [
+              "{{apiUrl}}"
+            ],
+            "path": [
+              "articles",
+              "{{articleSlug}}",
+              "favorite"
+            ]
+          },
+          "description": ""
+        },
+        "response": []
+      },
+      {
+        "name": "Get All Tags",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              "res = pm.response.json();",
+              "var tags = res.tags;",
+              "tests['should have tags field'] = typeof(tags) !== 'undefined';",
+              "tests['tags should be an array'] = Array.isArray(tags);",
+              ""
+            ]
+          }
+        }],
+        "request": {
+          "method": "GET",
+          "header": [],
+          "body": {},
+          "url": {
+            "raw": "{{apiUrl}}/tags",
+            "host": [
+              "{{apiUrl}}"
+            ],
+            "path": [
+              "tags"
+            ]
+          },
+          "description": ""
+        },
+        "response": []
+      },
+      {
+        "name": "Delete Article",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              ""
+            ]
+          }
+        }],
+        "request": {
+          "method": "DELETE",
+          "header": [{
+            "key": "Authorization",
+            "value": "Token {{authToken}}"
+          }],
+          "body": {},
+          "url": {
+            "raw": "{{apiUrl}}/articles/{{articleSlug}}",
+            "host": [
+              "{{apiUrl}}"
+            ],
+            "path": [
+              "articles",
+              "{{articleSlug}}"
+            ]
+          },
+          "description": ""
+        },
+        "response": []
+      }
+    ]
+  }]
 }

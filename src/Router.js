@@ -26,7 +26,8 @@ module.exports = {
         pong: new Date(),
         DATASTORE_NAMESPACE: process.env.DATASTORE_NAMESPACE ? process.env.DATASTORE_NAMESPACE : '',
       })],
-      ['PURGE', '/__DELETE_ALL_ARTICLE_DATA__', async() => {
+      ['PURGE', '/__DELETE_ALL_DATA__', async() => {
+        await User.testutils.__deleteAllUsers();
         await Article.testutils.__deleteAllArticles();
         await Article.testutils.__deleteAllComments();
         res.status(200).send();
@@ -59,8 +60,8 @@ module.exports = {
         const articles = await Article.getAll({
           tag: req.query.tag,
           author: req.query.author,
-          limit: req.query.limit,
-          offset: req.query.offset,
+          limit: parseInt(req.query.limit),
+          offset: parseInt(req.query.offset),
           reader: validatedUsername,
         });
         res.status(200).send({ articles, articlesCount: articles.length });

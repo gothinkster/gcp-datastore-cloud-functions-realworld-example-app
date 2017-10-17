@@ -157,6 +157,9 @@ describe('Article module', async() => {
     articles = await Article.getAll({ offset: 3 });
     articles.forEach(expectArticleSchema);
     expect(articles).to.be.an('array').to.have.lengthOf(9);
+
+    articles = await Article.getAll({ offset: 100 });
+    expect(articles).to.be.an('array').to.have.lengthOf(0);
   });
 
   it('should get all articles with a reader', async() => {
