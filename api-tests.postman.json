@@ -729,6 +729,39 @@
           "response": []
         },
         {
+          "name": "Get All Tags",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "tests['should have status 200'] = pm.response.code === 200;",
+                "res = pm.response.json();",
+                "var tags = res.tags;",
+                "tests['should have tags field'] = typeof(tags) !== 'undefined';",
+                "tests['tags should be an array'] = Array.isArray(tags);",
+                ""
+              ]
+            }
+          }],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {},
+            "url": {
+              "raw": "{{apiUrl}}/tags",
+              "host": [
+                "{{apiUrl}}"
+              ],
+              "path": [
+                "tags"
+              ]
+            },
+            "description": ""
+          },
+          "response": []
+        },
+        {
           "name": "Delete Article",
           "event": [{
             "listen": "test",

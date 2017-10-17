@@ -115,6 +115,9 @@ module.exports = {
         res.status(200).send({ article: await Article.unfavoriteArticle(matchedPath.slug, validatedUsername) });
       }],
 
+      // Tags
+      ['GET', '/tags', async() => res.status(200).send({ tags: await Article.getAllTags() })],
+
     ];
 
     // Match route and call handler
