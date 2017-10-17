@@ -286,7 +286,7 @@ async function cleanSlate() {
   mlog.log('Deleting all users.');
   await User.testutils.__deleteAllUsers();
   mlog.log('Deleting all articles.');
-  await Article.testutils.__deleteAll();
+  await Article.testutils.__deleteAllArticles();
   mlog.log('Deleting all comments.');
   await Article.testutils.__deleteAllComments();
 }

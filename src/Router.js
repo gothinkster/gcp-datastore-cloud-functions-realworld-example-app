@@ -26,8 +26,8 @@ module.exports = {
         pong: new Date(),
         DATASTORE_NAMESPACE: process.env.DATASTORE_NAMESPACE ? process.env.DATASTORE_NAMESPACE : '',
       })],
-      ['PURGE', '/__DELETE_ALL_DATA__', async() => {
-        await Article.testutils.__deleteAll();
+      ['PURGE', '/__DELETE_ALL_ARTICLE_DATA__', async() => {
+        await Article.testutils.__deleteAllArticles();
         await Article.testutils.__deleteAllComments();
         res.status(200).send();
       }],

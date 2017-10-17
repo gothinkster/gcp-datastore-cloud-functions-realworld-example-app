@@ -7,19 +7,30 @@
   },
   "item": [{
       "name": "automated",
+      "description": null,
       "item": [{
           "name": "Clean Slate",
+          "event": [{
+            "listen": "test",
+            "script": {
+              "type": "text/javascript",
+              "exec": [
+                "tests['should have status 200'] = pm.response.code === 200;",
+                ""
+              ]
+            }
+          }],
           "request": {
             "method": "PURGE",
             "header": [],
             "body": {},
             "url": {
-              "raw": "{{apiUrl}}/__DELETE_ALL_DATA__",
+              "raw": "{{apiUrl}}/__DELETE_ALL_ARTICLE_DATA__",
               "host": [
                 "{{apiUrl}}"
               ],
               "path": [
-                "__DELETE_ALL_DATA__"
+                "__DELETE_ALL_ARTICLE_DATA__"
               ]
             },
             "description": ""
@@ -56,7 +67,8 @@
               "path": [
                 "ping"
               ]
-            }
+            },
+            "description": null
           },
           "response": []
         },
@@ -106,7 +118,8 @@
                 "users",
                 "login"
               ]
-            }
+            },
+            "description": null
           },
           "response": []
         },
@@ -153,7 +166,8 @@
               "path": [
                 "user"
               ]
-            }
+            },
+            "description": null
           },
           "response": []
         },
@@ -384,7 +398,7 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n\t\"article\": {\n\t\t\"title\": \"How to train your dragon\",\n\t\t\"description\": \"Ever wonder how?\",\n\t\t\"body\": \"You have to believe\",\n\t\t\"tagList\": [\"reactjs\", \"angularjs\", \"dragons\"]\n\t}\n}"
+              "raw": "{\n  \"article\": {\n    \"title\": \"How to train your dragon\",\n    \"description\": \"Ever wonder how?\",\n    \"body\": \"You have to believe\",\n    \"tagList\": [\"reactjs\", \"angularjs\", \"dragons\"]\n  }\n}"
             },
             "url": {
               "raw": "{{apiUrl}}/articles",
@@ -683,7 +697,8 @@
             "path": [
               "users"
             ]
-          }
+          },
+          "description": null
         },
         "response": []
       }]

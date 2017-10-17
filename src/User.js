@@ -166,8 +166,8 @@ module.exports = {
   testutils: {
     async __deleteAllUsers() {
       /* istanbul ignore next */
-      if (namespace != 'test') {
-        console.warn(`namespace is not test but [${namespace}], skipping.`);
+      if (!namespace.startsWith('test')) {
+        console.warn(`__deleteAllUsers: namespace does not start with "test" but is [${namespace}], skipping.`);
         return;
       }
       const userKeys = (await ds.createQuery(namespace, 'User').select('__key__').run())[0];
