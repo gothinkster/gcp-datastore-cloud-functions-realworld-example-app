@@ -38,6 +38,7 @@ module.exports = {
       ['GET', '/user', async() => {
         if (!validatedUser) {
           res.status(401).send({ errors: { body: ['Token is required'], }, });
+          return;
         }
         res.status(200).send({ user: validatedUser });
       }],
@@ -67,6 +68,7 @@ module.exports = {
       ['POST', '/articles', async() => {
         if (!validatedUser) {
           res.status(401).send({ errors: { body: ['Must be logged in'], }, });
+          return;
         }
         res.status(200).send({ article: await Article.create(req.body.article, validatedUsername) });
       }],
@@ -76,6 +78,7 @@ module.exports = {
       ['DELETE', '/articles/:slug', async(matchedPath) => {
         if (!validatedUser) {
           res.status(401).send({ errors: { body: ['Must be logged in'], }, });
+          return;
         }
         res.status(200).send(await Article.delete(matchedPath.slug, validatedUsername));
       }],
@@ -84,6 +87,7 @@ module.exports = {
       ['POST', '/articles/:slug/comments', async(matchedPath) => {
         if (!validatedUser) {
           res.status(401).send({ errors: { body: ['Must be logged in'], }, });
+          return;
         }
         res.status(200).send({
           comment: await Article.createComment(matchedPath.slug, validatedUsername, req.body.comment.body)
@@ -95,16 +99,35 @@ module.exports = {
       ['DELETE', '/articles/:slug/comments/:id', async(matchedPath) => res.status(200).send(
         await Article.deleteComment(matchedPath.slug, matchedPath.id, validatedUsername))],
 
+      // Favorite/Unfavorite
+      ['POST', '/articles/:slug/favorite', async(matchedPath) => {
+        if (!validatedUser) {
+          res.status(401).send({ errors: { body: ['Must be logged in'], }, });
+          return;
+        }
+        res.status(200).send({ article: await Article.favoriteArticle(matchedPath.slug, validatedUsername) });
+      }],
+      ['DELETE', '/articles/:slug/favorite', async(matchedPath) => {
+        if (!validatedUser) {
+          res.status(401).send({ errors: { body: ['Must be logged in'], }, });
+          return;
+        }
+        res.status(200).send({ article: await Article.unfavoriteArticle(matchedPath.slug, validatedUsername) });
+      }],
+
     ];
 
     // Match route and call handler
     for (let i = 0; i < routes.length; ++i) {
-      if (req.method !== routes[i][0]) {
+      const method = routes[i][0];
+      const route = routes[i][1];
+      const handler = routes[i][2];
+      if (req.method !== method) {
         continue;
       }
-      const matchedPath = (new routeParser(routes[i][1])).match(req.path);
+      const matchedPath = (new routeParser(route)).match(req.path);
       if (matchedPath) {
-        await routes[i][2](matchedPath);
+        await handler(matchedPath);
         return;
       }
     }

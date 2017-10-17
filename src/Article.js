@@ -200,10 +200,11 @@ module.exports = {
     if (!article) {
       throw new Error(`Article does not exist: [${aSlug}]`);
     }
+
+    // First remove this author if already in list, and add back if favoriting
+    article.favoritedBy = article.favoritedBy.filter(e => e !== aUsername);
     if (aFavoriteBit) {
       article.favoritedBy.push(aUsername);
-    } else {
-      article.favoritedBy = article.favoritedBy.filter(e => e !== aUsername);
     }
     await ds.update(article);
     article.favorited = aFavoriteBit;
