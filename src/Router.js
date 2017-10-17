@@ -67,6 +67,18 @@ module.exports = {
         });
         res.status(200).send({ articles, articlesCount: articles.length });
       }],
+      ['GET', '/articles/feed', async() => {
+        if (!validatedUser) {
+          res.status(401).send({ errors: { body: ['Must be logged in'], }, });
+          return;
+        }
+        const articles = await Article.getFeed(validatedUsername, {
+          limit: parseInt(req.query.limit),
+          offset: parseInt(req.query.offset),
+          reader: validatedUsername,
+        });
+        res.status(200).send({ articles, articlesCount: articles.length });
+      }],
       ['POST', '/articles', async() => {
         if (!validatedUser) {
           res.status(401).send({ errors: { body: ['Must be logged in'], }, });

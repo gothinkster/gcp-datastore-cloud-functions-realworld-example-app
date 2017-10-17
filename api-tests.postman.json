@@ -38,8 +38,7 @@
             "path": [
               "ping"
             ]
-          },
-          "description": null
+          }
         },
         "response": []
       },
@@ -210,8 +209,7 @@
               "users",
               "login"
             ]
-          },
-          "description": null
+          }
         },
         "response": []
       },
@@ -258,8 +256,7 @@
             "path": [
               "user"
             ]
-          },
-          "description": null
+          }
         },
         "response": []
       },
@@ -490,7 +487,7 @@
           ],
           "body": {
             "mode": "raw",
-            "raw": "{\n  \"article\": {\n    \"title\": \"How to train your dragon\",\n    \"description\": \"Ever wonder how?\",\n    \"body\": \"You have to believe\",\n    \"tagList\": [\"reactjs\", \"angularjs\", \"dragons\"]\n  }\n}"
+            "raw": "{\n\t\"article\": {\n\t\t\"title\": \"How to train your dragon\",\n\t\t\"description\": \"Ever wonder how?\",\n\t\t\"body\": \"You have to believe\",\n\t\t\"tagList\": [\"reactjs\", \"angularjs\", \"dragons\"]\n\t}\n}"
           },
           "url": {
             "raw": "{{apiUrl}}/articles",
@@ -801,6 +798,145 @@
             "query": [{
               "key": "favorited",
               "value": "basicuser",
+              "equals": true
+            }]
+          },
+          "description": ""
+        },
+        "response": []
+      },
+      {
+        "name": "Feed",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              "res = pm.response.json();",
+              "console.log(res);",
+              "var articles = res.articles;",
+              "tests['should have articles field'] = typeof(articles) === 'object';",
+              "tests['should have articlesCount field'] = typeof(res.articlesCount) !== 'undefined';",
+              ""
+            ]
+          }
+        }],
+        "request": {
+          "method": "GET",
+          "header": [{
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Authorization",
+              "value": "Token {{authToken}}"
+            }
+          ],
+          "body": {},
+          "url": {
+            "raw": "{{apiUrl}}/articles/feed",
+            "host": [
+              "{{apiUrl}}"
+            ],
+            "path": [
+              "articles",
+              "feed"
+            ]
+          },
+          "description": ""
+        },
+        "response": []
+      },
+      {
+        "name": "Feed with Limit",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              "res = pm.response.json();",
+              "console.log(res);",
+              "var articles = res.articles;",
+              "tests['should have articles field'] = typeof(articles) === 'object';",
+              "tests['should have articlesCount field'] = typeof(res.articlesCount) !== 'undefined';",
+              ""
+            ]
+          }
+        }],
+        "request": {
+          "method": "GET",
+          "header": [{
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Authorization",
+              "value": "Token {{authToken}}"
+            }
+          ],
+          "body": {},
+          "url": {
+            "raw": "{{apiUrl}}/articles/feed?limit=1",
+            "host": [
+              "{{apiUrl}}"
+            ],
+            "path": [
+              "articles",
+              "feed"
+            ],
+            "query": [{
+              "key": "limit",
+              "value": "1",
+              "equals": true
+            }]
+          },
+          "description": ""
+        },
+        "response": []
+      },
+      {
+        "name": "Feed with Offset",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              "res = pm.response.json();",
+              "console.log(res);",
+              "var articles = res.articles;",
+              "tests['should have articles field'] = typeof(articles) === 'object';",
+              "tests['should have articlesCount field'] = typeof(res.articlesCount) !== 'undefined';",
+              ""
+            ]
+          }
+        }],
+        "request": {
+          "method": "GET",
+          "header": [{
+              "key": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "key": "Authorization",
+              "value": "Token {{authToken}}"
+            }
+          ],
+          "body": {},
+          "url": {
+            "raw": "{{apiUrl}}/articles/feed?offset=1",
+            "host": [
+              "{{apiUrl}}"
+            ],
+            "path": [
+              "articles",
+              "feed"
+            ],
+            "query": [{
+              "key": "offset",
+              "value": "1",
               "equals": true
             }]
           },
