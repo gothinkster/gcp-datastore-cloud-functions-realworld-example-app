@@ -60,6 +60,7 @@ module.exports = {
         const articles = await Article.getAll({
           tag: req.query.tag,
           author: req.query.author,
+          favoritedBy: req.query.favorited,
           limit: parseInt(req.query.limit),
           offset: parseInt(req.query.offset),
           reader: validatedUsername,

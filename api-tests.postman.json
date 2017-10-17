@@ -766,6 +766,49 @@
         "response": []
       },
       {
+        "name": "Get All Articles by Favorited",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              "res = pm.response.json();",
+              "console.log(res);",
+              "var articles = res.articles;",
+              "tests['should have articles field'] = typeof(articles) === 'object';",
+              "tests['should have articlesCount field'] = typeof(res.articlesCount) !== 'undefined';",
+              "",
+              ""
+            ]
+          }
+        }],
+        "request": {
+          "method": "GET",
+          "header": [{
+            "key": "Authorization",
+            "value": "Token {{authToken}}"
+          }],
+          "body": {},
+          "url": {
+            "raw": "{{apiUrl}}/articles?favorited=basicuser",
+            "host": [
+              "{{apiUrl}}"
+            ],
+            "path": [
+              "articles"
+            ],
+            "query": [{
+              "key": "favorited",
+              "value": "basicuser",
+              "equals": true
+            }]
+          },
+          "description": ""
+        },
+        "response": []
+      },
+      {
         "name": "Add Comment",
         "event": [{
           "listen": "test",

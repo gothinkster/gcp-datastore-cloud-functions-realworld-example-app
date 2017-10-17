@@ -17,3 +17,9 @@ indexes:
   - name: author
   - name: createdAt
     direction: desc
+
+- kind: Article
+  properties:
+  - name: favoritedBy
+  - name: createdAt
+    direction: desc

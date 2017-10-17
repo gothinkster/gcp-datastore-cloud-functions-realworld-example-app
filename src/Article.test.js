@@ -78,6 +78,10 @@ describe('Article module', async() => {
     expect(favoritedArticle.favorited).to.be.true;
     expect(favoritedArticle.favoritesCount).to.equal(1);
 
+    const favoritedArticles = await Article.getAll({ favoritedBy: readerUser.username });
+    expect(favoritedArticles).to.be.an('array').to.have.lengthOf(1);
+    expectArticleSchema(favoritedArticles[0]);
+
     favoritedArticle = await Article.unfavoriteArticle(createdArticle.slug, readerUser.username);
     expectArticleSchema(favoritedArticle);
     expect(favoritedArticle.favorited).to.be.false;

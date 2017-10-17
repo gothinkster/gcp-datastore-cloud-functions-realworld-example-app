@@ -98,6 +98,8 @@ module.exports = {
       query = query.filter('tagList', '=', options.tag);
     } else if (options.author) {
       query = query.filter('author', '=', options.author);
+    } else if (options.favoritedBy) {
+      query = query.filter('favoritedBy', '=', options.favoritedBy);
     }
 
     if (options.limit) {
