@@ -96,6 +96,13 @@ module.exports = {
       ['GET', '/articles/:slug', async(matchedPath) => res.status(200).send({
         article: await Article.get(matchedPath.slug, validatedUsername)
       })],
+      ['PUT', '/articles/:slug', async(matchedPath) => {
+        if (!validatedUser) {
+          res.status(401).send({ errors: { body: ['Must be logged in'], }, });
+          return;
+        }
+        res.status(200).send({ article: await Article.update(matchedPath.slug, req.body.article, validatedUsername) });
+      }],
       ['DELETE', '/articles/:slug', async(matchedPath) => {
         if (!validatedUser) {
           res.status(401).send({ errors: { body: ['Must be logged in'], }, });

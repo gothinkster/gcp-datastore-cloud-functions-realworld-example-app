@@ -607,6 +607,67 @@
         "response": []
       },
       {
+        "name": "Update Article",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              "res = pm.response.json();",
+              "console.log(res);",
+              "var article = res.article;",
+              "tests['should have article field'] = typeof(article) === 'object';",
+              "",
+              "var expectedArticleFields = ['slug', 'title', 'description', 'body', 'tagList', 'createdAt', 'updatedAt', 'author', 'favorited', 'favoritesCount'];",
+              "expectedArticleFields.forEach(function(key) {",
+              "    tests[`article should have ${key} field`] = (typeof(article[key]) !== 'undefined');",
+              "});",
+              "tests['should have correct title'] = article.title === 'new title';",
+              "tests['should have correct decription'] = article.description === 'new description';",
+              "tests['should have correct body'] = article.body === 'new body';",
+              "",
+              "var author = article.author;",
+              "tests['should have author field'] = typeof(author) === 'object';",
+              "var expectedAuthorFields = ['username', 'bio', 'image', 'following'];",
+              "expectedAuthorFields.forEach(function(key) {",
+              "    tests[`author should have ${key} field`] = (typeof(author[key]) !== 'undefined');",
+              "});",
+              "tests['author username should be correct'] = author.username === 'basicuser';",
+              ""
+            ]
+          }
+        }],
+        "request": {
+          "method": "PUT",
+          "header": [{
+              "key": "Authorization",
+              "value": "Token {{authToken}}"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n\t\"article\": {\n\t\t\"title\": \"new title\",\n\t\t\"description\": \"new description\",\n\t\t\"body\": \"new body\"\n\t}\n}"
+          },
+          "url": {
+            "raw": "{{apiUrl}}/articles/{{articleSlug}}",
+            "host": [
+              "{{apiUrl}}"
+            ],
+            "path": [
+              "articles",
+              "{{articleSlug}}"
+            ]
+          },
+          "description": ""
+        },
+        "response": []
+      },
+      {
         "name": "Get All Articles",
         "event": [{
           "listen": "test",
