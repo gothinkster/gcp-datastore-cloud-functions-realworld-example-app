@@ -11,3 +11,26 @@ For more information on how to this works with other frontends/backends, head ov
 # How it works
 
 # Getting started
+
+## Setup Google Cloud Platform (GCP)
+
+* Signup for a Google Cloud Platform (GCP) Free Account [here](https://cloud.google.com/free/) and create a new project
+* Install and setup `gcloud` CLI tool by following help [here](https://cloud.google.com/sdk/downloads)
+
+## Setup local development environment
+
+* Clone this repo
+* Create GCP Datastore indexes
+```
+gcloud datastore create-indexes index.yaml
+```
+* Create a [service account]() and store the credentials as `service-account-key.json` in the repo root folder - DO NOT SHARE THIS FILE!
+* Point to this service account
+```
+export GOOGLE_APPLICATION_CREDENTIALS=service-account-key.json
+```
+* Install dependencies and test local setup
+```
+npm install
+npm test
+```
