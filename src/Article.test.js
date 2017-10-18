@@ -61,6 +61,33 @@ describe('Article module', async() => {
     expect(createdArticleNoTags.tagList).to.be.an('array').that.is.empty;
   });
 
+  it('should update article', async() => {
+    const newTitle = casual.title;
+    const newDescription = casual.description;
+    const newBody = casual.text;
+    let updatedArticle = await Article.update(createdArticle.slug, {
+      title: newTitle,
+      description: newDescription,
+      body: newBody,
+    }, authorUser.username);
+    mlog.log(`Updated article: [${JSON.stringify(updatedArticle)}]`);
+    expect(updatedArticle.title).to.equal(newTitle);
+    expect(updatedArticle.description).to.equal(newDescription);
+    expect(updatedArticle.body).to.equal(newBody);
+
+    // Verify empty mutation is a no-op
+    updatedArticle = await Article.update(createdArticle.slug, {}, authorUser.username);
+    expect(updatedArticle.title).to.equal(newTitle);
+    expect(updatedArticle.description).to.equal(newDescription);
+    expect(updatedArticle.body).to.equal(newBody);
+
+    await Article.update(casual.word).catch(err =>
+      expect(err).to.match(/Article not found/));
+    await Article.update(createdArticle.slug, casual.username).catch(err =>
+      expect(err).to.match(/Only author can update article/));
+
+  });
+
   it('should not allow unknown author', async() => {
     await Article.create(null, casual.username).catch(err =>
       expect(err).to.match(/User does not exist/));

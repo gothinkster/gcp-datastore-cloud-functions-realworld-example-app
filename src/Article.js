@@ -39,6 +39,29 @@ module.exports = {
     return newArticle;
   },
 
+  async update(aSlug, aMutation, aUpdaterUsername) {
+    const article = (await ds.get(ds.key({ namespace, path: ['Article', aSlug] })))[0];
+    if (!article) {
+      throw new Error(`Article not found: [${aSlug}]`);
+    }
+
+    if (aUpdaterUsername !== article.author) {
+      throw new Error('Only author can update article');
+    }
+
+    if (aMutation.title) {
+      article.title = aMutation.title;
+    }
+    if (aMutation.description) {
+      article.description = aMutation.description;
+    }
+    if (aMutation.body) {
+      article.body = aMutation.body;
+    }
+    await ds.update(article);
+    return await this.get(aSlug, aUpdaterUsername);
+  },
+
   async get(aSlug, aReaderUsername) {
     const article = (await ds.get(ds.key({ namespace, path: ['Article', aSlug] })))[0];
     if (!article) {
