@@ -16,12 +16,7 @@ module.exports = {
       throw new Error(`Username already taken: [${aUserData.username}]`);
     }
 
-    // Verify email is not taken
-    const usersWithThisEmail = await ds.runQuery(
-      ds.createQuery(namespace, 'User').filter('email', '=', aUserData.email));
-    if (usersWithThisEmail[0].length) {
-      throw new Error(`Email already taken: [${aUserData.email}]`);
-    }
+    await verifyEmailIsNotTaken(aUserData.email);
 
     // Add user
     const encryptedPassword = await bcrypt.hash(aUserData.password, 5);
@@ -39,6 +34,38 @@ module.exports = {
     userRecord.token = this.mintToken(aUserData.username);
     userRecord.username = aUserData.username;
     return userRecord;
+  },
+
+  async update(aCurrentUser, aUserMutation) {
+    const userKey = ds.key({ namespace, path: ['User', aCurrentUser.username] });
+    const user = (await ds.get(userKey))[0];
+    if (!user) {
+      throw new Error(`User not found: [${aCurrentUser.username}]`);
+    }
+
+    // Make requested mutations
+    if (aUserMutation.email) {
+      await verifyEmailIsNotTaken(aUserMutation.email);
+      user.email = aUserMutation.email;
+    }
+    if (aUserMutation.password) {
+      user.password = await bcrypt.hash(aUserMutation.password, 5);
+    }
+    if (aUserMutation.image) {
+      user.image = aUserMutation.image;
+    }
+    if (aUserMutation.bio) {
+      user.bio = aUserMutation.bio;
+    }
+    await ds.update(user);
+    const updatedUser = (await ds.get(userKey))[0];
+    return {
+      email: updatedUser.email,
+      token: aCurrentUser.token,
+      username: updatedUser.username,
+      bio: updatedUser.bio,
+      image: updatedUser.image
+    };
   },
 
   async login(aUserData) {
@@ -178,3 +205,11 @@ module.exports = {
   },
 
 };
+
+async function verifyEmailIsNotTaken(aEmail) {
+  const usersWithThisEmail = await ds.runQuery(
+    ds.createQuery(namespace, 'User').filter('email', '=', aEmail));
+  if (usersWithThisEmail[0].length) {
+    throw new Error(`Email already taken: [${aEmail}]`);
+  }
+}

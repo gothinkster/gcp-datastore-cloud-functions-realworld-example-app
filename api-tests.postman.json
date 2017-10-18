@@ -38,7 +38,8 @@
             "path": [
               "ping"
             ]
-          }
+          },
+          "description": null
         },
         "response": []
       },
@@ -209,7 +210,8 @@
               "users",
               "login"
             ]
-          }
+          },
+          "description": null
         },
         "response": []
       },
@@ -256,7 +258,59 @@
             "path": [
               "user"
             ]
+          },
+          "description": null
+        },
+        "response": []
+      },
+      {
+        "name": "Update User",
+        "event": [{
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "tests['should have status 200'] = pm.response.code === 200;",
+              "res = pm.response.json();",
+              "console.log(res);",
+              "tests['should have user field'] = typeof(res.user) === 'object';",
+              "var user = res.user;",
+              "",
+              "var expectedUserFields = ['email', 'token', 'username', 'bio', 'image'];",
+              "expectedUserFields.forEach(function(key) {",
+              "    tests[`user should have ${key} field`] = (typeof(user[key]) !== 'undefined');",
+              "});",
+              "tests['should have correct email'] = user.email == 'newemail@mail.com';",
+              "tests['should have correct username'] = user.username == 'basicuser';",
+              ""
+            ]
           }
+        }],
+        "request": {
+          "method": "PUT",
+          "header": [{
+              "key": "Authorization",
+              "value": "Token {{authToken}}"
+            },
+            {
+              "key": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "mode": "raw",
+            "raw": "{\n\t\"user\": {\n\t\t\"email\": \"newemail@mail.com\"\n\t}\n}"
+          },
+          "url": {
+            "raw": "{{apiUrl}}/user",
+            "host": [
+              "{{apiUrl}}"
+            ],
+            "path": [
+              "user"
+            ]
+          },
+          "description": ""
         },
         "response": []
       },
@@ -487,7 +541,7 @@
           ],
           "body": {
             "mode": "raw",
-            "raw": "{\n\t\"article\": {\n\t\t\"title\": \"How to train your dragon\",\n\t\t\"description\": \"Ever wonder how?\",\n\t\t\"body\": \"You have to believe\",\n\t\t\"tagList\": [\"reactjs\", \"angularjs\", \"dragons\"]\n\t}\n}"
+            "raw": "{\n  \"article\": {\n    \"title\": \"How to train your dragon\",\n    \"description\": \"Ever wonder how?\",\n    \"body\": \"You have to believe\",\n    \"tagList\": [\"reactjs\", \"angularjs\", \"dragons\"]\n  }\n}"
           },
           "url": {
             "raw": "{{apiUrl}}/articles",

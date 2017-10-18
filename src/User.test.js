@@ -75,6 +75,32 @@ describe('User module', async() => {
     });
   });
 
+  it('should update user', async() => {
+    const newEmail = casual.email;
+    const newPassword = casual.password;
+    const newBio = casual.sentence;
+    const newImage = casual.url;
+    let updatedUser = await User.update(loggedInUser, {
+      email: newEmail,
+      password: newPassword,
+      bio: newBio,
+      image: newImage
+    });
+    mlog.log(`Updated user: [${JSON.stringify(updatedUser)}]`);
+    expect(updatedUser.email).to.equal(newEmail);
+    expect(updatedUser.bio).to.equal(newBio);
+    expect(updatedUser.image).to.equal(newImage);
+
+    // Empty mutation should be no-op
+    updatedUser = await User.update(loggedInUser, {});
+    expect(updatedUser.email).to.equal(newEmail);
+    expect(updatedUser.bio).to.equal(newBio);
+    expect(updatedUser.image).to.equal(newImage);
+
+    await User.update({ username: casual.username }).catch(err =>
+      expect(err).to.match(/User not found/));
+  });
+
   it('should follow/unfollow a user', async() => {
     const userToFollow = await User.create({
       email: 'followed_' + username + '@gmail.com',

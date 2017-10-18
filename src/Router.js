@@ -43,6 +43,13 @@ module.exports = {
         }
         res.status(200).send({ user: validatedUser });
       }],
+      ['PUT', '/user', async() => {
+        if (!validatedUser) {
+          res.status(401).send({ errors: { body: ['Token is required'], }, });
+          return;
+        }
+        res.status(200).send({ user: await User.update(validatedUser, req.body.user) });
+      }],
 
       // Profiles
       ['GET', '/profiles/:username', async(matchedPath) => res.status(200).send({
