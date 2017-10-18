@@ -24,7 +24,7 @@ For more information on how to this works with other frontends/backends, head ov
 ```
 gcloud datastore create-indexes index.yaml
 ```
-* Create a [service account]() and store the credentials as `service-account-key.json` in the repo root folder - DO NOT SHARE THIS FILE!
+* Create a [service account](https://cloud.google.com/compute/docs/access/service-accounts) and store the credentials as `service-account-key.json` in the repo root folder - DO NOT SHARE THIS FILE!
 * Point to this service account
 ```
 export GOOGLE_APPLICATION_CREDENTIALS=service-account-key.json
