@@ -15,6 +15,7 @@ For more information on how to this works with other frontends/backends, head ov
 ## Setup Google Cloud Platform (GCP)
 
 * Signup for a Google Cloud Platform (GCP) Free Account [here](https://cloud.google.com/free/) and create a new project
+* Setup Cloud Datastore for this project by following steps [here](https://cloud.google.com/datastore/docs/quickstart)
 * Install and setup `gcloud` CLI tool by following help [here](https://cloud.google.com/sdk/downloads)
 
 ## Setup local development environment
