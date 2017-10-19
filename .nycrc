@@ -1,5 +1,3 @@
 {
-  "nyc": {
-    "reporter": ["lcov", "text"]
-  }
+  "reporter": ["lcov", "text"]
 }
