@@ -7,6 +7,8 @@ machine:
 test:
   pre:
     - echo $GOOGLE_APPLICATION_CREDENTIALS_BASE64 | base64 --decode --ignore-garbage > $GOOGLE_APPLICATION_CREDENTIALS
+    - npm install coveralls
   post:
     - cp -r testresults $CIRCLE_ARTIFACTS
     - cp -r coverage $CIRCLE_ARTIFACTS
+    - cat ./coverage/lcov.info | npx coveralls
