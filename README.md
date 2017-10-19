@@ -1,5 +1,6 @@
 # ![](logo.png)
 
+[![CircleCI](https://img.shields.io/circleci/project/github/anishkny/realworld-gcp-datastore-cloud-functions.svg)](https://circleci.com/gh/anishkny/realworld-gcp-datastore-cloud-functions)
 [![Greenkeeper badge](https://badges.greenkeeper.io/anishkny/realworld-gcp-datastore-cloud-functions.svg)](https://greenkeeper.io/)
 
 > ### Google Cloud Platform (Datastore + Cloud Functions) serverless codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld API Spec](https://github.com/gothinkster/realworld/tree/master/api).
