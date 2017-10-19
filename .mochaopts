@@ -1,0 +1,3 @@
+--reporter mochawesome
+--reporter-options reportDir=testresults,reportFilename=index.html
+--timeout=60000

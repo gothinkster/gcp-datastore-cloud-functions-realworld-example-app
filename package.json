@@ -2,7 +2,7 @@
   "scripts": {
     "test": "npm run lint && npm run test:unit && npm run test:api",
     "lint": "eslint src/",
-    "test:unit": "DATASTORE_NAMESPACE=test-unit nyc --reporter=lcov --reporter=text mocha --reporter mochawesome --reporter-options reportDir=testresults,reportFilename=index.html --timeout=60000 ./src/*.test.js",
+    "test:unit": "DATASTORE_NAMESPACE=test-unit nyc mocha --opts .mochaopts ./src/*.test.js",
     "test:api": "./run-api-tests.sh"
   },
   "devDependencies": {
