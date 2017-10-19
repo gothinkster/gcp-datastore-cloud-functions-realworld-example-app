@@ -31,8 +31,15 @@ gcloud datastore create-indexes index.yaml
 ```
 export GOOGLE_APPLICATION_CREDENTIALS=service-account-key.json
 ```
-* Install dependencies and test local setup
+* Install dependencies
 ```
 npm install
+```
+* Setup [Cloud Functions Local Emulator](https://cloud.google.com/functions/docs/emulator)
+```
+npx functions config set projectId $YOUR_GCP_PROJECT_ID
+```
+* Test
+```
 npm test
 ```
