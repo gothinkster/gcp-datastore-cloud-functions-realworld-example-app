@@ -10,7 +10,7 @@
     "casual": "^1.5.17",
     "chai": "^4.1.2",
     "eslint": "^4.8.0",
-    "mocha": "^3.5.3",
+    "mocha": "^4.0.1",
     "mocha-logger": "^1.0.5",
     "mochawesome": "^2.3.1",
     "newman": "^3.8.2",

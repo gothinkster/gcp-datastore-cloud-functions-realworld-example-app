@@ -1,5 +1,7 @@
 # ![](logo.png)
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/anishkny/realworld-gcp-datastore-cloud-functions.svg)](https://greenkeeper.io/)
+
 > ### Google Cloud Platform (Datastore + Cloud Functions) serverless codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld API Spec](https://github.com/gothinkster/realworld/tree/master/api).
 
 This codebase was created to demonstrate a fully fledged fullstack application built with **Google Cloud Platform (Datastore + Cloud Functions)** including CRUD operations, authentication, routing, pagination, and more.
