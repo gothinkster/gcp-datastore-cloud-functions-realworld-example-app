@@ -119,9 +119,10 @@ gcloud datastore create-indexes index.yaml
 ```
 * Create a [service account](https://cloud.google.com/compute/docs/access/service-accounts) and store the credentials as `service-account-key.json` in the repo root folder - DO NOT SHARE THIS FILE!
 * Ensure Datastore indexes are created before proceeding by checking [here](https://console.cloud.google.com/datastore/indexes)
-* Point to service account credentials
+* Specify details about your GCP project,
 ```
 export GOOGLE_APPLICATION_CREDENTIALS=service-account-key.json
+export GCP_PROJECT_ID=<your-GCP-project-id>
 ```
 * Install dependencies
 ```
@@ -129,9 +130,20 @@ npm install
 ```
 * Setup [Cloud Functions Local Emulator](https://cloud.google.com/functions/docs/emulator)
 ```
-npx functions config set projectId $YOUR_GCP_PROJECT_ID
+npx functions config set projectId $GCP_PROJECT_ID
 ```
+
 * Test
 ```
 npm test
+```
+
+## Deploy to Cloud Functions
+
+*Note: The [Cloud Functions Runtime](https://cloud.google.com/functions/docs/writing) follows the [Node LTS schedule](https://github.com/nodejs/Release#release-schedule1) and is currently at Node v6.11.1. This codebase needs Node v8 due its use of async/await and as such **currently will not run** until Cloud Functions Runtime upgrades to Node v8 sometime after October 31, 2017. You can still deploy it though.*
+
+To deploy the code to Cloud Functions environment, execute:
+
+```
+gcloud beta functions deploy api --trigger-http --stage-bucket gs://$GCP_PROJECT_ID.appspot.com
 ```
