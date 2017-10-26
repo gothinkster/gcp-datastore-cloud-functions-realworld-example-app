@@ -1,9 +1,9 @@
-node_modules/
+node_modules
 package-lock.json
 service-account-key.json
-.nyc_output/
-coverage/
-testresults/
+.nyc_output
+coverage
+testresults
 
 logs
 *.log
