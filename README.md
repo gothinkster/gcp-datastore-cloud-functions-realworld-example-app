@@ -25,6 +25,69 @@ For every [API](https://github.com/gothinkster/realworld/blob/master/api/README.
 
 For data persistence, [Google Cloud Datastore](https://cloud.google.com/datastore/docs/concepts/overview) is used which is a fully managed NoSQL database as a service. Cloud Datastore [multitenancy](https://cloud.google.com/datastore/docs/concepts/multitenancy) is supported and can be leveraged by specifying a `DATASTORE_NAMESPACE` environment variable at runtime.
 
+## Datastore Schema
+
+### User
+
+```javascript
+{ username: 'Julie_Stracke',
+  password: '$2a$05$Unbla43FRv5Zb...',
+  email: 'Julie_Stracke@foomail.com',
+  image: '',
+  bio: '',
+  followers: [],
+  following: [],
+  [Symbol(KEY)]:
+   Key {
+     namespace: 'test-unit',
+     name: 'Julie_Stracke',
+     kind: 'User',
+     path: [Getter] } }
+```
+
+### Article
+
+```javascript
+
+{ slug: 'In-enim-nur2bx',
+  title: 'In enim',
+  description: 'Suscipit voluptas minima...',
+  body: 'Voluptates doloremque unde...',
+  tagList: [ 'temporibus', 'quae', 'omnis', 'aut' ],
+  createdAt: 1509036552780,
+  updatedAt: 1509036552780,
+  author: 'author_Paul_Heaney',
+  favoritedBy: [],
+  [Symbol(KEY)]:
+   Key {
+     namespace: 'test-unit',
+     name: 'In-enim-nur2bx',
+     kind: 'Article',
+     path: [Getter] } }
+```
+
+### Comment
+
+```javascript
+{ body: 'Voluptatem dolorem repellat...',
+  author: 'Wiegand_Hattie',
+  createdAt: 1509036740596,
+  updatedAt: 1509036740596,
+  [Symbol(KEY)]:
+   Key {
+     namespace: 'test-unit',
+     id: '5629499534213120',
+     kind: 'Comment',
+     parent:
+      Key {
+        namespace: 'test-unit',
+        name: 'In-enim-nur2bx',
+        kind: 'Article',
+        path: [Getter] },
+     path: [Getter] } }
+```
+
+
 ## Testing
 
 ### Unit Tests
