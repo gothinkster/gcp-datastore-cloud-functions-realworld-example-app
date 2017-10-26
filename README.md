@@ -15,6 +15,30 @@ For more information on how to this works with other frontends/backends, head ov
 
 # How it works
 
+## Background
+
+This codebase is meant to be deployed to [Google Cloud Functions](https://cloud.google.com/functions/), a serverless environment which allows you to run NodeJS code in reponse to events like [HTTP triggers](https://cloud.google.com/functions/docs/calling/http) scaling up and down elastically without the need for spinning up or maintaining servers.
+
+## Life of a Request
+
+For every [API](https://github.com/gothinkster/realworld/blob/master/api/README.md) call made, a new invocation of the top level function [`index.js`](index.js) occurs. It calls [`Router.js`](src/Router.js) which parses the HTTP route and calls the appropriate handler in [`User.js`](src/User.js) or [`Article.js`](src/Article.js). The handler applies business logic and returns a response which is marshalled back to the caller by Cloud Functions.
+
+For data persistence, [Google Cloud Datastore](https://cloud.google.com/datastore/docs/concepts/overview) is used which is a fully managed NoSQL database as a service. Cloud Datastore [multitenancy](https://cloud.google.com/datastore/docs/concepts/multitenancy) is supported and can be leveraged by specifying a `DATASTORE_NAMESPACE` environment variable at runtime.
+
+## Testing
+
+### Unit Tests
+Unit tests live adjacent to source code as [`src/*.test.js`](src/) and can be run by executing `npm run test:unit`. They use [mocha](https://mochajs.org) as a test runner and [istanbul/nyc](https://istanbul.js.org) for coverage.
+
+### API Tests
+You can also run Postman based [API tests](api-tests.postman.json) by executing `npm run test:api`. These are run using the [newman](https://github.com/postmanlabs/newman) command line runner. The code is deployed locally to a [Cloud Functions Local Emulator](https://cloud.google.com/functions/docs/emulator) environment and tested. See [`run-api-tests.sh`](run-api-tests.sh) for details.
+
+### Linting
+Code linting is enforced using `eslint` configured by [`.eslintrc.js`](.eslintrc.js). You can run the linter by executing `npm run lint`.
+
+### CI
+You can see recent build and test runs in [CircleCI](https://circleci.com/gh/anishkny/realworld-gcp-datastore-cloud-functions).
+
 # Getting started
 
 ## Setup Google Cloud Platform (GCP)
