@@ -105,6 +105,8 @@ describe('Article module', async () => {
     expect(favoritedArticle.favorited).to.be.true;
     expect(favoritedArticle.favoritesCount).to.equal(1);
 
+    // Delay a little before asserting on favoritedBy
+    await delay(2000);
     const favoritedArticles = await Article.getAll({ favoritedBy: readerUser.username });
     expect(favoritedArticles).to.be.an('array').to.have.lengthOf(1);
     expectArticleSchema(favoritedArticles[0]);
@@ -311,9 +313,7 @@ describe('Article module', async () => {
 });
 
 function delay(time) {
-  return new Promise(function (fulfill) {
-    setTimeout(fulfill, time);
-  });
+  return new Promise((fulfill) => setTimeout(fulfill, time));
 }
 
 async function cleanSlate() {

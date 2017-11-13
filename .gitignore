@@ -1,4 +1,5 @@
 node_modules
+dist
 package-lock.json
 service-account-key.json
 .nyc_output

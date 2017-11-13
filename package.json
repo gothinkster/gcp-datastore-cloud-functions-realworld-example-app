@@ -3,10 +3,14 @@
     "test": "npm run lint && npm run test:unit && npm run test:api",
     "lint": "eslint index.js src/",
     "test:unit": "DATASTORE_NAMESPACE=test-unit nyc mocha --opts .mochaopts ./src/*.test.js",
-    "test:api": "./run-api-tests.sh"
+    "test:api": "./run-api-tests.sh",
+    "deploy": "./deploy-to-cloud.sh"
   },
   "devDependencies": {
     "@google-cloud/functions-emulator": "^1.0.0-alpha.25",
+    "babel-cli": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1",
+    "babel-preset-stage-3": "^6.24.1",
     "casual": "^1.5.17",
     "chai": "^4.1.2",
     "eslint": "^4.8.0",
@@ -18,7 +22,9 @@
   },
   "dependencies": {
     "@google-cloud/datastore": "^1.1.0",
+    "babel-polyfill": "^6.26.0",
     "bcrypt": "^1.0.3",
+    "dotenv": "^4.0.0",
     "jsonwebtoken": "^8.1.0",
     "route-parser": "0.0.5",
     "slug": "^0.9.1"

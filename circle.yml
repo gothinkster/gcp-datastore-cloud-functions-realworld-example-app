@@ -3,6 +3,7 @@ machine:
     version: 8
   environment:
     GOOGLE_APPLICATION_CREDENTIALS: service-account-key.json
+    GCLOUD_BIN: "sudo /opt/google-cloud-sdk/bin/gcloud"
 
 test:
   pre:
@@ -12,3 +13,13 @@ test:
     - cp -r testresults $CIRCLE_ARTIFACTS
     - cp -r coverage $CIRCLE_ARTIFACTS
     - cat ./coverage/lcov.info | npx coveralls
+
+deployment:
+  staging:
+    branch: master
+    commands:
+      - $GCLOUD_BIN --quiet components install beta
+      - $GCLOUD_BIN --quiet components update
+      - $GCLOUD_BIN --quiet config set project $GCP_PROJECT_ID
+      - $GCLOUD_BIN --quiet auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS &> /dev/null
+      - npm run deploy
