@@ -22,11 +22,11 @@ module.exports = {
     const routes = [
 
       // Helpers
-      ['GET', '/ping', async() => res.status(200).send({
+      ['GET', '/ping', async () => res.status(200).send({
         pong: new Date(),
         DATASTORE_NAMESPACE: process.env.DATASTORE_NAMESPACE ? process.env.DATASTORE_NAMESPACE : '',
       })],
-      ['PURGE', '/__DELETE_ALL_DATA__', async() => {
+      ['PURGE', '/__DELETE_ALL_DATA__', async () => {
         await User.testutils.__deleteAllUsers();
         await Article.testutils.__deleteAllArticles();
         await Article.testutils.__deleteAllComments();
@@ -34,16 +34,16 @@ module.exports = {
       }],
 
       // Users
-      ['POST', '/users/login', async() => res.status(200).send({ user: await User.login(req.body.user) })],
-      ['POST', '/users', async() => res.status(200).send({ user: await User.create(req.body.user) })],
-      ['GET', '/user', async() => {
+      ['POST', '/users/login', async () => res.status(200).send({ user: await User.login(req.body.user) })],
+      ['POST', '/users', async () => res.status(200).send({ user: await User.create(req.body.user) })],
+      ['GET', '/user', async () => {
         if (!validatedUser) {
           res.status(401).send({ errors: { body: ['Token is required'], }, });
           return;
         }
         res.status(200).send({ user: validatedUser });
       }],
-      ['PUT', '/user', async() => {
+      ['PUT', '/user', async () => {
         if (!validatedUser) {
           res.status(401).send({ errors: { body: ['Token is required'], }, });
           return;
@@ -52,18 +52,18 @@ module.exports = {
       }],
 
       // Profiles
-      ['GET', '/profiles/:username', async(matchedPath) => res.status(200).send({
+      ['GET', '/profiles/:username', async (matchedPath) => res.status(200).send({
         profile: await User.getProfile(matchedPath.username, validatedUser)
       })],
-      ['POST', '/profiles/:username/follow', async(matchedPath) => res.status(200).send({
+      ['POST', '/profiles/:username/follow', async (matchedPath) => res.status(200).send({
         profile: await User.followUser(validatedUser.username, matchedPath.username)
       })],
-      ['DELETE', '/profiles/:username/follow', async(matchedPath) => res.status(200).send({
+      ['DELETE', '/profiles/:username/follow', async (matchedPath) => res.status(200).send({
         profile: await User.unfollowUser(validatedUser.username, matchedPath.username)
       })],
 
       // Articles
-      ['GET', '/articles', async() => {
+      ['GET', '/articles', async () => {
         const articles = await Article.getAll({
           tag: req.query.tag,
           author: req.query.author,
@@ -74,7 +74,7 @@ module.exports = {
         });
         res.status(200).send({ articles, articlesCount: articles.length });
       }],
-      ['GET', '/articles/feed', async() => {
+      ['GET', '/articles/feed', async () => {
         if (!validatedUser) {
           res.status(401).send({ errors: { body: ['Must be logged in'], }, });
           return;
@@ -86,24 +86,24 @@ module.exports = {
         });
         res.status(200).send({ articles, articlesCount: articles.length });
       }],
-      ['POST', '/articles', async() => {
+      ['POST', '/articles', async () => {
         if (!validatedUser) {
           res.status(401).send({ errors: { body: ['Must be logged in'], }, });
           return;
         }
         res.status(200).send({ article: await Article.create(req.body.article, validatedUsername) });
       }],
-      ['GET', '/articles/:slug', async(matchedPath) => res.status(200).send({
+      ['GET', '/articles/:slug', async (matchedPath) => res.status(200).send({
         article: await Article.get(matchedPath.slug, validatedUsername)
       })],
-      ['PUT', '/articles/:slug', async(matchedPath) => {
+      ['PUT', '/articles/:slug', async (matchedPath) => {
         if (!validatedUser) {
           res.status(401).send({ errors: { body: ['Must be logged in'], }, });
           return;
         }
         res.status(200).send({ article: await Article.update(matchedPath.slug, req.body.article, validatedUsername) });
       }],
-      ['DELETE', '/articles/:slug', async(matchedPath) => {
+      ['DELETE', '/articles/:slug', async (matchedPath) => {
         if (!validatedUser) {
           res.status(401).send({ errors: { body: ['Must be logged in'], }, });
           return;
@@ -112,7 +112,7 @@ module.exports = {
       }],
 
       // Comments
-      ['POST', '/articles/:slug/comments', async(matchedPath) => {
+      ['POST', '/articles/:slug/comments', async (matchedPath) => {
         if (!validatedUser) {
           res.status(401).send({ errors: { body: ['Must be logged in'], }, });
           return;
@@ -121,21 +121,21 @@ module.exports = {
           comment: await Article.createComment(matchedPath.slug, validatedUsername, req.body.comment.body)
         });
       }],
-      ['GET', '/articles/:slug/comments', async(matchedPath) => res.status(200).send({
+      ['GET', '/articles/:slug/comments', async (matchedPath) => res.status(200).send({
         comments: await Article.getAllComments(matchedPath.slug, validatedUsername)
       })],
-      ['DELETE', '/articles/:slug/comments/:id', async(matchedPath) => res.status(200).send(
+      ['DELETE', '/articles/:slug/comments/:id', async (matchedPath) => res.status(200).send(
         await Article.deleteComment(matchedPath.slug, matchedPath.id, validatedUsername))],
 
       // Favorite/Unfavorite
-      ['POST', '/articles/:slug/favorite', async(matchedPath) => {
+      ['POST', '/articles/:slug/favorite', async (matchedPath) => {
         if (!validatedUser) {
           res.status(401).send({ errors: { body: ['Must be logged in'], }, });
           return;
         }
         res.status(200).send({ article: await Article.favoriteArticle(matchedPath.slug, validatedUsername) });
       }],
-      ['DELETE', '/articles/:slug/favorite', async(matchedPath) => {
+      ['DELETE', '/articles/:slug/favorite', async (matchedPath) => {
         if (!validatedUser) {
           res.status(401).send({ errors: { body: ['Must be logged in'], }, });
           return;
@@ -144,7 +144,7 @@ module.exports = {
       }],
 
       // Tags
-      ['GET', '/tags', async() => res.status(200).send({ tags: await Article.getAllTags() })],
+      ['GET', '/tags', async () => res.status(200).send({ tags: await Article.getAllTags() })],
 
     ];
 

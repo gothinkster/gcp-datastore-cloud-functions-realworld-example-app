@@ -326,7 +326,7 @@ module.exports = {
         return;
       }
       const articleKeys = (await ds.createQuery(namespace, 'Article').select('__key__').run())[0];
-      articleKeys.forEach(async(articleKey) => {
+      articleKeys.forEach(async (articleKey) => {
         await ds.delete(articleKey[ds.KEY]);
       });
     },
@@ -337,7 +337,7 @@ module.exports = {
         return;
       }
       const commentKeys = (await ds.createQuery(namespace, 'Comment').select('__key__').run())[0];
-      commentKeys.forEach(async(commentKey) => {
+      commentKeys.forEach(async (commentKey) => {
         await ds.delete(commentKey[ds.KEY]);
       });
     },

@@ -11,31 +11,31 @@ const userToCreate = {
 };
 let loggedInUser = null;
 
-describe('User module', async() => {
+describe('User module', async () => {
 
-  before(async() => {
+  before(async () => {
     await cleanSlate();
   });
 
-  it('should create new user', async() => {
+  it('should create new user', async () => {
     const createdUser = await User.create(userToCreate);
     mlog.log(`Created user: [${JSON.stringify(createdUser)}]`);
     await delay(1000);
   });
 
-  it('should not allow same username', async() => {
+  it('should not allow same username', async () => {
     await User.create(userToCreate).catch(err =>
       expect(err).to.match(/Username already taken/));
   });
 
-  it('should not allow same email', async() => {
+  it('should not allow same email', async () => {
     const userWithSameEmail = JSON.parse(JSON.stringify(userToCreate));
     userWithSameEmail.username += 'foo';
     await User.create(userWithSameEmail).catch(err =>
       expect(err).to.match(/Email already taken/));
   });
 
-  it('should login user', async() => {
+  it('should login user', async () => {
     loggedInUser = await User.login({
       email: userToCreate.email,
       password: userToCreate.password
@@ -43,39 +43,39 @@ describe('User module', async() => {
     mlog.log(`Logged in user: [${JSON.stringify(loggedInUser)}]`);
   });
 
-  it('should authenticate token', async() => {
+  it('should authenticate token', async () => {
     const authenticatedUser = await User.authenticateToken(loggedInUser.token);
     mlog.log(`Authenticated user: [${JSON.stringify(authenticatedUser)}]`);
   });
 
-  it('should not allow bad token', async() => {
+  it('should not allow bad token', async () => {
     await User.authenticateToken(loggedInUser.token + 'foo').catch(err => {
       expect(err.message).to.match(/invalid signature/);
     });
   });
 
-  it('should not allow wrong email', async() => {
+  it('should not allow wrong email', async () => {
     await User.login({
       email: userToCreate.email + 'foo',
       password: userToCreate.password
     }).catch(err => expect(err).to.match(/Email not found/));
   });
 
-  it('should not allow wrong password', async() => {
+  it('should not allow wrong password', async () => {
     await User.login({
       email: userToCreate.email,
       password: userToCreate.password + 'bar'
     }).catch(err => expect(err).to.match(/Incorrect password/));
   });
 
-  it('should not allow token for non existetnt user', async() => {
+  it('should not allow token for non existetnt user', async () => {
     const tokenForNonExistentUser = User.mintToken((Math.random() * Math.pow(36, 6)).toString(36));
     await User.authenticateToken(tokenForNonExistentUser).catch(err => {
       expect(err).to.match(/Invalid token/);
     });
   });
 
-  it('should update user', async() => {
+  it('should update user', async () => {
     const newEmail = casual.email;
     const newPassword = casual.password;
     const newBio = casual.sentence;
@@ -101,7 +101,7 @@ describe('User module', async() => {
       expect(err).to.match(/User not found/));
   });
 
-  it('should follow/unfollow a user', async() => {
+  it('should follow/unfollow a user', async () => {
     const userToFollow = await User.create({
       email: 'followed_' + username + '@gmail.com',
       username: 'followed_' + username,
@@ -143,7 +143,7 @@ describe('User module', async() => {
 });
 
 function delay(time) {
-  return new Promise(function(fulfill) {
+  return new Promise(function (fulfill) {
     setTimeout(fulfill, time);
   });
 }

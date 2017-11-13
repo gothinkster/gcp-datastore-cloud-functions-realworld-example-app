@@ -198,7 +198,7 @@ module.exports = {
         return;
       }
       const userKeys = (await ds.createQuery(namespace, 'User').select('__key__').run())[0];
-      userKeys.forEach(async(userKey) => {
+      userKeys.forEach(async (userKey) => {
         await ds.delete(userKey[ds.KEY]);
       });
     },

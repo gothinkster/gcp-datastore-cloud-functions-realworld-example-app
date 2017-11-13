@@ -22,6 +22,11 @@ module.exports = {
     'no-var': 'error',
     'prefer-const': 'error',
     'semi': 'error',
+    'space-before-function-paren': ['error', {
+      'anonymous': 'always',
+      'asyncArrow': 'always',
+      'named': 'never',
+    }],
   },
 
 };
