@@ -16,6 +16,7 @@ const expectedArticleKeys = ['slug', 'title', 'description', 'body', 'tagList',
 const expectedArticleAuthorKeys = ['username', 'image', 'bio', 'following'].sort();
 const expectedCommentKeys = ['id', 'createdAt', 'updatedAt', 'body', 'author'].sort();
 const expectedCommentAuthorKeys = expectedArticleAuthorKeys;
+const expectedTags = [];
 
 describe('Article module', async () => {
 
@@ -46,6 +47,7 @@ describe('Article module', async () => {
       tagList: casual.array_of_words(Math.ceil(10 * Math.random())),
     }, authorUser.username);
     expectArticleSchema(createdArticle);
+    expectedTags.push(...createdArticle.tagList);
 
     // TODO: Assert on Article fields
     mlog.log(`Created article: [${JSON.stringify(createdArticle)}]`);
@@ -179,8 +181,10 @@ describe('Article module', async () => {
         body: `body ${i}`,
         tagList: ['sometag', `tag${i}`],
       }, authorUser.username);
+      expectedTags.push(`tag${i}`);
       await delay(100);
     }
+    expectedTags.push('sometag');
     console.log('');
 
     let articles = await Article.getAll({ limit: 3 });
@@ -266,6 +270,7 @@ describe('Article module', async () => {
     const tags = await Article.getAllTags();
     expect(tags).to.be.an('array');
     expect(tags.length).to.be.at.least(11);
+    expect(tags.sort()).to.eql(expectedTags.sort());
   });
 
   it('should create new comment', async () => {
