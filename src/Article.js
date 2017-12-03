@@ -1,5 +1,5 @@
 const { ds, namespace } = require('./Datastore.js');
-const slug = require('slug');
+const slugify = require('slugify');
 
 module.exports = {
 
@@ -10,7 +10,7 @@ module.exports = {
       throw new Error(`User does not exist: [${aAuthorUsername}]`);
     }
 
-    const articleSlug = slug(aArticleData.title) + '-' + (Math.random() * Math.pow(36, 6) | 0).toString(36);
+    const articleSlug = slugify('' + aArticleData.title) + '-' + (Math.random() * Math.pow(36, 6) | 0).toString(36);
     const timestamp = (new Date()).getTime();
     const newArticle = {
       slug: articleSlug,
