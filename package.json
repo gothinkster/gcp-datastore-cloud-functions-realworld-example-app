@@ -4,7 +4,9 @@
     "lint": "eslint index.js src/",
     "test:unit": "DATASTORE_NAMESPACE=test-unit nyc mocha --opts .mochaopts ./src/*.test.js",
     "test:api": "./run-api-tests.sh",
-    "deploy": "./deploy-to-cloud.sh"
+    "deploy": "./deploy-to-cloud.sh",
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
   },
   "devDependencies": {
     "@google-cloud/functions-emulator": "^1.0.0-alpha.25",
@@ -27,6 +29,8 @@
     "dotenv": "^4.0.0",
     "jsonwebtoken": "^8.1.0",
     "route-parser": "0.0.5",
-    "slug": "^0.9.1"
-  }
+    "slug": "^0.9.1",
+    "snyk": "^1.53.0"
+  },
+  "snyk": true
 }
