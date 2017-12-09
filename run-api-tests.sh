@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 echo PWD=`pwd`
 
 ## Deploy to Cloud Functions Local Emulator
