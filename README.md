@@ -100,7 +100,10 @@ You can also run Postman based [API tests](api-tests.postman.json) by executing 
 Code linting is enforced using `eslint` configured by [`.eslintrc.js`](.eslintrc.js). You can run the linter by executing `npm run lint`.
 
 ### CI
-You can see recent build and test runs in [CircleCI](https://circleci.com/gh/anishkny/realworld-gcp-datastore-cloud-functions).
+You can see recent build and test runs in [CircleCI](https://circleci.com/gh/gothinkster/gcp-datastore-cloud-functions-realworld-example-app).
+
+### CD
+If all tests pass, the code is automatically deployed to a [Cloud Functions Endpoint](https://us-central1-realworld-datastore.cloudfunctions.net/api/articles). See [deploy-to-cloud.sh](deploy-to-cloud.sh) for details.
 
 # Getting started
 
@@ -139,11 +142,8 @@ npm test
 ```
 
 ## Deploy to Cloud Functions
-
-*Note: The [Cloud Functions Runtime](https://cloud.google.com/functions/docs/writing) follows the [Node LTS schedule](https://github.com/nodejs/Release#release-schedule1) and is currently at Node v6.11.1. This codebase needs Node v8 due its use of async/await and as such **currently will not run** until Cloud Functions Runtime upgrades to Node v8 sometime after October 31, 2017. You can still deploy it though.*
-
-To deploy the code to Cloud Functions environment, execute:
-
 ```
-gcloud beta functions deploy api --trigger-http --stage-bucket gs://$GCP_PROJECT_ID.appspot.com
+npm run deploy
 ```
+
+*Note: Since this codebase depends on Node.js v8 featrues like `async/await` but [Cloud Functions Runtime](https://cloud.google.com/functions/docs/writing/#the_cloud_functions_runtime) currently only supports Node v6.11.5, we have to transpile the code down using `babel` before deploying. For more details, see [deploy-to-cloud.sh](deploy-to-cloud.sh)*
