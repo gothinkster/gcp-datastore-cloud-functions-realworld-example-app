@@ -17,6 +17,10 @@ describe('User module', async () => {
     await cleanSlate();
   });
 
+  after(async () => {
+    await cleanSlate();
+  });
+
   it('should create new user', async () => {
     const createdUser = await User.create(userToCreate);
     mlog.log(`Created user: [${JSON.stringify(createdUser)}]`);
@@ -143,7 +147,7 @@ describe('User module', async () => {
 });
 
 function delay(time) {
-  return new Promise(function (fulfill) {
+  return new Promise(function(fulfill) {
     setTimeout(fulfill, time);
   });
 }

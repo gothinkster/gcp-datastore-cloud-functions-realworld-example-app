@@ -1,7 +1,7 @@
 {
   "info": {
     "name": "Realworld API",
-    "_postman_id": "8f613b45-6d18-3b58-f9de-2ee4b83f543d",
+    "_postman_id": "3e226695-958b-be2d-4262-c41cdf635a21",
     "description": "",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
@@ -1383,6 +1383,37 @@
           "path": [
             "articles",
             "{{articleSlug}}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Clean Slate",
+      "event": [{
+        "listen": "test",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            "tests['should have status 200'] = pm.response.code === 200;",
+            ""
+          ]
+        }
+      }],
+      "request": {
+        "method": "PURGE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{apiUrl}}/__DELETE_ALL_DATA__",
+          "host": [
+            "{{apiUrl}}"
+          ],
+          "path": [
+            "__DELETE_ALL_DATA__"
           ]
         }
       },
