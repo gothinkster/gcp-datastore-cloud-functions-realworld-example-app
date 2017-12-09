@@ -5,7 +5,7 @@ echo PWD=`pwd`
 
 ## Deploy to Cloud Functions Local Emulator
 echo "Using functions emulator located at: ["`which functions`"]"
-export DATASTORE_NAMESPACE=test-api
+export DATASTORE_NAMESPACE=test-api-`date +%s`
 echo $GCP_PROJECT_ID | functions start > /dev/null
 if [ -n "$CI" ]; then
   functions config set watch false

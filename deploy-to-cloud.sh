@@ -5,7 +5,7 @@ rm -rf dist/
 babel index.js src/*.js --presets es2015,stage-3 --out-dir dist/ --ignore *.test.js
 
 ## Setup dist folder with additional files
-echo DATASTORE_NAMESPACE=test-api-cloud > dist/.env
+echo DATASTORE_NAMESPACE=test-api-cloud-`date +%s` > dist/.env
 cp package.json dist/
 
 ## Deploy to Cloud Functions

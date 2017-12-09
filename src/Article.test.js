@@ -39,6 +39,10 @@ describe('Article module', async () => {
     });
   });
 
+  after(async () => {
+    await cleanSlate();
+  });
+
   it('should create new article', async () => {
     createdArticle = await Article.create({
       title: casual.title,
