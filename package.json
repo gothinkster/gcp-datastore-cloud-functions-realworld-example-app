@@ -16,7 +16,7 @@
     "eslint": "^4.8.0",
     "mocha": "^4.0.1",
     "mocha-logger": "^1.0.5",
-    "mochawesome": "^2.3.1",
+    "mochawesome": "^3.0.0",
     "newman": "3.8.3",
     "nyc": "^11.2.1"
   },
