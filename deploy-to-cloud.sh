@@ -10,7 +10,7 @@ cp package.json dist/
 
 ## Deploy to Cloud Functions
 GCLOUD_BIN="${GCLOUD_BIN:-gcloud}"
-$GCLOUD_BIN beta functions deploy api --source=dist/ --trigger-http --stage-bucket=$GCP_PROJECT_ID.appspot.com
+$GCLOUD_BIN beta functions deploy api --source=dist/ --trigger-http
 export API_URL=`gcloud beta functions describe api --format=text | grep 'httpsTrigger.url:' | grep -o 'https://.*'`
 echo API_URL=$API_URL
 sleep 5
