@@ -22,4 +22,4 @@ echo
 
 ## Run Postman tests against local deployed API
 echo "Using newman runner located at: ["`which newman`"]"
-newman run --global-var="apiUrl=$API_URL" ./api-tests.postman.json
+newman run --global-var "apiUrl=$API_URL" ./api-tests.postman.json
