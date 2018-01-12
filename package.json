@@ -17,7 +17,7 @@
     "mocha": "^4.0.1",
     "mocha-logger": "^1.0.5",
     "mochawesome": "^3.0.0",
-    "newman": "3.8.3",
+    "newman": "^3.9.2",
     "nyc": "^11.2.1"
   },
   "dependencies": {

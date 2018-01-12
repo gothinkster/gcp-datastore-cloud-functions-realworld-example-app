@@ -19,6 +19,6 @@ sleep 5
 curl --silent $API_URL/ping
 echo
 
-## Run Postman tests against local deployed API
+## Run Postman tests against API deployed to cloud
 echo "Using newman runner located at: ["`which newman`"]"
-newman run --global-var="apiUrl=$API_URL" ./api-tests.postman.json
+newman run ./api-tests.postman.json --global-var "apiUrl=$API_URL"
