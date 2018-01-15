@@ -6,6 +6,14 @@ module.exports = {
 
   async route(req, res) {
 
+    // Enable CORS
+    if (req.method == 'OPTIONS') {
+      res.set('Access-Control-Allow-Origin', '*')
+        .set('Access-Control-Allow-Headers', req.header('Access-Control-Request-Headers'))
+        .status(200).send();
+      return;
+    }
+
     var validatedUser = null; // eslint-disable-line no-var
     var validatedUsername = null; // eslint-disable-line no-var
     const rawToken = req.get('Authorization');
