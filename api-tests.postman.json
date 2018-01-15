@@ -38,7 +38,8 @@
           "path": [
             "ping"
           ]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -69,7 +70,41 @@
           "path": [
             "__DELETE_ALL_DATA__"
           ]
+        },
+        "description": null
+      },
+      "response": []
+    },
+    {
+      "name": "CORS Options",
+      "event": [{
+        "listen": "test",
+        "script": {
+          "type": "text/javascript",
+          "exec": [
+            "tests['should have status 200'] = pm.response.code === 200;",
+            ""
+          ]
         }
+      }],
+      "request": {
+        "method": "OPTIONS",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{apiUrl}}/anything/really",
+          "host": [
+            "{{apiUrl}}"
+          ],
+          "path": [
+            "anything",
+            "really"
+          ]
+        },
+        "description": null
       },
       "response": []
     },
@@ -114,7 +149,8 @@
           "path": [
             "users"
           ]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -159,7 +195,8 @@
           "path": [
             "users"
           ]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -209,7 +246,8 @@
             "users",
             "login"
           ]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -259,7 +297,8 @@
           "path": [
             "user"
           ]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -299,7 +338,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n\t\"user\": {\n\t\t\"email\": \"newemail@mail.com\"\n\t}\n}"
+          "raw": "{\n  \"user\": {\n    \"email\": \"newemail@mail.com\"\n  }\n}"
         },
         "url": {
           "raw": "{{apiUrl}}/user",
@@ -309,7 +348,8 @@
           "path": [
             "user"
           ]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -343,7 +383,8 @@
           "path": [
             "nopez"
           ]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -394,7 +435,8 @@
             "celebuser",
             "follow"
           ]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -444,7 +486,8 @@
             "profiles",
             "celebuser"
           ]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -495,7 +538,8 @@
             "celebuser",
             "follow"
           ]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -558,7 +602,8 @@
           "path": [
             "articles"
           ]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -610,7 +655,8 @@
             "articles",
             "{{articleSlug}}"
           ]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -659,7 +705,7 @@
         ],
         "body": {
           "mode": "raw",
-          "raw": "{\n\t\"article\": {\n\t\t\"title\": \"new title\",\n\t\t\"description\": \"new description\",\n\t\t\"body\": \"new body\"\n\t}\n}"
+          "raw": "{\n  \"article\": {\n    \"title\": \"new title\",\n    \"description\": \"new description\",\n    \"body\": \"new body\"\n  }\n}"
         },
         "url": {
           "raw": "{{apiUrl}}/articles/{{articleSlug}}",
@@ -670,7 +716,8 @@
             "articles",
             "{{articleSlug}}"
           ]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -710,7 +757,8 @@
           "path": [
             "articles"
           ]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -755,7 +803,8 @@
             "value": "1",
             "equals": true
           }]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -800,7 +849,8 @@
             "value": "1",
             "equals": true
           }]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -845,7 +895,8 @@
             "value": "dragons",
             "equals": true
           }]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -890,7 +941,8 @@
             "value": "basicuser",
             "equals": true
           }]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -935,7 +987,8 @@
             "value": "basicuser",
             "equals": true
           }]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -980,7 +1033,8 @@
             "articles",
             "feed"
           ]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -1030,7 +1084,8 @@
             "value": "1",
             "equals": true
           }]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -1080,7 +1135,8 @@
             "value": "1",
             "equals": true
           }]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -1143,7 +1199,8 @@
             "{{articleSlug}}",
             "comments"
           ]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -1180,7 +1237,8 @@
             "{{articleSlug}}",
             "comments"
           ]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -1222,7 +1280,8 @@
             "comments",
             "{{commentId}}"
           ]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -1268,7 +1327,8 @@
             "{{articleSlug}}",
             "favorite"
           ]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -1314,7 +1374,8 @@
             "{{articleSlug}}",
             "favorite"
           ]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -1349,7 +1410,8 @@
           "path": [
             "tags"
           ]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -1384,7 +1446,8 @@
             "articles",
             "{{articleSlug}}"
           ]
-        }
+        },
+        "description": null
       },
       "response": []
     },
@@ -1415,7 +1478,8 @@
           "path": [
             "__DELETE_ALL_DATA__"
           ]
-        }
+        },
+        "description": null
       },
       "response": []
     }
