@@ -7,10 +7,10 @@ module.exports = {
   async route(req, res) {
 
     // Enable CORS
+    res.set('Access-Control-Allow-Origin', '*')
+      .set('Access-Control-Allow-Headers', req.header('Access-Control-Request-Headers'));
     if (req.method == 'OPTIONS') {
-      res.set('Access-Control-Allow-Origin', '*')
-        .set('Access-Control-Allow-Headers', req.header('Access-Control-Request-Headers'))
-        .status(200).send();
+      res.status(200).send();
       return;
     }
 
