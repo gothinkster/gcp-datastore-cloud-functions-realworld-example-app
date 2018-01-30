@@ -24,7 +24,7 @@
     "@google-cloud/datastore": "^1.1.0",
     "babel-polyfill": "^6.26.0",
     "bcrypt": "^1.0.3",
-    "dotenv": "^4.0.0",
+    "dotenv": "^5.0.0",
     "jsonwebtoken": "^8.1.0",
     "route-parser": "0.0.5",
     "slugify": "^1.2.6"
