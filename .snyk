@@ -219,11 +219,3 @@ ignore:
     - '@google-cloud/datastore > @google-cloud/common > google-auto-auth > google-auth-library > gtoken > request > hawk > cryptiles > boom > hoek':
         reason: None given
         expires: '2018-03-18T02:39:01.179Z'
-# patches apply the minimum changes required to fix a vulnerability
-patch:
-  'npm:hawk:20160119':
-    - '@google-cloud/datastore > @google-cloud/common > log-driver > codecov.io > request > hawk':
-        patched: '2018-02-10T08:26:30.056Z'
-  'npm:request:20160119':
-    - '@google-cloud/datastore > @google-cloud/common > log-driver > codecov.io > request':
-        patched: '2018-02-10T08:26:30.056Z'
