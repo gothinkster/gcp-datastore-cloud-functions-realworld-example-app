@@ -1,0 +1,47 @@
+version: 2
+
+jobs:
+  test:
+    docker:
+      - image: circleci/node:8.9.4
+    environment:
+      GOOGLE_APPLICATION_CREDENTIALS: service-account-key.json
+      GCLOUD_BIN: ./google-cloud-sdk/bin/gcloud
+      CLOUDSDK_CORE_DISABLE_PROMPTS: 1      
+    steps:
+      - checkout
+      - run:
+          name: Test
+          command: |
+            echo $GOOGLE_APPLICATION_CREDENTIALS_BASE64 | base64 --decode --ignore-garbage > $GOOGLE_APPLICATION_CREDENTIALS
+            set -x
+            npm install coveralls
+            npm install
+            npm test
+            cat ./coverage/lcov.info | npx coveralls
+      - run:
+          name: Deploy
+          command: |
+            set -x
+            curl https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-189.0.0-linux-x86_64.tar.gz | tar xz
+            $GCLOUD_BIN components install beta
+            $GCLOUD_BIN components update
+            $GCLOUD_BIN config set project $GCP_PROJECT_ID
+            $GCLOUD_BIN auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS &> /dev/null
+            npm run deploy
+
+workflows:
+   version: 2
+   commit:
+     jobs:
+       - test
+   nightly:
+     triggers:
+       - schedule:
+           cron: "0 0 * * *"
+           filters:
+             branches:
+               only:
+                 - master
+     jobs:
+       - test
