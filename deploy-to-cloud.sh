@@ -10,8 +10,11 @@ cp package.json dist/
 
 ## Deploy to Cloud Functions
 GCLOUD_BIN="${GCLOUD_BIN:-gcloud}"
+echo GCLOUD_BIN=$GCLOUD_BIN
+echo Deploying function...
 $GCLOUD_BIN beta functions deploy api --source=dist/ --trigger-http
-export API_URL=`gcloud beta functions describe api --format=text | grep 'httpsTrigger.url:' | grep -o 'https://.*'`
+echo ...Done
+export API_URL=`$GCLOUD_BIN beta functions describe api --format=text | grep 'httpsTrigger.url:' | grep -o 'https://.*'`
 echo API_URL=$API_URL
 sleep 5
 
@@ -21,4 +24,4 @@ echo
 
 ## Run Postman tests against API deployed to cloud
 echo "Using newman runner located at: ["`which newman`"]"
-newman run ./api-tests.postman.json --global-var "apiUrl=$API_URL"
+newman run ./api-tests.postman.json --global-var "apiUrl=$API_URL" --delay-request 500 --bail
