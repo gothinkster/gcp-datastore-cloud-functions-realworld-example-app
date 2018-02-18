@@ -115,6 +115,8 @@ If all tests pass, the code is automatically deployed to a [Cloud Functions Endp
 
 ## Setup local development environment
 
+*Note: Node.js 8.0 or greater is required*
+
 * Clone this repo
 * Create GCP Datastore indexes
 ```
