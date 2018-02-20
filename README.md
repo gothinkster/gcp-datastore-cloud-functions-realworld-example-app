@@ -1,6 +1,6 @@
 # ![](logo.png)
 
-[![CircleCI](https://img.shields.io/circleci/project/github/gothinkster/gcp-datastore-cloud-functions-realworld-example-app.svg)](https://circleci.com/gh/gothinkster/gcp-datastore-cloud-functions-realworld-example-app)
+[![TravisCI](https://img.shields.io/travis/gothinkster/gcp-datastore-cloud-functions-realworld-example-app/master.svg)](https://travis-ci.org/gothinkster/gcp-datastore-cloud-functions-realworld-example-app)
 [![Coverage Status](https://coveralls.io/repos/github/gothinkster/gcp-datastore-cloud-functions-realworld-example-app/badge.svg?branch=master)](https://coveralls.io/github/gothinkster/gcp-datastore-cloud-functions-realworld-example-app?branch=master)
 [![Docs](https://img.shields.io/badge/docs-Postman-brightgreen.svg)](https://documenter.getpostman.com/view/1841370/realworld-api/7TFGFZA)
 [![Known Vulnerabilities](https://snyk.io/test/github/gothinkster/gcp-datastore-cloud-functions-realworld-example-app/badge.svg)](https://snyk.io/test/github/gothinkster/gcp-datastore-cloud-functions-realworld-example-app)
@@ -100,7 +100,7 @@ You can also run Postman based [API tests](api-tests.postman.json) by executing 
 Code linting is enforced using `eslint` configured by [`.eslintrc.js`](.eslintrc.js). You can run the linter by executing `npm run lint`.
 
 ### CI
-You can see recent build and test runs in [CircleCI](https://circleci.com/gh/gothinkster/gcp-datastore-cloud-functions-realworld-example-app).
+Continuous integration is performed by [TravisCI](https://travis-ci.org/gothinkster/gcp-datastore-cloud-functions-realworld-example-app). See [`.travis.yml`](.travis.yml) for details.
 
 ### CD
 If all tests pass, the code is automatically deployed to a [Cloud Functions Endpoint](https://us-central1-realworld-datastore.cloudfunctions.net/api/articles). See [deploy-to-cloud.sh](deploy-to-cloud.sh) for details.
