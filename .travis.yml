@@ -1,0 +1,30 @@
+language: node_js
+
+node_js:
+  - 8
+
+before_script:
+  - echo $GOOGLE_APPLICATION_CREDENTIALS_BASE64 | base64 --decode --ignore-garbage > $GOOGLE_APPLICATION_CREDENTIALS
+  - (curl https://sdk.cloud.google.com | bash) &> /dev/null
+  - source $HOME/google-cloud-sdk/path.bash.inc
+  - gcloud version
+  - gcloud config set project $GCP_PROJECT_ID
+
+after_script:
+  - npm install coveralls
+  - cat ./coverage/lcov.info | npx coveralls
+
+before_deploy:
+  - gcloud components install beta
+  - gcloud components update
+  - gcloud auth activate-service-account --key-file $GOOGLE_APPLICATION_CREDENTIALS &> /dev/null
+
+deploy:
+  - provider: script
+    script:
+      - npm run deploy
+    skip_cleanup: true
+    on:
+      branch: master
+      repo: gothinkster/gcp-datastore-cloud-functions-realworld-example-app
+
