@@ -21,3 +21,7 @@ sleep 5
 ## Smoke test API endpoint
 curl --silent $API_URL/ping
 echo
+
+## Run Postman tests against API deployed to cloud
+echo "Using newman runner located at: ["`which newman`"]"
+newman run ./api-tests.postman.json --global-var "apiUrl=$API_URL" --delay-request 500 --bail || true
