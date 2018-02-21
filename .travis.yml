@@ -27,4 +27,4 @@ deploy:
     on:
       branch: master
       repo: gothinkster/gcp-datastore-cloud-functions-realworld-example-app
-
+      condition: $TRAVIS_EVENT_TYPE = push
