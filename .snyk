@@ -1,5 +1,5 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.10.1
+version: v1.10.2
 # ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
   'npm:hoek:20180212':
@@ -219,3 +219,14 @@ ignore:
     - '@google-cloud/datastore > @google-cloud/common > google-auto-auth > google-auth-library > gtoken > request > hawk > cryptiles > boom > hoek':
         reason: None given
         expires: '2018-03-18T02:39:01.179Z'
+  'npm:node-forge:20180226':
+    - '@google-cloud/datastore > google-auto-auth > google-auth-library > gtoken > google-p12-pem > node-forge':
+        reason: None given
+        expires: '2018-03-29T00:56:10.410Z'
+    - '@google-cloud/datastore > google-gax > google-auto-auth > google-auth-library > gtoken > google-p12-pem > node-forge':
+        reason: None given
+        expires: '2018-03-29T00:56:10.410Z'
+    - '@google-cloud/datastore > @google-cloud/common > google-auto-auth > google-auth-library > gtoken > google-p12-pem > node-forge':
+        reason: None given
+        expires: '2018-03-29T00:56:10.410Z'
+patch: {}
