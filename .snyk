@@ -229,4 +229,8 @@ ignore:
     - '@google-cloud/datastore > @google-cloud/common > google-auto-auth > google-auth-library > gtoken > google-p12-pem > node-forge':
         reason: None given
         expires: '2018-03-29T00:56:10.410Z'
+  'npm:protobufjs:20180305':
+    - '@google-cloud/datastore > google-gax > grpc > protobufjs':
+        reason: None given
+        expires: '2018-04-05T17:27:05.076Z'
 patch: {}
