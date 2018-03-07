@@ -3,6 +3,7 @@
 [![TravisCI](https://img.shields.io/travis/gothinkster/gcp-datastore-cloud-functions-realworld-example-app/master.svg)](https://travis-ci.org/gothinkster/gcp-datastore-cloud-functions-realworld-example-app)
 [![Coverage Status](https://coveralls.io/repos/github/gothinkster/gcp-datastore-cloud-functions-realworld-example-app/badge.svg?branch=master)](https://coveralls.io/github/gothinkster/gcp-datastore-cloud-functions-realworld-example-app?branch=master)
 [![Docs](https://img.shields.io/badge/docs-Postman-brightgreen.svg)](https://documenter.getpostman.com/view/1841370/realworld-api/7TFGFZA)
+[![dependencies Status](https://david-dm.org/gothinkster/gcp-datastore-cloud-functions-realworld-example-app/status.svg)](https://david-dm.org/gothinkster/gcp-datastore-cloud-functions-realworld-example-app)
 [![Known Vulnerabilities](https://snyk.io/test/github/gothinkster/gcp-datastore-cloud-functions-realworld-example-app/badge.svg)](https://snyk.io/test/github/gothinkster/gcp-datastore-cloud-functions-realworld-example-app)
 
 > ### Google Cloud Platform (Datastore + Cloud Functions) serverless codebase containing real world examples (CRUD, auth, advanced patterns, etc) that adheres to the [RealWorld API Spec](https://github.com/gothinkster/realworld/tree/master/api).
