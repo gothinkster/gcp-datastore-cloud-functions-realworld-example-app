@@ -149,4 +149,4 @@ npm test
 npm run deploy
 ```
 
-*Note: Since this codebase depends on Node.js v8 featrues like `async/await` but [Cloud Functions Runtime](https://cloud.google.com/functions/docs/writing/#the_cloud_functions_runtime) currently only supports Node v6.11.5, we have to transpile the code down using `babel` before deploying. For more details, see [deploy-to-cloud.sh](deploy-to-cloud.sh)*
+*Note: Since this codebase depends on Node.js v8 featrues like `async/await` but [Cloud Functions Runtime](https://cloud.google.com/functions/docs/writing/#the_cloud_functions_runtime) currently only supports Node v6.14.0, we have to transpile the code down using `babel` before deploying. For more details, see [deploy-to-cloud.sh](deploy-to-cloud.sh)*
