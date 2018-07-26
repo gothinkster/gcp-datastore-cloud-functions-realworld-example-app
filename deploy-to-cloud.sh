@@ -1,4 +1,4 @@
-#!/bin/bash -e -x
+#!/bin/bash -e
 
 ## Deploy to Cloud Functions
 GCLOUD_BIN="${GCLOUD_BIN:-gcloud}"
