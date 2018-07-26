@@ -12,12 +12,17 @@
 #!include:.gitignore
 
 # Following files are needed only for testing/development and need not be deployed
-src/*.test.js
-README.md
-logo.png
 .eslintrc.js
 .mochaopts
+.npmrc
 .nycrc
+.snyk
+.travis.yml
 api-tests.postman.json
 circle.yml
+deploy-to-cloud.sh
+index.yaml
+logo.png
+README.md
 run-api-tests.sh
+src/*.test.js
