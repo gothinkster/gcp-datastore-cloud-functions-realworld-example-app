@@ -8,7 +8,7 @@ $GCLOUD_BIN beta functions deploy api --runtime nodejs8 --set-env-vars DATASTORE
 echo ...Done
 export API_URL=`$GCLOUD_BIN beta functions describe api --format=text | grep 'httpsTrigger.url:' | grep -o 'https://.*'`
 echo API_URL=$API_URL
-sleep 5
+sleep 60
 
 ## Smoke test API endpoint
 curl --silent $API_URL/ping
@@ -16,4 +16,4 @@ echo
 
 ## Run Postman tests against API deployed to cloud
 echo "Using newman runner located at: ["`which newman`"]"
-newman run ./api-tests.postman.json --global-var "apiUrl=$API_URL" --delay-request 500 --bail || true
+newman run ./api-tests.postman.json --global-var "apiUrl=$API_URL" --delay-request 1000 --bail || true
