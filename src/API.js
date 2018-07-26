@@ -1,5 +1,3 @@
-require('dotenv').config();
-require('babel-polyfill');
 const Router = require('./Router.js');
 
 module.exports = {
