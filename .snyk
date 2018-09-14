@@ -1,5 +1,10 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.11.0
+version: v1.12.0
+# ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
   'npm:chownr:20180731':
+    - bcrypt > node-pre-gyp > tar > chownr:
+        expires: '2018-10-14T14:59:55.757Z'
+    - '@google-cloud/datastore > google-gax > grpc > node-pre-gyp > tar > chownr':
+        expires: '2018-10-14T14:59:55.757Z'
 patch: {}
