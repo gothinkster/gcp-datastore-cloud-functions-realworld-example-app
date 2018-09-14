@@ -1,12 +1,5 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
 version: v1.11.0
-# ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
-  'npm:deep-extend:20180409':
-    - deep-extend:
-    - bcrypt > node-pre-gyp > rc > deep-extend:
-    - '@google-cloud/datastore > google-gax > grpc > node-pre-gyp > rc > deep-extend':
-    - node-pre-gyp > rc > deep-extend:
-  'npm:protobufjs:20180305':
-    - '@google-cloud/datastore > google-gax > grpc > protobufjs':
+  'npm:chownr:20180731':
 patch: {}
