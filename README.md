@@ -18,7 +18,7 @@ For more information on how to this works with other frontends/backends, head ov
 
 ## Background
 
-This codebase is meant to be deployed to [Google Cloud Functions](https://cloud.google.com/functions/), a serverless environment which allows you to run NodeJS code in reponse to events like [HTTP triggers](https://cloud.google.com/functions/docs/calling/http) scaling up and down elastically without the need for spinning up or maintaining servers.
+This codebase is meant to be deployed to [Google Cloud Functions](https://cloud.google.com/functions/), a serverless environment which allows you to run NodeJS code in response to events like [HTTP triggers](https://cloud.google.com/functions/docs/calling/http) scaling up and down elastically without the need for spinning up or maintaining servers.
 
 ## Life of a Request
 
