@@ -122,7 +122,7 @@ If all tests pass, the code is automatically deployed to a [Cloud Functions Endp
 * Clone this repo
 * Create GCP Datastore indexes
 ```
-gcloud datastore create-indexes index.yaml
+gcloud datastore indexes create index.yaml
 ```
 * Create a [service account](https://cloud.google.com/compute/docs/access/service-accounts) and store the credentials as `service-account-key.json` in the repo root folder - DO NOT SHARE THIS FILE!
 * Ensure Datastore indexes are created before proceeding by checking [here](https://console.cloud.google.com/datastore/indexes)
