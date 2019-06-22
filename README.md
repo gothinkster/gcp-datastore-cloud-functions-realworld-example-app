@@ -151,3 +151,6 @@ npm run deploy
 ```
 
 More details in [deploy-to-cloud.sh](deploy-to-cloud.sh).
+
+If you don't have the beta commands in your project then it will ask you to install them. Also because the functions are designed to be invokated from your website, it will ask for `Allow unauthenticated invocations of new function [api]? (y/N)?`
+
