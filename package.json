@@ -26,7 +26,7 @@
     "jsonwebtoken": "^8.1.0",
     "route-parser": "0.0.5",
     "slugify": "^1.2.6",
-    "snyk": "^1.69.10"
+    "snyk": "^1.189.0"
   },
   "snyk": true
 }
