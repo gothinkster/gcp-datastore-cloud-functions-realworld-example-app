@@ -26,3 +26,4 @@ logo.png
 README.md
 run-api-tests.sh
 src/*.test.js
+.idea

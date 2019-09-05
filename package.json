@@ -6,6 +6,9 @@
     "test:api": "./run-api-tests.sh",
     "deploy": "./deploy-to-cloud.sh",
     "snyk-protect": "snyk protect",
+    "emulate": "gcloud beta emulators datastore start --project realworldgcp",
+    "emulate:functions": "functions-framework",
+    "emulate:functions": "functions-framework",
     "prepublish": "npm run snyk-protect"
   },
   "devDependencies": {
@@ -17,6 +20,7 @@
     "mocha-logger": "^1.0.5",
     "mochawesome": "^3.0.0",
     "newman": "^3.9.2",
+    "@google-cloud/functions-framework": "^1.2.1",
     "nyc": "^12.0.2"
   },
   "dependencies": {
