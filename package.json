@@ -8,7 +8,6 @@
     "snyk-protect": "snyk protect",
     "emulate": "gcloud beta emulators datastore start --project realworldgcp",
     "emulate:functions": "functions-framework",
-    "emulate:functions": "functions-framework",
     "prepublish": "npm run snyk-protect"
   },
   "devDependencies": {
