@@ -1,16 +1,30 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
-version: v1.12.0
+version: v1.13.5
 # ignores vulnerabilities until expiry date; change duration by modifying expiry date
 ignore:
   'npm:chownr:20180731':
     - bcrypt > node-pre-gyp > tar > chownr:
         expires: '2018-10-14T14:59:55.757Z'
-      '@google-cloud/datastore > google-gax > grpc > node-pre-gyp > tar > chownr':
-        reason: ''
-        expires: '2018-11-22T18:34:44.794Z'
     - '@google-cloud/datastore > google-gax > grpc > node-pre-gyp > tar > chownr':
         expires: '2018-10-14T14:59:55.757Z'
-      bcrypt > node-pre-gyp > tar > chownr:
+    - '@google-cloud/datastore > google-gax > grpc > node-pre-gyp > tar > chownr':
         reason: ''
         expires: '2018-11-22T18:34:44.794Z'
-patch: {}
+    - bcrypt > node-pre-gyp > tar > chownr:
+        reason: ''
+        expires: '2018-11-22T18:34:44.794Z'
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  SNYK-JS-HTTPSPROXYAGENT-469131:
+    - '@google-cloud/datastore > google-auth-library > https-proxy-agent':
+        patched: '2019-10-05T05:17:39.885Z'
+    - snyk > proxy-agent > https-proxy-agent:
+        patched: '2019-10-05T05:17:39.885Z'
+    - '@google-cloud/datastore > google-gax > google-auth-library > https-proxy-agent':
+        patched: '2019-10-05T05:17:39.885Z'
+    - snyk > proxy-agent > pac-proxy-agent > https-proxy-agent:
+        patched: '2019-10-05T05:17:39.885Z'
+    - '@google-cloud/datastore > google-auth-library > gtoken > gaxios > https-proxy-agent':
+        patched: '2019-10-05T05:17:39.885Z'
+    - '@google-cloud/datastore > google-gax > google-auth-library > gtoken > gaxios > https-proxy-agent':
+        patched: '2019-10-05T05:17:39.885Z'
