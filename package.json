@@ -6,9 +6,9 @@
     "test:api": "./run-api-tests.sh",
     "deploy": "./deploy-to-cloud.sh",
     "snyk-protect": "snyk protect",
-    "view-datastore": "dsui -e http://localhost:8081 -r local-datastore -p3002",
+    "view-datastore": "google-cloud-gui --port 8083",
     "emulate:datastore": " gcloud beta emulators datastore start --project realworldgcp ",
-    "emulate:functions": "GOOGLE_CLOUD_PROJECT=realworldgcp DATASTORE_EMULATOR_HOST=http://localhost:8081 forever -c 'node --inspect=8082' node_modules/@google-cloud/functions-framework --target=api ",
+    "emulate:functions": "sh emulate-functions.sh",
     "prepublish": "npm run snyk-protect"
   },
   "devDependencies": {
@@ -22,6 +22,7 @@
     "mocha-logger": "^1.0.5",
     "mochawesome": "^3.0.0",
     "newman": "^3.9.2",
+    "nodemon": "^1.19.3",
     "nyc": "^12.0.2"
   },
   "dependencies": {
