@@ -6,17 +6,23 @@
     "test:api": "./run-api-tests.sh",
     "deploy": "./deploy-to-cloud.sh",
     "snyk-protect": "snyk protect",
+    "view-datastore": "google-cloud-gui --port 8083",
+    "emulate:datastore": " gcloud beta emulators datastore start --project realworldgcp ",
+    "emulate:functions": "sh emulate-functions.sh",
     "prepublish": "npm run snyk-protect"
   },
   "devDependencies": {
     "@google-cloud/functions-emulator": "^1.0.0-beta.4",
+    "@google-cloud/functions-framework": "^1.2.1",
     "casual": "^1.5.17",
     "chai": "^4.1.2",
     "eslint": "^4.8.0",
+    "forever": "^1.0.0",
     "mocha": "^5.0.0",
     "mocha-logger": "^1.0.5",
     "mochawesome": "^3.0.0",
     "newman": "^3.9.2",
+    "nodemon": "^1.19.3",
     "nyc": "^12.0.2"
   },
   "dependencies": {

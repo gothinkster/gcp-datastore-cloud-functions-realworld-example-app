@@ -151,3 +151,10 @@ npm run deploy
 ```
 
 More details in [deploy-to-cloud.sh](deploy-to-cloud.sh).
+
+## Debugging locally
+```
+npm run emulate:datastore
+npm run emulate:functions
+```
+For more details see the playlist https://www.youtube.com/watch?v=foQLf5BBF2Q&list=PLCrwuqjmVebK08Cwz_XB55cNKFfFYOMGo
