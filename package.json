@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@google-cloud/datastore": "^2.0.0",
-    "bcrypt": "^3.0.0",
+    "bcrypt": "^5.0.0",
     "dotenv": "^6.0.0",
     "jsonwebtoken": "^8.1.0",
     "route-parser": "0.0.5",
